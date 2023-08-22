@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "i18.formatMessage",
-        "title": "国际化格式文本命令"
+        "command": "i18.parseKeyAndValue2FormatMessage",
+        "title": "提取国际化代码"
       }
     ]
   },
