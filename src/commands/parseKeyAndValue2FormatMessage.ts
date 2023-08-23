@@ -2,6 +2,10 @@ import * as vscode from 'vscode';
 import { rangeFix } from 'utils/arr';
 import { parseKeyAndValTexts2Object } from 'utils/code';
 import { emptyWarningHandler } from 'utils/err';
+import type { ICommondItem } from './type';
+
+/** 解析国际化 key value 指令 */
+const PARSE_KEY_AND_VALUE2_FORMAT_MESSAGE_CMD = 'i18.parseKeyAndValue2FormatMessage';
 
 /**
  * @description 解析键值对，创建代码到剪切板
@@ -53,4 +57,15 @@ function parseKeyAndValue2FormatMessage() {
   vscode.window.showInformationMessage('国际化代码已经生成到剪切板');
 }
 
-export default parseKeyAndValue2FormatMessage;
+/** 解析国际化 key value 转为 代码 */
+const item: ICommondItem = {
+  cmd: PARSE_KEY_AND_VALUE2_FORMAT_MESSAGE_CMD,
+  cmdExcuter: parseKeyAndValue2FormatMessage,
+};
+
+export default item;
+
+export {
+  PARSE_KEY_AND_VALUE2_FORMAT_MESSAGE_CMD,
+  parseKeyAndValue2FormatMessage,
+};

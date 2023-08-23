@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import parseKeyAndValue2FormatMessage from 'commands/parseKeyAndValue2FormatMessage';
+import formatMessageCmd from 'commands/parseKeyAndValue2FormatMessage';
 
 
 // This method is called when your extension is activated
@@ -15,8 +15,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('i18.parseKeyAndValue2FormatMessage',parseKeyAndValue2FormatMessage);
-	context.subscriptions.push(disposable);
+	const disposables = [
+		formatMessageCmd
+	].map((cmdItem) => vscode.commands.registerCommand(cmdItem.cmd, cmdItem.cmdExcuter));
+	context.subscriptions.push(...disposables);
 }
 
 // This method is called when your extension is deactivated
