@@ -6,6 +6,19 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "启动 webpack 调试程序",
+			"request": "launch",
+			"type": "extensionHost",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}"
+			],
+			"outFiles": [
+				"${workspaceFolder}/dist/**/*.js"
+			],
+			// https://code.visualstudio.com/docs/editor/tasks#vscode
+			"preLaunchTask": "npm: dev"
+		},
+		{
 			"name": "Run Extension",
 			"type": "extensionHost",
 			"request": "launch",
@@ -29,6 +42,6 @@
 				"${workspaceFolder}/out/test/**/*.js"
 			],
 			"preLaunchTask": "${defaultBuildTask}"
-		}
+		},
 	]
 }
