@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "jsx": "react-jsx",
+    "rootDir": "./pages",
+    "esModuleInterop": true,
+  },
+  "include": [
+    "./pages/*",
+    "./templates/*",
+  ],
+}
