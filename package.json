@@ -2,7 +2,7 @@
   "name": "i18-extension",
   "displayName": "i18-extension",
   "description": "国际化扩展工具",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -36,7 +36,7 @@
     "dev:webview": "webpack --config ./client/webpack.config.js",
     "dev": "webpack --config ./webpack.config.js",
     "prepare": "husky install",
-    "commitTalk": "pwsh ./scripts/commitTalk.ps1"
+    "commit:talk": "pwsh ./scripts/commitTalk.ps1"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",

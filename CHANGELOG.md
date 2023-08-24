@@ -19,5 +19,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - pref: 添加调试配置
 
 ## 0.1.6
+
 - build: 添加 husky hook 依赖
 - script: 添加 commit Message 依赖
+
+## 0.1.7
+
+- docs: 规范化 npm 命令
