@@ -3,14 +3,23 @@
     "lib": [
       "DOM",
       "DOM.Iterable",
-      "ESNext"
+      "ESNext",
     ],
     "jsx": "react-jsx",
-    "rootDir": "./pages",
+    // 可编译模块
+    "rootDirs": [
+      "./",
+      // 包括这个才能处理模块中的东西,  否则打包出来没有这个模块的东西
+      "../node_modules"
+    ],
     "esModuleInterop": true,
+    "allowJs": true,
+    "sourceMap": true,
   },
   "include": [
     "./pages/*",
     "./templates/*",
+    // 包括这个才能处理模块中的东西
+    "../node_modules/*",
   ],
 }

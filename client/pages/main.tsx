@@ -1,16 +1,11 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import App from './App';
 
 const root = document.getElementById('root');
 
-const App = () => {
-  return <div>
-    这是我的 自定义插件
-  </div>;
-};
-
 if (root) {
-  console.log('当前 React 版本', React.version);
+  console.log(React.version);
   createRoot(root).render(<App />);
 }
 

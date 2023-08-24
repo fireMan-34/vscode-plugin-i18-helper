@@ -24,9 +24,13 @@ const webpackConfig = {
       title: 'index.html',
       template: join(__dirname, './templates/index.html'),
       cache: true,
-      publicPath: '.'
+      // publicPath: '.'
     }),
-  ]
+  ],
+  resolve: {
+    // 修复解析相对模块
+    extensions: ['.tsx', '.ts', '.jsx', '.js', '.json']
+  }
 };
 
 module.exports = webpackConfig;

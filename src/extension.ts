@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import formatMessageCmd from 'commands/parseKeyAndValue2FormatMessage';
+import openWebViewCmd from 'commands/openWebView';
 
 
 // This method is called when your extension is activated
@@ -16,8 +17,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
 	const disposables = [
-		formatMessageCmd
-	].map((cmdItem) => vscode.commands.registerCommand(cmdItem.cmd, cmdItem.cmdExcuter));
+		formatMessageCmd,
+		openWebViewCmd,
+	].map((cmdItem) => vscode.commands.registerCommand(cmdItem.cmd, () => cmdItem.cmdExcuter(context)));
 	context.subscriptions.push(...disposables);
 }
 
