@@ -20,7 +20,7 @@ const webpackConfig = {
   },
   output: {
     filename: 'extension.js',
-    path: join(__dirname, 'out'),
+    path: join(cwd(), 'out'),
     libraryTarget: 'commonjs2'
   },
   module: {
