@@ -17,3 +17,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - docs: 添加版权信息
 - ci: 输出路径采用命令行位置
 - pref: 添加调试配置
+
+## 0.1.6
+- build: 添加 husky hook 依赖
+- script: 添加 commit Message 依赖
