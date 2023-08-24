@@ -16,6 +16,11 @@
       {
         "command": "i18.parseKeyAndValue2FormatMessage",
         "title": "提取国际化代码"
+      },
+      {
+        "command": "i18.openWebView",
+        "title": "打开国际化页面",
+        "icon": "./assets/icons/页面.svg"
       }
     ]
   },
