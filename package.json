@@ -36,7 +36,9 @@
     "dev:webview": "webpack --config ./client/webpack.config.js",
     "dev": "webpack --config ./webpack.config.js",
     "prepare": "husky install",
-    "commit:talk": "pwsh ./scripts/commitTalk.ps1"
+    "commit:talk": "pwsh ./scripts/commitTalk.ps1",
+    "version": "npm run commit:talk",
+    "preversion": "pwsh ./scripts/preVersion.ps1"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
