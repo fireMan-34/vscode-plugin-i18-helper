@@ -2,7 +2,7 @@
   "name": "i18-extension",
   "displayName": "i18-extension",
   "description": "国际化扩展工具",
-  "version": "0.0.1",
+  "version": "0.1.4",
   "engines": {
     "vscode": "^1.81.0"
   },
