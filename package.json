@@ -31,7 +31,7 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "rm": "rimraf ./node_modules",
+    "ri": "rimraf ./node_modules && npm install",
     "package": "vsce package",
     "dev:webview": "webpack --config ./client/webpack.config.js",
     "dev": "webpack --config ./webpack.config.js"
