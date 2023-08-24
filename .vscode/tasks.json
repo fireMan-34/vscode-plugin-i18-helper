@@ -19,10 +19,10 @@
 		// 配置任务
 		{
 			"type": "npm",
-			"script": "dev",
+			"script": "vscode:prepublish",
 			"problemMatcher": [],
 			"label": "npm: dev",
-			"detail": "webpack --config ./webpack.config.js"
+			"detail": "打包 webview 内容 & 且打包插件内容"
 		}
 	]
 }

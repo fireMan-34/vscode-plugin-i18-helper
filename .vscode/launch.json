@@ -13,7 +13,7 @@
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"outFiles": [
-				"${workspaceFolder}/dist/**/*.js"
+				"${workspaceFolder}/out/**/*.js"
 			],
 			// https://code.visualstudio.com/docs/editor/tasks#vscode
 			"preLaunchTask": "npm: dev"
