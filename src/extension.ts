@@ -3,24 +3,29 @@
 import * as vscode from 'vscode';
 import formatMessageCmd from 'commands/parseKeyAndValue2FormatMessage';
 import openWebViewCmd from 'commands/openWebView';
+import scanI18FileCmd from 'commands/scanI18File';
 
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
+// 激活事件 插件一开始不一定会启动
 export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "i18-extension" is now active!');
+	console.log('你的国际化插件已经可以预览啦啦， 😊');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	const disposables = [
+	const commands = [
 		formatMessageCmd,
 		openWebViewCmd,
-	].map((cmdItem) => vscode.commands.registerCommand(cmdItem.cmd, () => cmdItem.cmdExcuter(context)));
+		scanI18FileCmd,
+	];
+	const disposables = commands.map((cmdItem) => vscode.commands.registerCommand(cmdItem.cmd, () => cmdItem.cmdExcuter(context)));
 	context.subscriptions.push(...disposables);
+	commands.filter(cmd => cmd.excuter).forEach(cmd => cmd.excuter!(context));
 }
 
 // This method is called when your extension is deactivated
