@@ -12,3 +12,7 @@ Write-Output "现在时间: $NowTime"
 
 Write-Output "---------------------------------------------------"
 
+
+npm install
+
+git add package-lock.json
