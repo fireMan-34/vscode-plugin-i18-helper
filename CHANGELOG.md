@@ -26,3 +26,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## 0.1.7
 
 - docs: 规范化 npm 命令
+
+## 0.1.13
+- build: 依赖管理器 pnpm 切换 npm
+- build: 添加 git hook 依赖
+- script: 添加提价 hook 测试
+- chore: 添加预发布命令占位
+- docs: 添加 study 目录文件忽略
+- chore: 添加 packge 提交检测以及预安装命令
