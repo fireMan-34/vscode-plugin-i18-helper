@@ -16,7 +16,9 @@ const excuter = (context: vscode.ExtensionContext) => {
   vscode.commands.executeCommand('setContext', 'ext.supportedFolders', [ 'dist', 'out' ]);
 };
 
-/** 打开界面视图指令 */
+/** 打开界面视图指令
+ * @see https://code.visualstudio.com/api/references/activation-events
+ */
 const item: ICommondItem = {
   cmd: SCAN_I18_FILE,
   cmdExcuter: scanI18File,
