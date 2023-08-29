@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import formatMessageCmd from 'commands/parseKeyAndValue2FormatMessage';
 import openWebViewCmd from 'commands/openWebView';
 import scanI18FileCmd from 'commands/scanI18File';
+import type { XTextEditor } from 'commands/type';
 
 
 // This method is called when your extension is activated
@@ -23,10 +24,17 @@ export function activate(context: vscode.ExtensionContext) {
 		openWebViewCmd,
 		scanI18FileCmd,
 	];
-	const disposables = commands.map((cmdItem) => vscode.commands.registerCommand(cmdItem.cmd, () => cmdItem.cmdExcuter(context)));
+	const disposables = commands
+		.map((cmdItem) =>
+			vscode.commands.registerCommand(cmdItem.cmd,
+				(...args: any[]) =>
+					cmdItem.cmdExcuter(context,
+						args[0] as XTextEditor,
+						args[1] as vscode.TextEditorEdit,
+						...args.slice(2,))));
 	context.subscriptions.push(...disposables);
 	commands.filter(cmd => cmd.excuter).forEach(cmd => cmd.excuter!(context));
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
