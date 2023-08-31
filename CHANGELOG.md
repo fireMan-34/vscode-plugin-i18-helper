@@ -34,3 +34,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - chore: 添加预发布命令占位
 - docs: 添加 study 目录文件忽略
 - chore: 添加 packge 提交检测以及预安装命令
+
+## 0.1.21
+- pref: 添加注册命令行上下文 ts 类型支持
+- build: 更新 node 版本 移除错误版本 ts 提示
+- refactor: 移除通用命名校验检验规则 (影响其它命名规则 如常量等)
+- feat: 完善国际化扫描文件目录
+- docs: 添加忽略运行时目录文件逻辑
+- build: 添加 esMoudleInteropus 导出支持
+- pref: 添加 webpack 打包项目优化 插件 extensions 2200+ms -> 180+ms 6500+ms -> 200+ms
+- refactor: 重构 lodash 引入逻辑，改为按需引入

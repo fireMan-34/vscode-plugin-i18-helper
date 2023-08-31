@@ -11,7 +11,7 @@
     "email": "524915379@qq.com",
     "url": "https://github.com/fireMan-34/vscode-plugin-i18-helper/issues"
   },
-  "version": "0.1.13",
+  "version": "0.1.21",
   "engines": {
     "vscode": "^1.81.0"
   },
