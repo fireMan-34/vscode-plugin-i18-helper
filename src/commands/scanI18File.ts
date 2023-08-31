@@ -38,7 +38,8 @@ class I18FileItemClass implements I18FileItem {
       this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
       await saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
     } else {
-      this.i18nMetaJson = await readJsonFile<I18nMetaJson>(this.saveJsonPath);
+      // this.i18nMetaJson = await readJsonFile<I18nMetaJson>(this.saveJsonPath);
+      this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
     }
   }
 
