@@ -132,7 +132,22 @@ class I18FileItemClass implements I18FileItem {
 /** 扫描国际化文件 */
 const SCAN_I18_FILE = 'i18n.scanI18File';
 
-/** 扫描国际化文件 */
+/** 扫描国际化文件
+ * 命令扫描符合文件目录 生成可使用的数据结构供 国际化插件使用
+ * 步骤拆解
+ * * 1. 获取扫描 、 插件目录基础信息 - [x]
+ * * 2. 获取扫描目录所有文件信息 - [x]
+ * * 3. 提取文本对应的国际化文本对象 - [x]
+ * * 4. 国际化文本分类 - [x]
+ * * 5. 存储国际化文本 - [x]
+ * * 6. 存储全局初始化文件配置 - [ ]
+ * * 7. 全局任务通信 （Rxjs） - [ ]
+ * * 8. 智能提示 - []
+ * * 9. 完善读取缓存更新逻辑 - [ ]
+ * * 10.多项目管理 - [ ]
+ * * 11.资源视图管理 - [ ]
+ * * 12. vscode 配置支持 - [ ] 
+ */
 const scanI18File: ICommondItem['cmdExcuter'] = async (context, eidtor) => {
   const dirPath = eidtor.fsPath;
   const rootPath = join(dirPath, '..');
