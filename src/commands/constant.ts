@@ -1,7 +1,7 @@
 import { join } from 'path';
 import type { ExtensionContext } from 'vscode';
 import { generatDirPathIfNone } from 'utils/fs';
-import { I18nType, I18nDescriptionItem, I18nMetaJson } from './type';
+import { I18nType, I18nDescriptionItem, I18nMetaJson } from 'types/index';
 
 type I18nDescriptionMap = Record<I18nType, I18nDescriptionItem>;
 

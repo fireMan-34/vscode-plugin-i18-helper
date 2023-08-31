@@ -1,7 +1,7 @@
 import vscode from "vscode";
 import { join } from "path";
 import { existsSync } from 'fs';
-import { readFile,  } from "fs/promises";
+import { readFile, } from "fs/promises";
 import countBy from 'lodash/countBy';
 import cloneDeep from 'lodash/cloneDeep';
 import { readDeepDir, saveJsonFile } from 'utils/fs';
@@ -9,20 +9,14 @@ import { parseKeyAndValTexts2Object, getCharsI18nType } from 'utils/code';
 import { generateRuntimeProjectI18nHashPath } from 'utils/str';
 import { PromiseAllMap } from 'utils/asy';
 import { DEFAULT_I18N_META } from 'commands/constant';
-import { ICommondItem, I18nType, XTextEditor, I18nMetaJsonSaveContentItem, I18nMetaJson } from 'commands/type';
-
-interface I18FileItem {
-  /** 文件路径 */
-  path: string;
-  /** 国际化类型 */
-  i18nType: Promise<I18nType>,
-  /** 国际化键值对 */
-  keyAndVals: Promise<string[]>;
-  /** 国际化解析 map 对象 */
-  parseKeyAndVals: Promise<Record<string, string>>;
-  /** 获取文件 utf-8 解析内容 */
-  getFileContent: () => Promise<string>;
-}
+import {
+  ICommondItem,
+  I18nType,
+  XTextEditor,
+  I18nMetaJsonSaveContentItem,
+  I18nMetaJson,
+  I18FileItem,
+} from 'types/index';
 
 class I18FileItemClass implements I18FileItem {
 
@@ -58,7 +52,7 @@ class I18FileItemClass implements I18FileItem {
     );
     i18nItems.forEach(item => this.i18nMetaJson.saveContent[item.i18nType].push(item));
     await saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
-    
+
     this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
   }
 

@@ -2,7 +2,7 @@ import vscode from 'vscode';
 import { rangeFix } from 'utils/arr';
 import { parseKeyAndValTexts2Object } from 'utils/code';
 import { emptyWarningHandler } from 'utils/err';
-import type { ICommondItem } from './type';
+import type { ICommondItem } from 'types/index';
 
 /** 解析国际化 key value 指令 */
 const PARSE_KEY_AND_VALUE2_FORMAT_MESSAGE_CMD = 'i18n.parseKeyAndValue2FormatMessage';

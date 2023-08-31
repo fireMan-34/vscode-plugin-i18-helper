@@ -1,6 +1,6 @@
 import vscode from "vscode";
 import { getWebViewContent } from 'utils/code';
-import type { ICommondItem } from './type';
+import type { ICommondItem } from 'types/index';
 
 /** 打开界面视图指令 */
 const OPEN_WEB_VIEW_CMD = 'i18n.openWebView';

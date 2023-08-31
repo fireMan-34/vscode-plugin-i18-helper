@@ -2,7 +2,7 @@ import type { ExtensionContext } from 'vscode';
 import { createHash } from 'crypto';
 import { join } from 'path';
 import { getRuntimePath } from 'commands/constant';
-import type { XTextEditor } from 'commands/type';
+import type { XTextEditor } from 'types/index';
 import { generatDirPathIfNone } from 'utils/fs';
 
 
