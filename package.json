@@ -2,6 +2,15 @@
   "name": "i18-extension",
   "displayName": "i18-extension",
   "description": "国际化扩展工具",
+  "author": {
+    "name": "firman-34",
+    "email": "524915379@qq.com",
+    "url": "https://github.com/fireMan-34/vscode-plugin-i18-helper"
+  },
+  "bugs": {
+    "email": "524915379@qq.com",
+    "url": "https://github.com/fireMan-34/vscode-plugin-i18-helper/issues"
+  },
   "version": "0.1.13",
   "engines": {
     "vscode": "^1.81.0"
