@@ -1,5 +1,8 @@
 const { join } = require('path');
 const { cwd } = require('process');
+const { DllPlugin, } = require('webpack');
+
+const OUT_PATH = join(cwd(), 'out');
 
 /** @type {import('webpack').Configuration} */
 const webpackConfig = {
@@ -20,20 +23,25 @@ const webpackConfig = {
   },
   output: {
     filename: 'extension.js',
-    path: join(cwd(), 'out'),
+    path: OUT_PATH,
     libraryTarget: 'commonjs2'
   },
   module: {
     rules: [
       {
-        test: /\.(ts?)$/,
+        test: /\.(ts|js|json)$/,
         loader: 'ts-loader',
         exclude: /node_modules/,
       },
     ]
   },
   plugins: [
+    // new DllPlugin({ format: true, path: OUT_PATH }),
   ],
+  cache: {
+    /** 文件编译缓存加速 这个真的顶 d=====(￣▽￣*)b */
+    type: 'filesystem'
+  }
 };
 
 module.exports = [ webpackConfig ];

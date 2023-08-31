@@ -30,7 +30,10 @@ const webpackConfig = {
   resolve: {
     // 修复解析相对模块
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json']
-  }
+  },
+  cache: {
+    type: 'filesystem',
+  },
 };
 
 module.exports = webpackConfig;
