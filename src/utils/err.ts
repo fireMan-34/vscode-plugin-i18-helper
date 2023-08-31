@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 
 /**
  *空异常警告

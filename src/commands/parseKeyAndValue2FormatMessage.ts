@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import vscode from 'vscode';
 import { rangeFix } from 'utils/arr';
 import { parseKeyAndValTexts2Object } from 'utils/code';
 import { emptyWarningHandler } from 'utils/err';

@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 import { getWebViewContent } from 'utils/code';
 import type { ICommondItem } from './type';
 

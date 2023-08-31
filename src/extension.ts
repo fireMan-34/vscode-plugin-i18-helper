@@ -1,6 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import vscode from 'vscode';
 import formatMessageCmd from 'commands/parseKeyAndValue2FormatMessage';
 import openWebViewCmd from 'commands/openWebView';
 import scanI18FileCmd from 'commands/scanI18File';

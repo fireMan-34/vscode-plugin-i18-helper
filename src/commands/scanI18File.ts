@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 import { join } from "path";
 import { existsSync } from 'fs';
 import { readFile,  } from "fs/promises";

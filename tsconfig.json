@@ -17,6 +17,7 @@
 			"utils/*": [ "./src/utils/*" ],
 			"commands/*":[ "./src/commands/*" ],
 		},
+		"esModuleInterop": true,
 	},
 	"exclude": [ "./client/*" ],
 }
