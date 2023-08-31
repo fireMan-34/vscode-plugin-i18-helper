@@ -85,8 +85,8 @@ class I18FileItemClass implements I18FileItem {
     return this.parseKeyAndVals
       .then((record) => {
         const list = Object.values(record);
-        const i18Types = list.map(getCharsI18nType);
-        const countMap = countBy(i18Types);
+        const i18nTypes = list.map(getCharsI18nType);
+        const countMap = countBy(i18nTypes);
         const i18nType = +Object
           .entries(countMap)
           .reduce((maxKeyAndVal, curKeyAndVal) => curKeyAndVal[1] > maxKeyAndVal[1] ? curKeyAndVal : maxKeyAndVal, [`${I18nType.UN_KNOWN}`, 0])
@@ -136,7 +136,7 @@ class I18FileItemClass implements I18FileItem {
 }
 
 /** 扫描国际化文件 */
-const SCAN_I18_FILE = 'i18.scanI18File';
+const SCAN_I18_FILE = 'i18n.scanI18File';
 
 /** 扫描国际化文件 */
 const scanI18File: ICommondItem['cmdExcuter'] = async (context, eidtor) => {
