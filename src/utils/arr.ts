@@ -1,4 +1,4 @@
-import { range } from 'lodash';
+import range from 'lodash/range';
 
 /**
  *创建起始行映射

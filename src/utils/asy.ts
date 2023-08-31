@@ -1,4 +1,4 @@
-import { assign } from 'lodash';
+import assign from 'lodash/assign';
 
 type PickPromise<P> = P extends Promise<infer R> ? R : P;
 
