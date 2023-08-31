@@ -9,3 +9,4 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 study/**
+.i18n/**
