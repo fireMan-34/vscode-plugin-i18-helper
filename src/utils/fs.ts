@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, write } from 'fs';
+import { existsSync, mkdirSync, writeFileSync, writeSync } from 'fs';
 import { readdir, stat, writeFile, readFile } from 'node:fs/promises';
 import { join, } from 'node:path';
 
@@ -58,6 +58,11 @@ export function generatDirPathIfNone (path: string): void {
 /** 保存 json 格式数据 */
 export async function saveJsonFile<T extends object>(path: string, data: T) {
   return writeFile(path,JSON.stringify(data, null, 2), { encoding: 'utf8' });
+};
+
+/** 保存 json 格式数据 同步 */
+export function saveJsonFileSync<T extends object>(path: string, data: T) {
+  return writeFileSync(path,JSON.stringify(data, null, 2), { encoding: 'utf8' });
 };
 
 /** 读取 json 格式数据 */

@@ -1,4 +1,4 @@
-import { I18nType, I18nDescriptionItem, I18nMetaJson } from 'types/index';
+import { I18nType, I18nDescriptionItem, I18nMetaJson, ProjectMetaJson } from 'types/index';
 
 type I18nDescriptionMap = Record<I18nType, I18nDescriptionItem>;
 
@@ -48,4 +48,9 @@ export const DEFAULT_I18N_META: I18nMetaJson = {
     [I18nType.ZH_CN]: [],
     [I18nType.ZH_HK]: [],
   }
+};
+
+/** 默认国际化文件配置 */
+export const PROJECT_META_JSON: ProjectMetaJson = {
+  i18nDirList: [],
 };

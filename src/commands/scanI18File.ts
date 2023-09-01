@@ -1,10 +1,15 @@
-import vscode from "vscode";
+import { 
+  workspace,
+  window,
+  commands, 
+  type ExtensionContext,
+} from "vscode";
 import { join } from "path";
 import { existsSync } from 'fs';
 import { readFile, } from "fs/promises";
 import countBy from 'lodash/countBy';
 import cloneDeep from 'lodash/cloneDeep';
-import { readDeepDir, saveJsonFile } from 'utils/fs';
+import { readDeepDir, saveJsonFile, readJsonFile } from 'utils/fs';
 import { parseKeyAndValTexts2Object, getCharsI18nType } from 'utils/code';
 import { generateRuntimeProjectI18nHashPath, getRunTimeConfigPath } from 'utils/str';
 import { PromiseAllMap } from 'utils/asy';
@@ -16,16 +21,22 @@ import {
   I18nMetaJsonSaveContentItem,
   I18nMetaJson,
   I18FileItem,
+  i18nDirItem,
+  ProjectMetaJson,
 } from 'types/index';
 
+/**
+ * @todo 国际化文件对象 有点稍微臃肿
+ */
 class I18FileItemClass implements I18FileItem {
 
   /** 键值对文本提取正则 */
   static KEY_AND_VALUE_REG = /["'][^"']*?["']:\s*["'].*["'],/gi;
 
   /** 初始化类对象 */
-  static async init(context: vscode.ExtensionContext, editor: XTextEditor) {
+  static async init(context: ExtensionContext, editor: XTextEditor) {
     this.rootPath = await generateRuntimeProjectI18nHashPath(context, editor);
+    this.excutePath = editor.fsPath;
     this.saveJsonPath = join(this.rootPath, 'meta.json');
 
     const hasMetaJson = existsSync(this.saveJsonPath);
@@ -40,7 +51,7 @@ class I18FileItemClass implements I18FileItem {
   }
 
   /** 将国际化内容写入路径中 */
-  static async writeI18FileContent2Json(set: I18FileItem[]) {
+  static async writeI18nFileContent2Json(set: I18FileItem[]) {
     const i18nItems = await Promise.all(
       set
         .map((item) =>
@@ -53,12 +64,34 @@ class I18FileItemClass implements I18FileItem {
     );
     i18nItems.forEach(item => this.i18nMetaJson.saveContent[item.i18nType].push(item));
     await saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
-
     this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
+    
+    await this.writeI18nConfigJson();
+  }
+
+  /** 写入国际化全局配置 */
+  static async writeI18nConfigJson() {
+    const projectMetaJson = await readJsonFile<ProjectMetaJson>(this.extensionMetaJsonPath);
+    const item: i18nDirItem = {
+      originalPath: this.excutePath,
+      targetPath: this.saveJsonPath,
+      projectPath: workspace.workspaceFolders![0].uri.fsPath,
+    };
+
+    if (!projectMetaJson.i18nDirList.find(dirItem => 
+      dirItem.originalPath === item.originalPath
+     && dirItem.targetPath === item.targetPath 
+      )) {
+        projectMetaJson.i18nDirList.push(item);
+
+        await saveJsonFile(this.extensionMetaJsonPath, projectMetaJson);
+    }
   }
 
   /** 项目根路径 */
   static rootPath: string;
+  /** 命令执行路径 */
+  static excutePath: string;
   /** 保存信息路径 */
   static saveJsonPath: string;
   /** 根 metaJson */
@@ -154,17 +187,17 @@ const SCAN_I18_FILE = 'i18n.scanI18File';
 const scanI18File: ICommondItem['cmdExcuter'] = async (context, eidtor) => {
   const dirPath = eidtor.fsPath;
   const rootPath = join(dirPath, '..');
-  vscode.window.showInformationMessage('准备扫描', rootPath, context.extension.extensionPath);
+  window.showInformationMessage('准备扫描', rootPath, context.extension.extensionPath);
 
   try {
     await I18FileItemClass.init(context, eidtor);
 
-    vscode.window.showInformationMessage('插件根路径', I18FileItemClass.rootPath);
+    window.showInformationMessage('插件根路径', I18FileItemClass.rootPath);
 
     const { filePaths } = await readDeepDir(dirPath);
     const i18nFileItems = filePaths.map(path => new I18FileItemClass(path));
 
-    await I18FileItemClass.writeI18FileContent2Json(i18nFileItems);
+    await I18FileItemClass.writeI18nFileContent2Json(i18nFileItems);
 
   } catch (err) {
     console.error(err);
@@ -173,9 +206,9 @@ const scanI18File: ICommondItem['cmdExcuter'] = async (context, eidtor) => {
 /** 注册扫描文件上下文
  * @see https://code.visualstudio.com/api/references/when-clause-contexts
  */
-const excuter = (context: vscode.ExtensionContext) => {
-  vscode.window.showInformationMessage('扫描文件已执行');
-  vscode.commands.executeCommand('setContext', 'ext.supportedFolders', ['dist', 'out', 'locales']);
+const excuter = (context: ExtensionContext) => {
+  window.showInformationMessage('扫描文件已执行');
+  commands.executeCommand('setContext', 'ext.supportedFolders', ['dist', 'out', 'locales']);
 };
 
 /** 打开界面视图指令
