@@ -1,7 +1,7 @@
 import vscode from "vscode";
 import { join } from "path";
 import { existsSync } from 'fs';
-import { readFile,  } from "fs/promises";
+import { readFile, } from "fs/promises";
 import countBy from 'lodash/countBy';
 import cloneDeep from 'lodash/cloneDeep';
 import { readDeepDir, saveJsonFile } from 'utils/fs';
@@ -9,20 +9,14 @@ import { parseKeyAndValTexts2Object, getCharsI18nType } from 'utils/code';
 import { generateRuntimeProjectI18nHashPath } from 'utils/str';
 import { PromiseAllMap } from 'utils/asy';
 import { DEFAULT_I18N_META } from 'commands/constant';
-import { ICommondItem, I18nType, XTextEditor, I18nMetaJsonSaveContentItem, I18nMetaJson } from 'commands/type';
-
-interface I18FileItem {
-  /** 文件路径 */
-  path: string;
-  /** 国际化类型 */
-  i18nType: Promise<I18nType>,
-  /** 国际化键值对 */
-  keyAndVals: Promise<string[]>;
-  /** 国际化解析 map 对象 */
-  parseKeyAndVals: Promise<Record<string, string>>;
-  /** 获取文件 utf-8 解析内容 */
-  getFileContent: () => Promise<string>;
-}
+import {
+  ICommondItem,
+  I18nType,
+  XTextEditor,
+  I18nMetaJsonSaveContentItem,
+  I18nMetaJson,
+  I18FileItem,
+} from 'types/index';
 
 class I18FileItemClass implements I18FileItem {
 
@@ -58,7 +52,7 @@ class I18FileItemClass implements I18FileItem {
     );
     i18nItems.forEach(item => this.i18nMetaJson.saveContent[item.i18nType].push(item));
     await saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
-    
+
     this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
   }
 
@@ -85,8 +79,8 @@ class I18FileItemClass implements I18FileItem {
     return this.parseKeyAndVals
       .then((record) => {
         const list = Object.values(record);
-        const i18Types = list.map(getCharsI18nType);
-        const countMap = countBy(i18Types);
+        const i18nTypes = list.map(getCharsI18nType);
+        const countMap = countBy(i18nTypes);
         const i18nType = +Object
           .entries(countMap)
           .reduce((maxKeyAndVal, curKeyAndVal) => curKeyAndVal[1] > maxKeyAndVal[1] ? curKeyAndVal : maxKeyAndVal, [`${I18nType.UN_KNOWN}`, 0])
@@ -136,9 +130,24 @@ class I18FileItemClass implements I18FileItem {
 }
 
 /** 扫描国际化文件 */
-const SCAN_I18_FILE = 'i18.scanI18File';
+const SCAN_I18_FILE = 'i18n.scanI18File';
 
-/** 扫描国际化文件 */
+/** 扫描国际化文件
+ * 命令扫描符合文件目录 生成可使用的数据结构供 国际化插件使用
+ * 步骤拆解
+ * * 1. 获取扫描 、 插件目录基础信息 - [x]
+ * * 2. 获取扫描目录所有文件信息 - [x]
+ * * 3. 提取文本对应的国际化文本对象 - [x]
+ * * 4. 国际化文本分类 - [x]
+ * * 5. 存储国际化文本 - [x]
+ * * 6. 存储全局初始化文件配置 - [ ]
+ * * 7. 全局任务通信 （Rxjs） - [ ]
+ * * 8. 智能提示 - []
+ * * 9. 完善读取缓存更新逻辑 - [ ]
+ * * 10.多项目管理 - [ ]
+ * * 11.资源视图管理 - [ ]
+ * * 12. vscode 配置支持 - [ ] 
+ */
 const scanI18File: ICommondItem['cmdExcuter'] = async (context, eidtor) => {
   const dirPath = eidtor.fsPath;
   const rootPath = join(dirPath, '..');

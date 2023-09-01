@@ -4,7 +4,7 @@ import vscode from 'vscode';
 import formatMessageCmd from 'commands/parseKeyAndValue2FormatMessage';
 import openWebViewCmd from 'commands/openWebView';
 import scanI18FileCmd from 'commands/scanI18File';
-import type { XTextEditor } from 'commands/type';
+import type { XTextEditor } from 'types/index';
 
 
 // This method is called when your extension is activated

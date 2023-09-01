@@ -2,10 +2,10 @@ import vscode from 'vscode';
 import { rangeFix } from 'utils/arr';
 import { parseKeyAndValTexts2Object } from 'utils/code';
 import { emptyWarningHandler } from 'utils/err';
-import type { ICommondItem } from './type';
+import type { ICommondItem } from 'types/index';
 
 /** 解析国际化 key value 指令 */
-const PARSE_KEY_AND_VALUE2_FORMAT_MESSAGE_CMD = 'i18.parseKeyAndValue2FormatMessage';
+const PARSE_KEY_AND_VALUE2_FORMAT_MESSAGE_CMD = 'i18n.parseKeyAndValue2FormatMessage';
 
 /**
  * @description 解析键值对，创建代码到剪切板
@@ -39,15 +39,15 @@ function parseKeyAndValue2FormatMessage() {
   };
 
   const keyAndValLines = getKeyAndValLines();
-  const i18Object = keyAndValLines.reduce((obj, keyAndValueLine) => {
+  const i18nObject = keyAndValLines.reduce((obj, keyAndValueLine) => {
     const o = parseKeyAndValTexts2Object(keyAndValueLine);
     return Object.assign(obj, o);
   }, {});
   const formatMessage = Object
-    .entries(i18Object)
-    .map(([i18Key, i18Msg]) => `formatMessage({
-         id: '${i18Key}',
-         defaultMessage: '${i18Msg}',
+    .entries(i18nObject)
+    .map(([i18nKey, i18nMsg]) => `formatMessage({
+         id: '${i18nKey}',
+         defaultMessage: '${i18nMsg}',
        })`)
     .join('\n');
 

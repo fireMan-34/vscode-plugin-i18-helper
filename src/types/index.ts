@@ -26,6 +26,8 @@ export interface ICommondItem {
   excuter?: (context: ExtensionContext) => void;
 }
 
+// ---------------------------------------------------------------- 命令相关 ⬆
+
 /** 国际化枚举类型 */
 export enum I18nType {
   /** 中文简体 */
@@ -42,12 +44,14 @@ export enum I18nType {
   UN_KNOWN,
 }
 
+/** 国际化描述美剧对象 */
 export interface I18nDescriptionItem {
   lang: I18nType,
   dir: string,
   name: string,
 }
 
+/** 国际化映射路径类型 */
 export interface I18nMetaJsonSaveContentItem {
   /** 文件路径 */
   path: string,
@@ -59,6 +63,7 @@ export interface I18nMetaJsonSaveContentItem {
   updateTime: string,
 }
 
+/** 国际化持久化 json */
 export interface I18nMetaJson {
   /** 默认选项 */
   default: {
@@ -67,3 +72,19 @@ export interface I18nMetaJson {
   /** 保存内容 */
   saveContent: Record<I18nType, I18nMetaJsonSaveContentItem[]>
 }
+
+/** 国际化文件管理原子对象 */
+export interface I18FileItem {
+  /** 文件路径 */
+  path: string;
+  /** 国际化类型 */
+  i18nType: Promise<I18nType>,
+  /** 国际化键值对 */
+  keyAndVals: Promise<string[]>;
+  /** 国际化解析 map 对象 */
+  parseKeyAndVals: Promise<Record<string, string>>;
+  /** 获取文件 utf-8 解析内容 */
+  getFileContent: () => Promise<string>;
+}
+
+// ---------------------------------------------------------------- 国际化相关 ⬆

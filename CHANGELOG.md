@@ -2,7 +2,7 @@
 
 ## 0.0.1
 
-All notable changes to the "i18-extension" extension will be documented in this file.
+All notable changes to the "i18n-extension" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 

@@ -1,13 +1,13 @@
 import vscode from "vscode";
 import { getWebViewContent } from 'utils/code';
-import type { ICommondItem } from './type';
+import type { ICommondItem } from 'types/index';
 
 /** 打开界面视图指令 */
-const OPEN_WEB_VIEW_CMD = 'i18.openWebView';
+const OPEN_WEB_VIEW_CMD = 'i18n.openWebView';
 
 /** 打开页面 */
 const openWebView = (context: vscode.ExtensionContext) => {
-  const panel = vscode.window.createWebviewPanel('i18WebView', 'i18 web view', vscode.ViewColumn.One, {
+  const panel = vscode.window.createWebviewPanel('i18nWebView', 'i18n web view', vscode.ViewColumn.One, {
     enableScripts: true,
     localResourceRoots: [ vscode.Uri.joinPath(context.extensionUri, 'out') ]
   });

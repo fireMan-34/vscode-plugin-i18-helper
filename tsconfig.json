@@ -16,6 +16,7 @@
 		"paths": {
 			"utils/*": [ "./src/utils/*" ],
 			"commands/*":[ "./src/commands/*" ],
+			"types/*": [ "./src/types/*" ],
 		},
 		"esModuleInterop": true,
 	},

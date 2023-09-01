@@ -1,15 +1,15 @@
 {
-  "name": "i18-extension",
-  "displayName": "i18-extension",
+  "name": "i18n-extension",
+  "displayName": "i18n-extension",
   "description": "国际化扩展工具",
   "author": {
     "name": "firman-34",
     "email": "524915379@qq.com",
-    "url": "https://github.com/fireMan-34/vscode-plugin-i18-helper"
+    "url": "https://github.com/fireMan-34/vscode-plugin-i18n-helper"
   },
   "bugs": {
     "email": "524915379@qq.com",
-    "url": "https://github.com/fireMan-34/vscode-plugin-i18-helper/issues"
+    "url": "https://github.com/fireMan-34/vscode-plugin-i18n-helper/issues"
   },
   "version": "0.1.21",
   "engines": {
@@ -23,17 +23,17 @@
   "contributes": {
     "commands": [
       {
-        "command": "i18.parseKeyAndValue2FormatMessage",
+        "command": "i18n.parseKeyAndValue2FormatMessage",
         "title": "提取国际化代码",
         "icon": "./assets/icons/提取.svg"
       },
       {
-        "command": "i18.openWebView",
+        "command": "i18n.openWebView",
         "title": "打开国际化页面",
         "icon": "./assets/icons/页面.svg"
       },
       {
-        "command": "i18.scanI18File",
+        "command": "i18n.scanI18File",
         "title": "扫描国际化代码",
         "icon": "./assets/icons/扫描.svg"
       }
@@ -41,7 +41,7 @@
     "menus": {
       "explorer/context": [
         {
-          "command": "i18.scanI18File",
+          "command": "i18n.scanI18File",
           "when": "explorerResourceIsFolder && resourceFilename in ext.supportedFolders"
         }
       ]

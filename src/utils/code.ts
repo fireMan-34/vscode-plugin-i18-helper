@@ -1,7 +1,7 @@
 import { readFileSync, writeFile } from 'node:fs';
 import { join } from 'node:path';
 import { Uri, type ExtensionContext, type WebviewPanel } from 'vscode';
-import { I18nType } from 'commands/type';
+import { I18nType } from 'types/index';
 
 /** 从键值对字符串·里解析对象
  * @param {string} text 键值对字符串
