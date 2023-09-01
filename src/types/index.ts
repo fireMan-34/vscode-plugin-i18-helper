@@ -88,3 +88,19 @@ export interface I18FileItem {
 }
 
 // ---------------------------------------------------------------- 国际化相关 ⬆
+
+export interface i18nDirItem {
+  /** 源路径 */
+  originalPath: string;
+  /** 插件生成路径 */
+  targetPath: string;
+  /** 国际化归属路径 激活的国际化项目会提供响应的国际化提示 */
+  projectPath: string;  
+}
+
+/** 项目配置信息 json */
+export interface ProjectMetaJson {
+  i18nDirList: i18nDirItem[],
+}
+
+// ---------------------------------------------------------------- 项目配置相关 ⬆

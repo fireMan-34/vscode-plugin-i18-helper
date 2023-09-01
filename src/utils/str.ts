@@ -5,7 +5,7 @@ import type { XTextEditor } from 'types/index';
 import { generatDirPathIfNone } from 'utils/fs';
 
 /*** 获取运行时目录的子目录 */
-export const getRuntimePath = (context: ExtensionContext, ...paths: string[]) => {
+export const getRuntimePath = (context: ExtensionContext | { extension: { extensionPath: string } } , ...paths: string[]) => {
   const { extensionPath } = context.extension;
   const RUN_TIME_DIR_NAME = '.i18n';
   const RUN_TIME_PATH = join(extensionPath, RUN_TIME_DIR_NAME);
@@ -27,3 +27,8 @@ export function generateRuntimeProjectI18nHashPath (context: ExtensionContext ,e
 
   return runtimeHashPath;
 };
+
+/** 获取运行时路径配置 */
+export function getRunTimeConfigPath(context: ExtensionContext) {
+  return getRuntimePath(context, 'config.json');
+}

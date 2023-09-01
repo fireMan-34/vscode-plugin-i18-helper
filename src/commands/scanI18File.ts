@@ -6,7 +6,7 @@ import countBy from 'lodash/countBy';
 import cloneDeep from 'lodash/cloneDeep';
 import { readDeepDir, saveJsonFile } from 'utils/fs';
 import { parseKeyAndValTexts2Object, getCharsI18nType } from 'utils/code';
-import { generateRuntimeProjectI18nHashPath } from 'utils/str';
+import { generateRuntimeProjectI18nHashPath, getRunTimeConfigPath } from 'utils/str';
 import { PromiseAllMap } from 'utils/asy';
 import { DEFAULT_I18N_META } from 'commands/constant';
 import {
@@ -36,6 +36,7 @@ class I18FileItemClass implements I18FileItem {
       // this.i18nMetaJson = await readJsonFile<I18nMetaJson>(this.saveJsonPath);
       this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
     }
+    this.extensionMetaJsonPath = getRunTimeConfigPath(context);
   }
 
   /** 将国际化内容写入路径中 */
@@ -62,6 +63,8 @@ class I18FileItemClass implements I18FileItem {
   static saveJsonPath: string;
   /** 根 metaJson */
   static i18nMetaJson: I18nMetaJson;
+  /** 项目根配置 */
+  static extensionMetaJsonPath: string;
 
   cacheMap: Partial<I18FileItem>
 
