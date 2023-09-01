@@ -11,7 +11,7 @@ import countBy from 'lodash/countBy';
 import cloneDeep from 'lodash/cloneDeep';
 import { readDeepDir, saveJsonFile, readJsonFile } from 'utils/fs';
 import { parseKeyAndValTexts2Object, getCharsI18nType } from 'utils/code';
-import { generateRuntimeProjectI18nHashPath, getRunTimeConfigPath } from 'utils/path';
+import { generateRuntimeProjectI18nHashPath, getRunTimeConfigPath, getWrokspaceFloder } from 'utils/path';
 import { PromiseAllMap } from 'utils/asy';
 import { DEFAULT_I18N_META } from 'commands/constant';
 import {
@@ -72,10 +72,11 @@ class I18FileItemClass implements I18FileItem {
   /** 写入国际化全局配置 */
   static async writeI18nConfigJson() {
     const projectMetaJson = await readJsonFile<ProjectMetaJson>(this.extensionMetaJsonPath);
+    const projectPath = await getWrokspaceFloder();
     const item: i18nDirItem = {
       originalPath: this.excutePath,
       targetPath: this.saveJsonPath,
-      projectPath: workspace.workspaceFolders![0].uri.fsPath,
+      projectPath: projectPath.uri.fsPath,
     };
 
     if (!projectMetaJson.i18nDirList.find(dirItem => 
