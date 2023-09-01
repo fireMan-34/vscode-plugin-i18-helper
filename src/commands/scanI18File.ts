@@ -11,7 +11,7 @@ import countBy from 'lodash/countBy';
 import cloneDeep from 'lodash/cloneDeep';
 import { readDeepDir, saveJsonFile, readJsonFile } from 'utils/fs';
 import { parseKeyAndValTexts2Object, getCharsI18nType } from 'utils/code';
-import { generateRuntimeProjectI18nHashPath, getRunTimeConfigPath } from 'utils/str';
+import { generateRuntimeProjectI18nHashPath, getRunTimeConfigPath } from 'utils/path';
 import { PromiseAllMap } from 'utils/asy';
 import { DEFAULT_I18N_META } from 'commands/constant';
 import {
