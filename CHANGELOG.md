@@ -44,3 +44,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - build: 添加 esMoudleInteropus 导出支持
 - pref: 添加 webpack 打包项目优化 插件 extensions 2200+ms -> 180+ms 6500+ms -> 200+ms
 - refactor: 重构 lodash 引入逻辑，改为按需引入
+
+## 0.1.32
+- refactor: 代码重命名 i18 -> i18n
+- refactor: ts 类型文件重组
+- refactor: 迁移 getRunTimePath 函数
+- feat: 运行时全局配置 TS
+- buid: 自动化构建
+- fix: 国际化语言简繁识别问题，日文识别问题修复 添加 chinese-conv 依赖 和手动声明
+- test: 添加国际化语言测试用例
+- feat: 添加全局配置文件初版
+- refactor: 工具包 str 重命名为 path
+- feat: 添加工具选中多种目录结构
+- refactor: 选择目录结构逻辑精简
