@@ -1,4 +1,16 @@
-import vscode from "vscode";
+import { window } from "vscode";
+
+/** 调试等级 */
+enum LoggerLevel {
+  info,
+  warn,
+  err,
+}
+
+interface LoggerObservable {
+  level: LoggerLevel,
+  message: string,
+}
 
 /**
  *空异常警告
@@ -6,7 +18,8 @@ import vscode from "vscode";
  * @param {string} [msg]
  */
 const emptyWarningHandler = (msg?: string) => {
-  vscode.window.showWarningMessage(`当前${msg || '上下文'}为空`);
+  const message = `当前${msg || '上下文'}为空`;
+  window.showWarningMessage(message);
 };
 
 export {
