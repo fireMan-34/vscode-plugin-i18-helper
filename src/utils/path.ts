@@ -89,14 +89,7 @@ export function matchI18nWorkspaceFolder(matchI18nPath: string) {
   const workspaceMatchFolder = workspaceFolders
     .map((item => ({ item, normailzePath: normalize(item.uri.fsPath) })))
     .map((item) => ({ ...item, sameVal: getPathSameVal(normalizeI18nPath, item.normailzePath) }))
-    .reduce((acc, item) => {
-      if (!acc) {
-        return item;
-      }
-      else {
-        return acc.sameVal > item.sameVal ? acc : item;
-      }
-    }).item;
+    .reduce((acc, item) => acc.sameVal > item.sameVal ? acc : item ).item;
   return workspaceMatchFolder;
 }
 
