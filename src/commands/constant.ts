@@ -1,6 +1,3 @@
-import { join } from 'path';
-import type { ExtensionContext } from 'vscode';
-import { generatDirPathIfNone } from 'utils/fs';
 import { I18nType, I18nDescriptionItem, I18nMetaJson } from 'types/index';
 
 type I18nDescriptionMap = Record<I18nType, I18nDescriptionItem>;
@@ -36,17 +33,6 @@ export const I18N_DESCRIPTION_MAP: I18nDescriptionMap = {
     dir: I18nType[I18nType.UN_KNOWN],
     name: '未知',
   }
-};
-
-/*** 获取运行时目录的子目录 */
-export const getRuntimePath = (context: ExtensionContext, ...paths: string[]) => {
-  const { extensionPath } = context.extension;
-  const RUN_TIME_DIR_NAME = '.i18n';
-  const RUN_TIME_PATH = join(extensionPath, RUN_TIME_DIR_NAME);
-
-  generatDirPathIfNone(RUN_TIME_DIR_NAME);
-
-  return join(RUN_TIME_PATH, ...paths);
 };
 
 /** 默认国际化保存文本 meta 类型 */

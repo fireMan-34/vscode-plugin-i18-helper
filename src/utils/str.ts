@@ -1,10 +1,19 @@
 import type { ExtensionContext } from 'vscode';
 import { createHash } from 'crypto';
 import { join } from 'path';
-import { getRuntimePath } from 'commands/constant';
 import type { XTextEditor } from 'types/index';
 import { generatDirPathIfNone } from 'utils/fs';
 
+/*** 获取运行时目录的子目录 */
+export const getRuntimePath = (context: ExtensionContext, ...paths: string[]) => {
+  const { extensionPath } = context.extension;
+  const RUN_TIME_DIR_NAME = '.i18n';
+  const RUN_TIME_PATH = join(extensionPath, RUN_TIME_DIR_NAME);
+
+  generatDirPathIfNone(RUN_TIME_DIR_NAME);
+
+  return join(RUN_TIME_PATH, ...paths);
+};
 
 /** 生成唯一运行时唯一 hash 路径 */
 export function generateRuntimeProjectI18nHashPath (context: ExtensionContext ,editor: XTextEditor) {
