@@ -1,7 +1,10 @@
 import { readFileSync, writeFile } from 'node:fs';
 import { join } from 'node:path';
 import { Uri, type ExtensionContext, type WebviewPanel } from 'vscode';
+import { sify } from 'chinese-conv';
 import { I18nType } from 'types/index';
+
+const CHINESE_LANGUAGE_REG = /[\u4e00-\u9fa5]/g;
 
 /** 从键值对字符串·里解析对象
  * @param {string} text 键值对字符串
@@ -33,26 +36,30 @@ const getWebViewContent = (context: ExtensionContext, panel: WebviewPanel) => {
 };
 
 /**
- * 判断字符串属于什么国际化 有概率错误判断
+ * 判断字符串属于什么国际化 中文繁体、中文简体、日文大概率错误判断
+ * 判断是以总体为单位所以判断串位的可能性比较多
+ * 中简，中繁，日文部分文字存在重合部分
  * @param code 
  * @returns {I18nType}
+ * @todo 添加总体字数判定
  */
 const getCharsI18nType = (code: string): I18nType => {
-	if (code.match(/[\u4E00-\u9FFF]/g)) {
-		// 存在繁体
-		if (code.match(/[\u3402\u3401\u3404\u3405\u3406\u340C\u340D\u3415\u3418\u341B\u341E\u3428\u3435\u3438\u3439\u343C\u343D\u3446\u3447\u344E\u345A\u3461\u3473\u347A\u347D\u3481\u3486\u348C\u3493\u3497]/g)) {
-			return I18nType.ZH_HK;
-		}
-		// 简体
-		return I18nType.ZH_CN;
-	}
-	if (code.match(/[\u3040-\u309F]|[\u30A0-\u30FF]|[\uFF00-\uFFEF]/g)) {
+	if (code.match(/[\u0800-\u4e00]/g)) {
 		return I18nType.JA_JP;
 	}
-	if (code.match(/[x3130-x318F]/)) {
+	if (code.match(CHINESE_LANGUAGE_REG)) {
+		// 存在繁体
+		// 简体
+		const transformSimpleText = sify(code);
+		if (code === transformSimpleText) {
+			return I18nType.ZH_CN;
+		}
+		return I18nType.ZH_HK;
+	}
+	if (code.match(/[\uac00-\ud7ff]/g)) {
 		return I18nType.KO_KR;
 	}
-	if (code.match(/[a-zA-Z]g/)) {
+	if (code.match(/[a-zA-Z]/g)) {
 		return I18nType.EN_US;
 	}
 	return I18nType.UN_KNOWN;
