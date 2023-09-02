@@ -10,12 +10,14 @@
 			"request": "launch",
 			"type": "extensionHost",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}"
+				// * https://github.com/microsoft/vscode/issues/122006
+				"D:\/Project\/pro-micro-services",
+				"--extensionDevelopmentPath=${workspaceFolder}",
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
 			],
-			// https://code.visualstudio.com/docs/editor/tasks#vscode
+			// * https://code.visualstudio.com/docs/editor/tasks#vscode
 			"preLaunchTask": "npm: dev"
 		},
 		{
