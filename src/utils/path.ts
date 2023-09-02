@@ -1,11 +1,13 @@
 import type { ExtensionContext, WorkspaceFolder } from 'vscode';
 import { workspace, window } from 'vscode';
 import { createHash } from 'crypto';
-import { join, normalize, sep } from 'path';
+import { join, normalize, sep, relative, isAbsolute } from 'path';
 import { existsSync } from 'fs';
 import range from 'lodash/range';
+import isEmpty from 'lodash/isEmpty';
 import type { XTextEditor } from 'types/index';
 import { generatDirPathIfNone, saveJsonFileSync } from 'utils/fs';
+import { thorwNewError } from 'utils/log';
 import { PROJECT_META_JSON } from 'constants/index';
 
 /*** 获取运行时目录的子目录 */
@@ -57,6 +59,12 @@ export function getPathSameVal(path1: string, path2: string): number {
   }, 0);
 };
 
+/** 判断是否是子路径 */
+export function isSubPath(parentPath: string, mayChildPath: string): boolean {
+  const relativePath = relative(parentPath,  mayChildPath);
+  return !!(relativePath && !relativePath.startsWith('..') && !isAbsolute(relativePath));
+};
+
 /** 检测 workfloder 是否不满足条件
  * 如果满足返回非空值类型
  */
@@ -85,7 +93,13 @@ export function pickWrokspaceFolder(): Thenable<WorkspaceFolder> {
 /** 匹配相似目录，选取相似度最高的目录 */
 export function matchI18nWorkspaceFolder(matchI18nPath: string) {
   const normalizeI18nPath = normalize(matchI18nPath);
-  const workspaceFolders = checkWrokFloders(workspace.workspaceFolders);
+  const workspaceFolders = checkWrokFloders(workspace.workspaceFolders)
+  .filter((folder) => isSubPath(folder.uri.fsPath, normalizeI18nPath));
+
+  if (isEmpty(workspaceFolders)) {
+    thorwNewError('当前工作区区间未扫描国际化', RangeError);
+  };
+
   const workspaceMatchFolder = workspaceFolders
     .map((item => ({ item, normailzePath: normalize(item.uri.fsPath) })))
     .map((item) => ({ ...item, sameVal: getPathSameVal(normalizeI18nPath, item.normailzePath) }))
