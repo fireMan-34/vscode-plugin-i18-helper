@@ -1,7 +1,8 @@
 {
   "name": "i18n-extension",
   "displayName": "i18n-extension",
-  "description": "国际化扩展工具",
+  "icon": "./assets/icons/国际化.png",
+  "description": "国际化扩展工具, 支持 js 、ts、 json 键值对解析 (注意解析类型的时候也会当作键值对), 支持复制国际化键值对文本转国际化代码，目前支持单一一种形式。",
   "author": {
     "name": "firman-34",
     "email": "524915379@qq.com",
@@ -11,6 +12,7 @@
     "email": "524915379@qq.com",
     "url": "https://github.com/fireMan-34/vscode-plugin-i18n-helper/issues"
   },
+  "publisher": "fireMan-34",
   "version": "0.1.32",
   "engines": {
     "vscode": "^1.81.0"
@@ -23,6 +25,18 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": [
+      {
+        "title": "国际化扩展插件配置",
+        "properties": {
+          "i18n-extension.isOpenCheckDir": {
+            "type": "boolean",
+            "default": true,
+            "description": "是否启动之后检测现有国际化是否失效"
+          }
+        }
+      }
+    ],
     "commands": [
       {
         "command": "i18n.parseKeyAndValue2FormatMessage",
@@ -40,11 +54,42 @@
         "icon": "./assets/icons/扫描.svg"
       }
     ],
+    "keybindings": [
+      {
+        "command": "i18n.parseKeyAndValue2FormatMessage",
+        "key": "ctrl+i",
+        "win": "ctrl+i",
+        "mac": "cmd+i",
+        "when": "editorTextFocus"
+      }
+    ],
     "menus": {
       "explorer/context": [
         {
           "command": "i18n.scanI18File",
           "when": "explorerResourceIsFolder && resourceFilename in ext.supportedFolders"
+        }
+      ]
+    },
+    "snippets": [],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "i18n-map-views",
+          "title": "国际化",
+          "icon": "./assets/icons/国际化视图.svg"
+        }
+      ]
+    },
+    "views": {
+      "i1n-map-views": [
+        {
+          "id": "i18n-map-view",
+          "name": "国际化文本"
+        },
+        {
+          "id": "i18n-map-config",
+          "name": "国际化配置"
         }
       ]
     }
@@ -97,5 +142,9 @@
     "react-dom": "^18.2.0",
     "rxjs": "^7.8.1"
   },
-  "repository": {}
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fireMan-34/vscode-plugin-i18n-helper"
+  },
+  "license": "Apache-2.0"
 }
