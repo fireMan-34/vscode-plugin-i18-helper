@@ -14,7 +14,7 @@ import { parseKeyAndValTexts2Object, getCharsI18nType } from 'utils/code';
 import { generateRuntimeProjectI18nHashPath, } from 'utils/path';
 import { PromiseAllMap } from 'utils/asy';
 import { writeI18nConfigJson } from 'utils/conf';
-import { DEFAULT_I18N_META } from 'commands/constant';
+import { CMD_KEY, DEFAULT_I18N_META } from 'constants/index';
 import {
   ICommondItem,
   I18nType,
@@ -145,8 +145,6 @@ class I18FileItemClass implements I18FileItem {
   };
 }
 
-/** 扫描国际化文件 */
-const SCAN_I18_FILE = 'i18n.scanI18File';
 
 /** 扫描国际化文件
  * 命令扫描符合文件目录 生成可使用的数据结构供 国际化插件使用
@@ -195,14 +193,8 @@ const excuter = (context: ExtensionContext) => {
  * @see https://code.visualstudio.com/api/references/activation-events
  */
 const item: ICommondItem = {
-  cmd: SCAN_I18_FILE,
+  cmd: CMD_KEY.SCAN_I18_FILE,
   cmdExcuter: scanI18File,
   excuter,
 };
 export default item;
-
-export {
-  SCAN_I18_FILE,
-  scanI18File,
-  excuter,
-};

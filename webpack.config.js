@@ -15,6 +15,7 @@ const webpackConfig = {
       commands: join(__dirname, './src/commands'),
       utils: join(__dirname, './src/utils'),
       types: join(__dirname, './src/types'),
+      constants: join(__dirname, './src/constants'),
     },
     extensions: [ ".ts", '.js' , ".json" ]
   },

@@ -1,9 +1,7 @@
 import vscode from "vscode";
 import { getWebViewContent } from 'utils/code';
 import type { ICommondItem } from 'types/index';
-
-/** 打开界面视图指令 */
-const OPEN_WEB_VIEW_CMD = 'i18n.openWebView';
+import { CMD_KEY } from 'constants/index';
 
 /** 打开页面 */
 const openWebView = (context: vscode.ExtensionContext) => {
@@ -16,12 +14,7 @@ const openWebView = (context: vscode.ExtensionContext) => {
 
 /** 打开界面视图指令 */
 const item: ICommondItem = {
-  cmd: OPEN_WEB_VIEW_CMD,
+  cmd: CMD_KEY.OPEN_WEB_VIEW_CMD,
   cmdExcuter: openWebView,
 };
 export default item;
-
-export {
-  OPEN_WEB_VIEW_CMD,
-  openWebView,
-};

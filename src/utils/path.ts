@@ -6,7 +6,7 @@ import { existsSync } from 'fs';
 import range from 'lodash/range';
 import type { XTextEditor } from 'types/index';
 import { generatDirPathIfNone, saveJsonFileSync } from 'utils/fs';
-import { PROJECT_META_JSON } from 'commands/constant';
+import { PROJECT_META_JSON } from 'constants/index';
 
 /*** 获取运行时目录的子目录 */
 export const getRuntimePath = (context: ExtensionContext | { extension: { extensionPath: string } }, ...paths: string[]) => {
