@@ -1,7 +1,7 @@
-import { 
+import {
   workspace,
   window,
-  commands, 
+  commands,
   type ExtensionContext,
 } from "vscode";
 import { join } from "path";
@@ -9,10 +9,11 @@ import { existsSync } from 'fs';
 import { readFile, } from "fs/promises";
 import countBy from 'lodash/countBy';
 import cloneDeep from 'lodash/cloneDeep';
-import { readDeepDir, saveJsonFile, readJsonFile } from 'utils/fs';
+import { readDeepDir, saveJsonFile, } from 'utils/fs';
 import { parseKeyAndValTexts2Object, getCharsI18nType } from 'utils/code';
-import { generateRuntimeProjectI18nHashPath, getRunTimeConfigPath, getWrokspaceFloder } from 'utils/path';
+import { generateRuntimeProjectI18nHashPath, } from 'utils/path';
 import { PromiseAllMap } from 'utils/asy';
+import { writeI18nConfigJson } from 'utils/conf';
 import { DEFAULT_I18N_META } from 'commands/constant';
 import {
   ICommondItem,
@@ -21,8 +22,6 @@ import {
   I18nMetaJsonSaveContentItem,
   I18nMetaJson,
   I18FileItem,
-  i18nDirItem,
-  ProjectMetaJson,
 } from 'types/index';
 
 /**
@@ -35,8 +34,10 @@ class I18FileItemClass implements I18FileItem {
 
   /** 初始化类对象 */
   static async init(context: ExtensionContext, editor: XTextEditor) {
+    this.Context = context;
+    this.Editor = editor;
+
     this.rootPath = await generateRuntimeProjectI18nHashPath(context, editor);
-    this.excutePath = editor.fsPath;
     this.saveJsonPath = join(this.rootPath, 'meta.json');
 
     const hasMetaJson = existsSync(this.saveJsonPath);
@@ -47,7 +48,6 @@ class I18FileItemClass implements I18FileItem {
       // this.i18nMetaJson = await readJsonFile<I18nMetaJson>(this.saveJsonPath);
       this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
     }
-    this.extensionMetaJsonPath = getRunTimeConfigPath(context);
   }
 
   /** 将国际化内容写入路径中 */
@@ -60,45 +60,24 @@ class I18FileItemClass implements I18FileItem {
             content: item.parseKeyAndVals,
             path: Promise.resolve(item.path),
           })
-            .then((val) => ({ ...val, updateTime: Date.now().toLocaleString() }) as I18nMetaJsonSaveContentItem))
+            .then((val) => ({ ...val, updateTime: new Date().toDateString() }) as I18nMetaJsonSaveContentItem))
     );
     i18nItems.forEach(item => this.i18nMetaJson.saveContent[item.i18nType].push(item));
     await saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
+    await writeI18nConfigJson(this.Context, this.Editor, this.saveJsonPath);
+
     this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
-    
-    await this.writeI18nConfigJson();
-  }
-
-  /** 写入国际化全局配置 */
-  static async writeI18nConfigJson() {
-    const projectMetaJson = await readJsonFile<ProjectMetaJson>(this.extensionMetaJsonPath);
-    const projectPath = await getWrokspaceFloder();
-    const item: i18nDirItem = {
-      originalPath: this.excutePath,
-      targetPath: this.saveJsonPath,
-      projectPath: projectPath.uri.fsPath,
-    };
-
-    if (!projectMetaJson.i18nDirList.find(dirItem => 
-      dirItem.originalPath === item.originalPath
-     && dirItem.targetPath === item.targetPath 
-      )) {
-        projectMetaJson.i18nDirList.push(item);
-
-        await saveJsonFile(this.extensionMetaJsonPath, projectMetaJson);
-    }
   }
 
   /** 项目根路径 */
   static rootPath: string;
-  /** 命令执行路径 */
-  static excutePath: string;
   /** 保存信息路径 */
   static saveJsonPath: string;
   /** 根 metaJson */
   static i18nMetaJson: I18nMetaJson;
-  /** 项目根配置 */
-  static extensionMetaJsonPath: string;
+
+  static Context: ExtensionContext;
+  static Editor: XTextEditor;
 
   cacheMap: Partial<I18FileItem>
 
@@ -123,7 +102,7 @@ class I18FileItemClass implements I18FileItem {
           .reduce((maxKeyAndVal, curKeyAndVal) => curKeyAndVal[1] > maxKeyAndVal[1] ? curKeyAndVal : maxKeyAndVal, [`${I18nType.UN_KNOWN}`, 0])
         [0] as I18nType;
         return i18nType;
-      })
+      });
   }
 
   get keyAndVals(): Promise<string[]> {
@@ -178,7 +157,7 @@ const SCAN_I18_FILE = 'i18n.scanI18File';
  * * 4. 国际化文本分类 - [x]
  * * 5. 存储国际化文本 - [x]
  * * 6. 存储全局初始化文件配置 - [x]
- * * 7. 全局任务通信 （Rxjs） - [ ]
+ * * 7. 全局任务通信 （Rxjs） - [x]
  * * 8. 智能提示 - []
  * * 9. 完善读取缓存更新逻辑 - [ ]
  * * 10.多项目管理 - [ ]
