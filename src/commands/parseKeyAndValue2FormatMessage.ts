@@ -1,7 +1,7 @@
 import vscode from 'vscode';
 import { rangeFix } from 'utils/arr';
 import { parseKeyAndValTexts2Object } from 'utils/code';
-import { emptyWarningHandler } from 'utils/err';
+import { emptyWarningHandler } from 'utils/log';
 import type { ICommondItem } from 'types/index';
 
 /** 解析国际化 key value 指令 */
@@ -35,7 +35,6 @@ function parseKeyAndValue2FormatMessage() {
   }
   if (!editor) {
     emptyWarningHandler('活跃编辑器对象');
-    return;
   };
 
   const keyAndValLines = getKeyAndValLines();

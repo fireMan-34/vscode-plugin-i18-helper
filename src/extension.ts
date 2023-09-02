@@ -4,6 +4,7 @@ import vscode from 'vscode';
 import formatMessageCmd from 'commands/parseKeyAndValue2FormatMessage';
 import openWebViewCmd from 'commands/openWebView';
 import scanI18FileCmd from 'commands/scanI18File';
+import { LoggerSubscription } from 'utils/log';
 import type { XTextEditor } from 'types/index';
 
 
@@ -37,4 +38,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() { 
+	LoggerSubscription.unsubscribe();
+}
