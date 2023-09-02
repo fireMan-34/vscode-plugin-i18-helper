@@ -67,7 +67,7 @@
       "explorer/context": [
         {
           "command": "i18n.scanI18File",
-          "group": "1_modification",
+          "group": "7_modification",
           "when": "explorerResourceIsFolder && resourceFilename in ext.supportedFolders"
         }
       ]
