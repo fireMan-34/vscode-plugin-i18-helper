@@ -1,7 +1,7 @@
 import type { ExtensionContext, WorkspaceFolder } from 'vscode';
 import { workspace, window } from 'vscode';
 import { createHash } from 'crypto';
-import { join, normalize, sep, relative, isAbsolute } from 'path';
+import { join, normalize, sep, relative, isAbsolute, } from 'path';
 import { existsSync } from 'fs';
 import range from 'lodash/range';
 import isEmpty from 'lodash/isEmpty';
@@ -63,6 +63,11 @@ export function getPathSameVal(path1: string, path2: string): number {
 export function isSubPath(parentPath: string, mayChildPath: string): boolean {
   const relativePath = relative(parentPath,  mayChildPath);
   return !!(relativePath && !relativePath.startsWith('..') && !isAbsolute(relativePath));
+};
+
+/** 判断是否是相同路径 */
+export function isSamePath(path1: string, path2: string): boolean {
+  return normalize(path1) === normalize(path2);
 };
 
 /** 检测 workfloder 是否不满足条件
