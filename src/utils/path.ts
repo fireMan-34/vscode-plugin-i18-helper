@@ -102,7 +102,7 @@ export function matchI18nWorkspaceFolder(matchI18nPath: string) {
   .filter((folder) => isSubPath(folder.uri.fsPath, normalizeI18nPath));
 
   if (isEmpty(workspaceFolders)) {
-    thorwNewError('当前工作区区间未扫描国际化', RangeError);
+    thorwNewError('当前工作区匹配不到此路径', RangeError);
   };
 
   const workspaceMatchFolder = workspaceFolders
