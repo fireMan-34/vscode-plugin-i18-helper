@@ -1,5 +1,4 @@
 import {
-  workspace,
   window,
   commands,
   type ExtensionContext,
