@@ -17,7 +17,8 @@
 			"utils/*": [ "./src/utils/*" ],
 			"commands/*":[ "./src/commands/*" ],
 			"types/*": [ "./src/types/*" ],
-			"constants/*":[ "./src/constants/*"]
+			"constants/*":[ "./src/constants/*"],
+			"providers/*":[ "./src/providers/*" ],
 		},
 		"esModuleInterop": true,
 	},

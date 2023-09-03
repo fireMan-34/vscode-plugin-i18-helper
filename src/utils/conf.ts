@@ -5,7 +5,14 @@ import { readJsonFile, saveJsonFile } from "utils/fs";
 import { getWrokspaceFloder, getRunTimeConfigPath } from "utils/path";
 
 /** 全局发布订阅中心 */
-export const GlobalExtensionSubject= new AsyncSubject<ProjectMetaJson>();
+export const GlobalExtensionSubject = new AsyncSubject<ProjectMetaJson>();
+
+/** 读取国际化全局配置 国际化信息 */
+export async function readConfigJson(context: ExtensionContext) {
+    /** 全局插件 元信息位置 */
+    const extensionMetaJsonPath = await getRunTimeConfigPath(context);
+    return readJsonFile<ProjectMetaJson>(extensionMetaJsonPath);
+};
 
 /** 写入国际化全局配置 国际化信息 */
 export async function writeI18nConfigJson(context: ExtensionContext, excuter: XTextEditor | Uri, saveJsonPath: string) {
@@ -28,8 +35,60 @@ export async function writeI18nConfigJson(context: ExtensionContext, excuter: XT
     )) {
         projectMetaJson.i18nDirList.push(item);
 
-        await saveJsonFile(extensionMetaJsonPath, projectMetaJson);
-
-        GlobalExtensionSubject.next(projectMetaJson);
+        await refreshI18nConfigJson(context,
+            {
+                runTimeConfigPath: extensionMetaJsonPath,
+                refreshType: 'set',
+                projectMeta: projectMetaJson
+            });
     }
 };
+
+interface RefreshI18nConfigJsonOptions {
+    refreshType?: 'read' | 'set',
+    projectMeta?: ProjectMetaJson,
+    runTimeConfigPath?: string,
+    isSave?: boolean
+};
+
+/** 刷新全局国际化配置 */
+export async function refreshI18nConfigJson(context: ExtensionContext, options: RefreshI18nConfigJsonOptions) {
+    try {
+        let {
+            refreshType,
+            projectMeta,
+            runTimeConfigPath = await getRunTimeConfigPath(context),
+            isSave,
+        }: RefreshI18nConfigJsonOptions = {
+            refreshType: 'read',
+            isSave: true,
+            ...options,
+        };
+        let metaJson: ProjectMetaJson;
+
+        const isWrite = projectMeta && refreshType === 'set';
+
+        if (isWrite) {
+            metaJson = projectMeta!;
+        } else {
+            metaJson = await readConfigJson(context);
+        }
+
+        if (isSave) {
+            await saveJsonFile(runTimeConfigPath, metaJson);
+        }
+
+        GlobalExtensionSubject.next(metaJson);
+        return metaJson;
+    } catch (err) {
+        GlobalExtensionSubject.error(err);
+    } finally {
+        console.log('finish refresh');                             
+    };
+};
+
+
+GlobalExtensionSubject.subscribe({
+    next: console.log,
+    error: console.error,
+}); 

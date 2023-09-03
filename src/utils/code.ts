@@ -65,9 +65,15 @@ const getCharsI18nType = (code: string): I18nType => {
 	return I18nType.UN_KNOWN;
 };
 
+/** 匹配正则
+ * @description 键值对后面触发提示
+ */
+const FORMAT_MESSAGE_ID_REGEX = /formatMessage\(\{\s*id\s*\:/;
+
 
 export {
 	parseKeyAndValTexts2Object,
 	getWebViewContent,
 	getCharsI18nType,
+	FORMAT_MESSAGE_ID_REGEX,
 };
