@@ -68,7 +68,7 @@ const getCharsI18nType = (code: string): I18nType => {
 /** 匹配正则
  * @description 键值对后面触发提示
  */
-const FORMAT_MESSAGE_ID_REGEX = /formatMessage\(\{\s*id\s*\:/;
+const FORMAT_MESSAGE_ID_REGEX = /formatMessage\(\{\s*/;
 
 
 export {
