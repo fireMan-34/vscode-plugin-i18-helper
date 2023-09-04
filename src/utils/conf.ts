@@ -1,11 +1,12 @@
 import type { ExtensionContext, Uri } from 'vscode';
-import { AsyncSubject } from 'rxjs/internal/AsyncSubject';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ProjectMetaJson, i18nDirItem, XTextEditor } from "types/index";
 import { readJsonFile, saveJsonFile } from "utils/fs";
 import { getWrokspaceFloder, getRunTimeConfigPath } from "utils/path";
+import { PROJECT_META_JSON } from 'constants/i18n';
 
 /** 全局发布订阅中心 */
-export const GlobalExtensionSubject = new AsyncSubject<ProjectMetaJson>();
+export const GlobalExtensionSubject = new BehaviorSubject<ProjectMetaJson>(PROJECT_META_JSON);
 
 /** 读取国际化全局配置 国际化信息 */
 export async function readConfigJson(context: ExtensionContext) {

@@ -1,6 +1,6 @@
 import type { CompletionItemProvider, ExtensionContext } from 'vscode';
 import { languages, window, CompletionItem, CompletionItemKind } from 'vscode';
-import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
+import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import isEmpty from 'lodash/isEmpty';
 import { GlobalExtensionSubject } from 'utils/conf';
 import { getWrokspaceFloder, isSamePath } from 'utils/path';
@@ -25,10 +25,8 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
         try {
         const line = document.lineAt(position);
         const lineText = line.text;
-        window.showInformationMessage(document.getText());
         if (FORMAT_MESSAGE_ID_REGEX.test(lineText)) {
-            const { i18nDirList } = await lastValueFrom(GlobalExtensionSubject);
-            console.log(i18nDirList); // 执行不到这里
+            const { i18nDirList } = await firstValueFrom(GlobalExtensionSubject);
             const documnetUrl = document.uri.fsPath;
             const currentWorkspaceFolder = await getWrokspaceFloder({
                 multiplySelect: 'matchI18n',
