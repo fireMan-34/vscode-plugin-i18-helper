@@ -1,5 +1,5 @@
 import { window } from "vscode";
-import { AsyncSubject } from 'rxjs/internal/AsyncSubject';
+import { Subject } from 'rxjs/internal/Subject';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 /** 调试等级 */
@@ -15,7 +15,7 @@ interface LoggerObservable {
 }
 
 /** @name 信息输出发布订阅中心 */
-const LoggerSubject = new AsyncSubject<LoggerObservable>();
+const LoggerSubject = new Subject<LoggerObservable>();
 
 const LoggerConsnoleLogSubscription = LoggerSubject.subscribe({
   next(observable) {
