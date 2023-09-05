@@ -80,6 +80,8 @@ const createI18nCompetionItemProvider = (context: ExtensionContext) => {
     context.subscriptions.push(languages.registerCompletionItemProvider([
         { language: 'typescript', scheme: 'file', },
         { language: 'javascript', scheme: 'file', },
+        { language: 'typescriptreact', scheme: 'file', },
+        { language: 'javascriptreact', scheme: 'file', },
     ], I18nCompetionItemProvider, `{`,));
 };
 
