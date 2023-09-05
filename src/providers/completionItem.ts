@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import isEmpty from 'lodash/isEmpty';
 import { GlobalExtensionSubject } from 'utils/conf';
 import { getWrokspaceFloder, isSamePath } from 'utils/path';
-import { FORMAT_MESSAGE_ID_REGEX } from 'utils/code';
+import { FORMAT_MESSAGE_REGEX } from 'utils/code';
 import { thorwNewError } from 'utils/log';
 import { readJsonFile } from 'utils/fs';
 import { I18nMetaJson, I18nType, i18nDirItem } from 'types/index';
@@ -27,7 +27,7 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
         try {
             const line = document.lineAt(position);
             const lineText = line.text;
-            if (FORMAT_MESSAGE_ID_REGEX.test(lineText)) {
+            if (FORMAT_MESSAGE_REGEX.test(lineText)) {
                 const { i18nDirList, mainLanguage } = await firstValueFrom(GlobalExtensionSubject);
                 const documnetUrl = document.uri.fsPath;
                 const currentWorkspaceFolder = await getWrokspaceFloder({

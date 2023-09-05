@@ -1,6 +1,6 @@
 import { equal, } from 'node:assert';
 import { describe, it, } from 'mocha';
-import { getCharsI18nType, FORMAT_MESSAGE_ID_REGEX } from 'utils/code';
+import { getCharsI18nType, FORMAT_MESSAGE_REGEX } from 'utils/code';
 import { I18nType } from 'types/index';
 
 describe('国际化文本检测测试', function () {
@@ -26,10 +26,10 @@ describe('国际化文本检测测试', function () {
 
 describe('代码提示 formatMessage 系列', function () {
   it('测试普通一行输入 匹配', function () {
-    equal(FORMAT_MESSAGE_ID_REGEX.test(`intl.formatMessage({`), true);
+    equal(FORMAT_MESSAGE_REGEX.test(`intl.formatMessage({`), true);
   });
 
   it('普通测试一行 匹配相对多', function () {
-    equal(FORMAT_MESSAGE_ID_REGEX.test(`formatMessage({  }`), true);
+    equal(FORMAT_MESSAGE_REGEX.test(`formatMessage({  }`), true);
   });
 });
