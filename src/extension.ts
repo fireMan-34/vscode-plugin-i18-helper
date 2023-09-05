@@ -5,7 +5,7 @@ import formatMessageCmd from 'commands/parseKeyAndValue2FormatMessage';
 import openWebViewCmd from 'commands/openWebView';
 import scanI18FileCmd from 'commands/scanI18File';
 import createI18nCompetionItemProvider from 'providers/completionItem';
-import { LoggerSubscription } from 'utils/log';
+import { createTotalRxSubscriptionDisable } from 'utils/disable';
 import { refreshI18nConfigJson } from 'utils/conf';
 import type { XTextEditor } from 'types/index';
 
@@ -41,9 +41,10 @@ export function activate(context: vscode.ExtensionContext) {
 	createI18nCompetionItemProvider(context);
 
 	refreshI18nConfigJson(context, { refreshType: 'read', isSave: false });
+
+	createTotalRxSubscriptionDisable(context);
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {
-	LoggerSubscription.unsubscribe();
 }

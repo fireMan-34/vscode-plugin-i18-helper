@@ -1,4 +1,4 @@
-import type { ExtensionContext, Uri } from 'vscode';
+import type { ExtensionContext, Uri, Disposable } from 'vscode';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ProjectMetaJson, i18nDirItem, XTextEditor } from "types/index";
 import { readJsonFile, saveJsonFile } from "utils/fs";
@@ -89,7 +89,7 @@ export async function refreshI18nConfigJson(context: ExtensionContext, options: 
 };
 
 
-GlobalExtensionSubject.subscribe({
+export const GlobalExtensionSubscription =  GlobalExtensionSubject.subscribe({
     next: console.log,
     error: console.error,
 }); 
