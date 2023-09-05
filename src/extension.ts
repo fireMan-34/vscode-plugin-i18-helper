@@ -4,7 +4,7 @@ import vscode from 'vscode';
 import formatMessageCmd from 'commands/parseKeyAndValue2FormatMessage';
 import openWebViewCmd from 'commands/openWebView';
 import scanI18FileCmd from 'commands/scanI18File';
-import createI18nCompetionItemProvider from 'providers/completionItem';
+import { createI18nProvider } from 'providers/index';
 import { createTotalRxSubscriptionDisable } from 'utils/disable';
 import { refreshContextTask } from 'utils/task';
 import type { XTextEditor } from 'types/index';
@@ -38,7 +38,8 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(...disposables);
 	commands.filter(cmd => cmd.excuter).forEach(cmd => cmd.excuter!(context));
 
-	createI18nCompetionItemProvider(context);
+	createI18nProvider(context);
+	
 	createTotalRxSubscriptionDisable(context);
 	
 	refreshContextTask(context);

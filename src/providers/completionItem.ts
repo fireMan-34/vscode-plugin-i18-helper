@@ -1,6 +1,6 @@
 import { relative } from 'path';
 import type { CompletionItemProvider, ExtensionContext } from 'vscode';
-import { languages, window, CompletionItem, CompletionItemKind, CompletionItemLabel } from 'vscode';
+import { languages, CompletionItem } from 'vscode';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import isEmpty from 'lodash/isEmpty';
 import { GlobalExtensionSubject } from 'utils/conf';
@@ -9,6 +9,7 @@ import { FORMAT_MESSAGE_ID_REGEX } from 'utils/code';
 import { thorwNewError } from 'utils/log';
 import { readJsonFile } from 'utils/fs';
 import { I18nMetaJson, I18nType, i18nDirItem } from 'types/index';
+import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/provider';
 
 
 
@@ -40,13 +41,13 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                 }
 
                 const metaJsons = await Promise.all(matchI18nDirList
-                    .map((item => 
+                    .map((item =>
                         readJsonFile<I18nMetaJson>(item.targetPath)
-                        .then((metaJson: I18nMetaJson) => ({ ...metaJson, ...item }))
-                        )));
+                            .then((metaJson: I18nMetaJson) => ({ ...metaJson, ...item }))
+                    )));
                 const i18nContents = metaJsons.flatMap(getI18nList);
 
-                function getI18nList(metaJson: I18nMetaJson & i18nDirItem ) {
+                function getI18nList(metaJson: I18nMetaJson & i18nDirItem) {
                     const i18nType = I18nType[mainLanguage];
                     return metaJson
                         .saveContent[i18nType]
@@ -76,13 +77,6 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
 };
 
 /** 创建国际化智能提示 */
-const createI18nCompetionItemProvider = (context: ExtensionContext) => {
-    context.subscriptions.push(languages.registerCompletionItemProvider([
-        { language: 'typescript', scheme: 'file', },
-        { language: 'javascript', scheme: 'file', },
-        { language: 'typescriptreact', scheme: 'file', },
-        { language: 'javascriptreact', scheme: 'file', },
-    ], I18nCompetionItemProvider, `{`,));
+export const createI18nCompetionItemProvider = (context: ExtensionContext) => {
+    return languages.registerCompletionItemProvider(SUPPORT_DOCUMENT_SELECTOR, I18nCompetionItemProvider, `{`,);
 };
-
-export default createI18nCompetionItemProvider;
