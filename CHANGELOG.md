@@ -93,4 +93,6 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
   - 代码悬浮问题
   - 还有视图交互性不足问题
   - 个人学习其它优秀作者和英文阅读能力不足的焦虑
-- 接下来的版本会以 0.2.x 开头，继续优化我的插件
+- ~~接下来的版本会以 0.2.x 开头，继续优化我的插件~~
+
+- 暂时还是 0.1.xx 吧
