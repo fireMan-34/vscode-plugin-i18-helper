@@ -1,6 +1,6 @@
 import { equal, } from 'node:assert';
 import { describe, it, } from 'mocha';
-import { getCharsI18nType, FORMAT_MESSAGE_REGEX } from 'utils/code';
+import { getCharsI18nType, FORMAT_MESSAGE_REGEX, FORMAT_MESSAGE_ID_REGEX } from 'utils/code';
 import { I18nType } from 'types/index';
 
 describe('国际化文本检测测试', function () {
@@ -31,5 +31,34 @@ describe('代码提示 formatMessage 系列', function () {
 
   it('普通测试一行 匹配相对多', function () {
     equal(FORMAT_MESSAGE_REGEX.test(`formatMessage({  }`), true);
+  });
+});
+
+describe('代码自动跳转', function() {
+  it('测试识别普通键值对', function() {
+    equal(FORMAT_MESSAGE_ID_REGEX.test(`id: '1234'`), true);
+  });
+  it('测试识别对象键值对', function() {
+    equal(FORMAT_MESSAGE_ID_REGEX.test(`{id: '1234'}`), true);
+  });
+  it('测试识别对象双引号键值对', function() {
+    equal(FORMAT_MESSAGE_ID_REGEX.test(`{"id": "1234"}`), true);
+  });
+  it('测试识别函数调用对象双引号键值对', function() {
+    equal(FORMAT_MESSAGE_ID_REGEX.test(`({"id": "1234"}),`), true);
+  });
+
+  
+  it('测试提取普通键值对', function() {
+    equal(`id: '1234'`.match(FORMAT_MESSAGE_ID_REGEX)?.[1], '1234');
+  });
+  it('测试提取对象键值对', function() {
+    equal(`{id: '1234'}`.match(FORMAT_MESSAGE_ID_REGEX)?.[1], '1234');
+  });
+  it('测试提取对象双引号键值对', function() {
+    equal(`{"id": "1234"}`.match(FORMAT_MESSAGE_ID_REGEX)?.[1], '1234');
+  });
+  it('测试提取函数调用对象双引号键值对', function() {
+    equal(`({"id": "1234"}),`.match(FORMAT_MESSAGE_ID_REGEX)?.[1], '1234');
   });
 });
