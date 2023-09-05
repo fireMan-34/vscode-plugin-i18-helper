@@ -40,6 +40,11 @@
             "enumDescriptions": [ "中文简体", "中文繁体", "英文", "韩文", "日文", "未知" ],
             "default": "ZH_CN",
             "description": "配置当前识别语言"
+          },
+          "i18n-extension.scanFolders": {
+            "type":"array",
+            "default": [ "locales", "locale" ],
+            "description": "支持扫描的国际化目录匹配"
           }
         }
       }

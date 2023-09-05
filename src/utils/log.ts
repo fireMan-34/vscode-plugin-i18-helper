@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/internal/Subject';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 /** 调试等级 */
-enum LoggerLevel {
+export enum LoggerLevel {
   info,
   warn,
   err,

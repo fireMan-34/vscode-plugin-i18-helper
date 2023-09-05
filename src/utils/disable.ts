@@ -1,7 +1,8 @@
 import { ExtensionContext } from 'vscode';
 import { createDisableFromSubscription } from 'utils/rxHelper';
 import { LoggerSubscription } from 'utils/log';
-import { GlobalExtensionSubscription, createConfgiChangeSubscript } from 'utils/conf';
+import { GlobalExtensionSubscription, } from 'utils/conf';
+import { createConfgiChangeSubscript } from 'utils/task';
 
 /** 资源释放处理 */
 export const createTotalRxSubscriptionDisable = (context: ExtensionContext) => {

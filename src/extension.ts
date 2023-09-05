@@ -6,7 +6,7 @@ import openWebViewCmd from 'commands/openWebView';
 import scanI18FileCmd from 'commands/scanI18File';
 import createI18nCompetionItemProvider from 'providers/completionItem';
 import { createTotalRxSubscriptionDisable } from 'utils/disable';
-import { refreshI18nConfigJson } from 'utils/conf';
+import { refreshContextTask } from 'utils/task';
 import type { XTextEditor } from 'types/index';
 
 
@@ -39,10 +39,9 @@ export function activate(context: vscode.ExtensionContext) {
 	commands.filter(cmd => cmd.excuter).forEach(cmd => cmd.excuter!(context));
 
 	createI18nCompetionItemProvider(context);
-
-	refreshI18nConfigJson(context, { refreshType: 'read', isSave: false });
-
 	createTotalRxSubscriptionDisable(context);
+	
+	refreshContextTask(context);
 }
 
 // This method is called when your extension is deactivated

@@ -56,5 +56,16 @@ export const PROJECT_META_JSON: ProjectMetaJson = {
   i18nDirList: [],
 };
 
+/** vscode 配置 Map */
+export const VSCODE_KEYS_MAP = {
+  isOpenCheckDir: 'isOpenCheckDir',
+  mainLanguage: 'mainLanguage',
+  scanFolders: 'scanFolders',
+};
+
 /** vscode 配置 */
-export  const VSCODE_KEYS = ['isOpenCheckDir', 'mainLanguage'];
+export const VSCODE_KEYS = [
+  VSCODE_KEYS_MAP.isOpenCheckDir, 
+  VSCODE_KEYS_MAP.mainLanguage, 
+  VSCODE_KEYS_MAP.scanFolders,
+];

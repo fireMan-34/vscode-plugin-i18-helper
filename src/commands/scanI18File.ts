@@ -1,6 +1,7 @@
 import {
   window,
   commands,
+  workspace,
   type ExtensionContext,
 } from "vscode";
 import { join } from "path";
@@ -13,7 +14,7 @@ import { parseKeyAndValTexts2Object, getCharsI18nType } from 'utils/code';
 import { generateRuntimeProjectI18nHashPath, } from 'utils/path';
 import { PromiseAllMap } from 'utils/asy';
 import { writeI18nConfigJson } from 'utils/conf';
-import { CMD_KEY, DEFAULT_I18N_META } from 'constants/index';
+import { CMD_KEY, DEFAULT_I18N_META, EXTENSION_NAME, VSCODE_KEYS_MAP } from 'constants/index';
 import {
   ICommondItem,
   I18nType,
@@ -184,7 +185,8 @@ const scanI18File: ICommondItem['cmdExcuter'] = async (context, eidtor) => {
  */
 const excuter = (context: ExtensionContext) => {
   window.showInformationMessage('扫描文件已执行');
-  commands.executeCommand('setContext', 'ext.supportedFolders', ['dist', 'out', 'locales']);
+  const scanFolders = workspace.getConfiguration(EXTENSION_NAME).get(VSCODE_KEYS_MAP.scanFolders);
+  commands.executeCommand('setContext', 'ext.supportedFolders', scanFolders);
 };
 
 /** 打开界面视图指令

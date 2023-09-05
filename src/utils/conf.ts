@@ -99,15 +99,3 @@ export const GlobalExtensionSubscription = GlobalExtensionSubject.subscribe({
     next: console.log,
     error: console.error,
 });
-
-/** 订阅 vscode 插件配置变更
- * @see https://code.visualstudio.com/api/references/contribution-points#contributes.configuration
- * @see 
- */
-export const createConfgiChangeSubscript = (context: ExtensionContext) => {
-    return workspace.onDidChangeConfiguration((ev) => {
-        const isNeedRefresh = ev.affectsConfiguration(EXTENSION_NAME);
-        if (!isNeedRefresh) { return; };
-        refreshI18nConfigJson(context, { refreshType: 'read', isSave: true, });
-    });
-};
