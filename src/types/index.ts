@@ -67,7 +67,6 @@ export interface I18nMetaJsonSaveContentItem {
 export interface I18nMetaJson {
   /** 默认选项 */
   default: {
-    lange: I18nType,
   },
   /** 保存内容 */
   saveContent: Record<I18nType, I18nMetaJsonSaveContentItem[]>
@@ -100,6 +99,8 @@ export interface i18nDirItem {
 
 /** 项目配置信息 json */
 export interface ProjectMetaJson {
+  isOpenCheckDir: boolean,
+  mainLanguage: keyof typeof I18nType ,
   i18nDirList: i18nDirItem[],
 }
 

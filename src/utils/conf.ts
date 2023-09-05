@@ -1,9 +1,10 @@
-import type { ExtensionContext, Uri, Disposable } from 'vscode';
+import { ExtensionContext, Uri, workspace } from 'vscode';
+import pick from 'lodash/pick';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ProjectMetaJson, i18nDirItem, XTextEditor } from "types/index";
 import { readJsonFile, saveJsonFile } from "utils/fs";
 import { getWrokspaceFloder, getRunTimeConfigPath } from "utils/path";
-import { PROJECT_META_JSON } from 'constants/i18n';
+import { PROJECT_META_JSON, EXTENSION_NAME,  VSCODE_KEYS } from 'constants/index';
 
 /** 全局发布订阅中心 */
 export const GlobalExtensionSubject = new BehaviorSubject<ProjectMetaJson>(PROJECT_META_JSON);
@@ -12,7 +13,12 @@ export const GlobalExtensionSubject = new BehaviorSubject<ProjectMetaJson>(PROJE
 export async function readConfigJson(context: ExtensionContext) {
     /** 全局插件 元信息位置 */
     const extensionMetaJsonPath = await getRunTimeConfigPath(context);
-    return readJsonFile<ProjectMetaJson>(extensionMetaJsonPath);
+    const extendMetaJson = await readJsonFile<ProjectMetaJson>(extensionMetaJsonPath);
+    const refreshReadConfig = {
+        ...extendMetaJson,
+        ...pick(workspace.getConfiguration(EXTENSION_NAME), VSCODE_KEYS),
+    };
+    return refreshReadConfig;
 };
 
 /** 写入国际化全局配置 国际化信息 */
@@ -84,12 +90,24 @@ export async function refreshI18nConfigJson(context: ExtensionContext, options: 
     } catch (err) {
         GlobalExtensionSubject.error(err);
     } finally {
-        console.log('finish refresh');                             
+        console.log('finish refresh');
     };
 };
 
 
-export const GlobalExtensionSubscription =  GlobalExtensionSubject.subscribe({
+export const GlobalExtensionSubscription = GlobalExtensionSubject.subscribe({
     next: console.log,
     error: console.error,
-}); 
+});
+
+/** 订阅 vscode 插件配置变更
+ * @see https://code.visualstudio.com/api/references/contribution-points#contributes.configuration
+ * @see 
+ */
+export const createConfgiChangeSubscript = (context: ExtensionContext) => {
+    return workspace.onDidChangeConfiguration((ev) => {
+        const isNeedRefresh = ev.affectsConfiguration(EXTENSION_NAME);
+        if (!isNeedRefresh) { return; };
+        refreshI18nConfigJson(context, { refreshType: 'read', isSave: true, });
+    });
+};

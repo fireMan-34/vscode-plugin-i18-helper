@@ -38,7 +38,6 @@ export const I18N_DESCRIPTION_MAP: I18nDescriptionMap = {
 /** 默认国际化保存文本 meta 类型 */
 export const DEFAULT_I18N_META: I18nMetaJson = {
   default: {
-    lange: I18nType.ZH_HK,
   },
   saveContent: {
     [I18nType.EN_US]: [],
@@ -52,5 +51,10 @@ export const DEFAULT_I18N_META: I18nMetaJson = {
 
 /** 默认国际化文件配置 */
 export const PROJECT_META_JSON: ProjectMetaJson = {
+  isOpenCheckDir: true,
+  mainLanguage: I18nType[I18nType.ZH_CN] as keyof typeof I18nType,
   i18nDirList: [],
 };
+
+/** vscode 配置 */
+export  const VSCODE_KEYS = ['isOpenCheckDir', 'mainLanguage'];

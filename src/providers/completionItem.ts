@@ -8,7 +8,7 @@ import { getWrokspaceFloder, isSamePath } from 'utils/path';
 import { FORMAT_MESSAGE_ID_REGEX } from 'utils/code';
 import { thorwNewError } from 'utils/log';
 import { readJsonFile } from 'utils/fs';
-import { I18nMetaJson, i18nDirItem } from 'types/index';
+import { I18nMetaJson, I18nType, i18nDirItem } from 'types/index';
 
 
 
@@ -27,7 +27,7 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
             const line = document.lineAt(position);
             const lineText = line.text;
             if (FORMAT_MESSAGE_ID_REGEX.test(lineText)) {
-                const { i18nDirList } = await firstValueFrom(GlobalExtensionSubject);
+                const { i18nDirList, mainLanguage } = await firstValueFrom(GlobalExtensionSubject);
                 const documnetUrl = document.uri.fsPath;
                 const currentWorkspaceFolder = await getWrokspaceFloder({
                     multiplySelect: 'matchI18n',
@@ -47,7 +47,7 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                 const i18nContents = metaJsons.flatMap(getI18nList);
 
                 function getI18nList(metaJson: I18nMetaJson & i18nDirItem ) {
-                    const i18nType = metaJson.default.lange;
+                    const i18nType = I18nType[mainLanguage];
                     return metaJson
                         .saveContent[i18nType]
                         .flatMap(i18nItem =>

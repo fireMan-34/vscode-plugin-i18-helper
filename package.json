@@ -32,7 +32,14 @@
           "i18n-extension.isOpenCheckDir": {
             "type": "boolean",
             "default": true,
-            "description": "是否启动之后检测现有国际化是否失效"
+            "description": "是否启动之后检测现有国际化项目是否失效，失效则移除"
+          },
+          "i18n-extension.mainLanguage": {
+            "type":"string",
+            "enum": [ "ZH_CN", "ZH_HK", "EN_US", "KO_KR", "JA_JP", "UN_KNOWN" ],
+            "enumDescriptions": [ "中文简体", "中文繁体", "英文", "韩文", "日文", "未知" ],
+            "default": "ZH_CN",
+            "description": "配置当前识别语言"
           }
         }
       }
