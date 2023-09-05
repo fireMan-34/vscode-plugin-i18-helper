@@ -70,10 +70,13 @@ const getCharsI18nType = (code: string): I18nType => {
  */
 const FORMAT_MESSAGE_REGEX = /formatMessage\(\{\s*/;
 
+const FORMAT_MESSAGE_ID_REGEX = /["']?id["']?\s*:\s*["']([^"']*)?["']/;
+
 
 export {
 	parseKeyAndValTexts2Object,
 	getWebViewContent,
 	getCharsI18nType,
 	FORMAT_MESSAGE_REGEX,
+	FORMAT_MESSAGE_ID_REGEX,
 };
