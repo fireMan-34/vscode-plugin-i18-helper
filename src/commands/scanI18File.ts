@@ -159,7 +159,7 @@ class I18FileItemClass implements I18FileItem {
  * * 9. 完善读取缓存更新逻辑 - [ ]
  * * 10.多项目管理 - [ ]
  * * 11.资源视图管理 - [ ]
- * * 12. vscode 配置支持 - [ ] 
+ * * 12. vscode 配置支持 - [x] 
  */
 const scanI18File: ICommondItem['cmdExcuter'] = async (context, eidtor) => {
   const dirPath = eidtor.fsPath;
@@ -180,21 +180,11 @@ const scanI18File: ICommondItem['cmdExcuter'] = async (context, eidtor) => {
     console.error(err);
   }
 };
-/** 注册扫描文件上下文
- * @see https://code.visualstudio.com/api/references/when-clause-contexts
- */
-const excuter = (context: ExtensionContext) => {
-  window.showInformationMessage('扫描文件已执行');
-  const scanFolders = workspace.getConfiguration(EXTENSION_NAME).get(VSCODE_KEYS_MAP.scanFolders);
-  commands.executeCommand('setContext', 'ext.supportedFolders', scanFolders);
-};
-
 /** 打开界面视图指令
  * @see https://code.visualstudio.com/api/references/activation-events
  */
 const item: ICommondItem = {
   cmd: CMD_KEY.SCAN_I18_FILE,
   cmdExcuter: scanI18File,
-  excuter,
 };
 export default item;

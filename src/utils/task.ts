@@ -8,7 +8,9 @@ export const refreshScan18FileTaskContext = (context: ExtensionContext) => {
   commands.executeCommand('setContext', 'ext.supportedFolders', scanFolders);
 };
 
-/** 刷新配置上下文 */
+/** 刷新配置上下文
+ * @see https://code.visualstudio.com/api/references/when-clause-contexts
+ */
 export const refreshContextTask = (context: ExtensionContext) => {
   refreshI18nConfigJson(context, { refreshType: 'read', isSave: true, });
   refreshScan18FileTaskContext(context);
