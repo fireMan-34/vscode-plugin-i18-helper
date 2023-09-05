@@ -1,5 +1,5 @@
 import type { ExtensionContext, WorkspaceFolder } from 'vscode';
-import { workspace, window } from 'vscode';
+import { workspace, window, Uri } from 'vscode';
 import { createHash } from 'crypto';
 import { join, normalize, sep, relative, isAbsolute, } from 'path';
 import { existsSync } from 'fs';
@@ -114,9 +114,11 @@ export function matchI18nWorkspaceFolder(matchI18nPath: string) {
 
 interface GetWrokspaceFloderOptions {
   /** 用户选择模式 , 首个模式  */
-  multiplySelect?: 'pick' | 'default' | 'matchI18n',
+  multiplySelect?: 'pick' | 'default' | 'matchI18n' | 'matchFile',
   /** 需要匹配的路径国际化路径 */
   matchI18nPath?: string,
+  /** match File 模式需要的资源定位 */
+  matchPath?: Uri | string,
 }
 
 /** 获取激活的 workfloder
@@ -124,7 +126,7 @@ interface GetWrokspaceFloderOptions {
  */
 export async function getWrokspaceFloder(options?: GetWrokspaceFloderOptions): Promise<WorkspaceFolder> {
 
-  const { multiplySelect, matchI18nPath } = {
+  const { multiplySelect, matchI18nPath, matchPath } = {
     multiplySelect: 'pick',
     ...options,
   } as GetWrokspaceFloderOptions;
@@ -139,6 +141,15 @@ export async function getWrokspaceFloder(options?: GetWrokspaceFloderOptions): P
   const isUseMatchI18n = multiplySelect === 'matchI18n' && matchI18nPath;
   if (isUseMatchI18n) {
     return matchI18nWorkspaceFolder(matchI18nPath);
+  }
+
+  const isMatchFile = multiplySelect === 'matchFile' && matchPath;
+  if (isMatchFile) {
+    const matchUri = matchPath instanceof Uri ? matchPath : Uri.file(matchPath);
+    const workspaceFolder =  workspace.getWorkspaceFolder(matchUri);
+    if (workspaceFolder) {
+      return workspaceFolder;
+    };
   }
 
   return pickWrokspaceFolder();
