@@ -8,7 +8,11 @@ jobs:
       - run: echo "The job was automatically triggered by a ${{github.event_name}}"
       - run: echo "The job is now runnint on a ${{runner.os}}"
       - run: echo "The name of your branch is ${{github.ref}} and your respository is ${{github.repository}}"
-
+      # 补充源来步骤
+      - name: Check Out Response Code
+        uses: actions/checkout@v3
+      - run: echo "The ${{github.repository}} has been cloned to the runner"
+      - run: echo "The workflow is now ready to test your code on the runner"
       - name: List files in the repository
         run: |
           ls ${{github.workspace}}
