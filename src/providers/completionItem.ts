@@ -10,6 +10,7 @@ import { thorwNewError } from 'utils/log';
 import { readJsonFile } from 'utils/fs';
 import { I18nMetaJson, I18nType, i18nDirItem } from 'types/index';
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/provider';
+import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 
 
 
@@ -28,24 +29,22 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
             const line = document.lineAt(position);
             const lineText = line.text;
             if (FORMAT_MESSAGE_REGEX.test(lineText)) {
-                const { i18nDirList, mainLanguage } = await firstValueFrom(GlobalExtensionSubject);
                 const documnetUrl = document.uri.fsPath;
                 const currentWorkspaceFolder = await getWrokspaceFloder({
                     multiplySelect: 'matchI18n',
                     matchI18nPath: documnetUrl,
                 });
-                const matchI18nDirList = i18nDirList.filter(i18nDir => isSamePath(i18nDir.projectPath, currentWorkspaceFolder.uri.fsPath));
+                const {
+                    i18nDirJsons,
+                    mainLanguage,
+                    matchI18nDirList,
+                } = await getProviderI18nJsonAndMainLanguage(currentWorkspaceFolder);
 
                 if (isEmpty(matchI18nDirList)) {
                     thorwNewError('全局配置匹配不到此工作区文件夹', RangeError);
                 }
 
-                const metaJsons = await Promise.all(matchI18nDirList
-                    .map((item =>
-                        readJsonFile<I18nMetaJson>(item.targetPath)
-                            .then((metaJson: I18nMetaJson) => ({ ...metaJson, ...item }))
-                    )));
-                const i18nContents = metaJsons.flatMap(getI18nList);
+                const i18nContents = i18nDirJsons.flatMap(getI18nList);
 
                 function getI18nList(metaJson: I18nMetaJson & i18nDirItem) {
                     const i18nType = I18nType[mainLanguage];
