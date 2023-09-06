@@ -70,12 +70,12 @@ const getCharsI18nType = (code: string): I18nType => {
 /** 动态嵌入变量值模板，目前只支持对象单个映射
  * @version 1.0 
  */
-export const generateDynamicTemplateString = (code: string, context: Record<string, string|boolean|number>) => {
+const generateDynamicTemplateString = (code: string, context: Record<string, string|boolean|number>) => {
 	return template(code, {
 	})(context);
 };
 
-export const renderI18nCode = (i18nItem: { id: string, msg: string }) => {
+const renderI18nCode = (i18nItem: { id: string, msg: string }) => {
 	const { generateTemplate: codeTemplate } = GlobalExtensionSubject.getValue();
 	return generateDynamicTemplateString(codeTemplate, i18nItem);
 };
@@ -92,6 +92,8 @@ export {
 	parseKeyAndValTexts2Object,
 	getWebViewContent,
 	getCharsI18nType,
+	generateDynamicTemplateString,
+	renderI18nCode,
 	FORMAT_MESSAGE_REGEX,
 	FORMAT_MESSAGE_ID_REGEX,
 };
