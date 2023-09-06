@@ -4,7 +4,7 @@ on: [push]
 jobs:
   Print-Log:
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - run: echo "The job was automatically triggered by a ${{github.event_name}}"
       - run: echo "The job is now runnint on a ${{runner.os}}"
       - run: echo "The name of your branch is ${{github.ref}} and your respository is ${{github.repository}}"
@@ -20,5 +20,12 @@ jobs:
 
       - run: echo "The job status is ${{job.status}}"
 
-    
-
+  Build-Package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3.8.1
+        with:
+          node-version: 16.14.2
+          cache: npm
+      - run: npm ci
+      - run: npm run package
