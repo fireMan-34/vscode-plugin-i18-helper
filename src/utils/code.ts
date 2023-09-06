@@ -1,7 +1,9 @@
 import { readFileSync, writeFile } from 'node:fs';
 import { join } from 'node:path';
 import { Uri, type ExtensionContext, type WebviewPanel } from 'vscode';
+import template from 'lodash/template';
 import { sify } from 'chinese-conv';
+import { GlobalExtensionSubject } from 'utils/conf';
 import { I18nType } from 'types/index';
 
 const CHINESE_LANGUAGE_REG = /[\u4e00-\u9fa5]/g;
@@ -63,6 +65,19 @@ const getCharsI18nType = (code: string): I18nType => {
 		return I18nType.EN_US;
 	}
 	return I18nType.UN_KNOWN;
+};
+
+/** 动态嵌入变量值模板，目前只支持对象单个映射
+ * @version 1.0 
+ */
+export const generateDynamicTemplateString = (code: string, context: Record<string, string|boolean|number>) => {
+	return template(code, {
+	})(context);
+};
+
+export const renderI18nCode = (i18nItem: { id: string, msg: string }) => {
+	const { generateTemplate: codeTemplate } = GlobalExtensionSubject.getValue();
+	return generateDynamicTemplateString(codeTemplate, i18nItem);
 };
 
 /** 匹配正则

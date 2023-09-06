@@ -53,6 +53,7 @@ export const DEFAULT_I18N_META: I18nMetaJson = {
 export const PROJECT_META_JSON: ProjectMetaJson = {
   isOpenCheckDir: true,
   mainLanguage: I18nType[I18nType.ZH_CN] as keyof typeof I18nType,
+  generateTemplate: "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})\n",
   i18nDirList: [],
 };
 
@@ -61,6 +62,7 @@ export const VSCODE_KEYS_MAP = {
   isOpenCheckDir: 'isOpenCheckDir',
   mainLanguage: 'mainLanguage',
   scanFolders: 'scanFolders',
+  generateTemplate: 'generateTemplate',
 };
 
 /** vscode 配置 */
@@ -68,4 +70,5 @@ export const VSCODE_KEYS = [
   VSCODE_KEYS_MAP.isOpenCheckDir, 
   VSCODE_KEYS_MAP.mainLanguage, 
   VSCODE_KEYS_MAP.scanFolders,
+  VSCODE_KEYS_MAP.generateTemplate,
 ];
