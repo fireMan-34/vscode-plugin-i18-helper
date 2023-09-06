@@ -1,8 +1,8 @@
 import { languages, Location, Position, Uri } from 'vscode';
 import type { DefinitionProvider, ExtensionContext } from 'vscode';
-import { FORMAT_MESSAGE_ID_REGEX } from 'utils/code';
 import { getWrokspaceFloder } from 'utils/path';
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/index';
+import { I18nTextParserClass } from 'models/index';
 import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 
 /**
@@ -14,9 +14,8 @@ import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
  */
 const definitionProvider: DefinitionProvider = {
     async provideDefinition(document, position, _token) {
-        const line = document.lineAt(position);
-        const lineText = line.text;
-        const matchValue = lineText.match(FORMAT_MESSAGE_ID_REGEX)?.[1];
+        const i18nTExtParser = new I18nTextParserClass(document, position);
+        const matchValue = i18nTExtParser.getMatchI18nKey();
 
         if (matchValue) {
             const currentWorkFolder = await getWrokspaceFloder({

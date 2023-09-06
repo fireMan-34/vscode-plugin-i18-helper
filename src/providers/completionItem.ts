@@ -1,13 +1,10 @@
 import { relative } from 'path';
 import type { CompletionItemProvider, ExtensionContext } from 'vscode';
 import { languages, CompletionItem } from 'vscode';
-import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import isEmpty from 'lodash/isEmpty';
-import { GlobalExtensionSubject } from 'utils/conf';
-import { getWrokspaceFloder, isSamePath } from 'utils/path';
+import { getWrokspaceFloder } from 'utils/path';
 import { FORMAT_MESSAGE_REGEX } from 'utils/code';
 import { thorwNewError } from 'utils/log';
-import { readJsonFile } from 'utils/fs';
 import { I18nMetaJson, I18nType, i18nDirItem } from 'types/index';
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/provider';
 import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';

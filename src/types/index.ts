@@ -1,4 +1,4 @@
-import type { ExtensionContext, TextEditor, TextEditorEdit } from 'vscode';
+import type { ExtensionContext, TextEditor, TextEditorEdit, TextDocument, Position } from 'vscode';
 
 export interface XTextEditor extends TextEditor {
   authority: string;
@@ -106,3 +106,38 @@ export interface ProjectMetaJson {
 }
 
 // ---------------------------------------------------------------- 项目配置相关 ⬆
+
+/**
+ * 国际化代码解析插件
+ */
+export interface I18nTextParsePlugin {
+  /** 生成模板字符串 */  
+  generateTemplate: string;
+  /** 插件上下文 */
+  context: I18nTextParse;
+  /** 判断是否该插件处理 */
+  isThisPlugin: boolean;
+  /** 获取从代码中匹配的 i18n key */
+  getMatchI18nKey:() => string;
+}
+
+/** 国际化代码解析对象
+ */
+export interface I18nTextParse {
+  /** 从当前目录获取获取至多上下两行的文本作为识别
+   * 从工具库扩展 工具库泛化 此方法实化
+   */
+  getRangeTextFromProvider(): string;
+  /** 获取当前行文本 */
+  getLineText(): string;
+  /** 文档对象 */
+  document: TextDocument;
+  /** 当前位置 */
+  currentPosition: Position;
+
+  plugins: I18nTextParsePlugin[];
+
+  /** 获取匹配的 i18n Key */
+  getMatchI18nKey(): string | null;
+};
+// ---------------------------------------------------------------- 国际化代码识别相关相关 ⬆
