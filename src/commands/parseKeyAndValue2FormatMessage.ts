@@ -1,6 +1,6 @@
 import vscode from 'vscode';
 import { rangeFix } from 'utils/arr';
-import { parseKeyAndValTexts2Object } from 'utils/code';
+import { parseKeyAndValTexts2Object, renderI18nCode } from 'utils/code';
 import { emptyWarningHandler } from 'utils/log';
 import { CMD_KEY } from 'constants/index';
 import type { ICommondItem } from 'types/index';
@@ -36,16 +36,13 @@ function parseKeyAndValue2FormatMessage() {
   };
 
   const keyAndValLines = getKeyAndValLines();
-  const i18nObject = keyAndValLines.reduce((obj, keyAndValueLine) => {
+  const i18nObject: Record<string, string> = keyAndValLines.reduce((obj, keyAndValueLine) => {
     const o = parseKeyAndValTexts2Object(keyAndValueLine);
     return Object.assign(obj, o);
   }, {});
   const formatMessage = Object
     .entries(i18nObject)
-    .map(([i18nKey, i18nMsg]) => `formatMessage({
-         id: '${i18nKey}',
-         defaultMessage: '${i18nMsg}',
-       })`)
+    .map(([id, msg]) => renderI18nCode({id, msg}))
     .join('\n');
 
 
