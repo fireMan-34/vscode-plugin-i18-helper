@@ -100,7 +100,8 @@ export interface i18nDirItem {
 /** 项目配置信息 json */
 export interface ProjectMetaJson {
   isOpenCheckDir: boolean,
-  mainLanguage: keyof typeof I18nType ,
+  mainLanguage: keyof typeof I18nType,
+  generateTemplate: string,
   i18nDirList: i18nDirItem[],
 }
 

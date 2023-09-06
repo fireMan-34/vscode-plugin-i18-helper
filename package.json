@@ -38,16 +38,63 @@
             "description": "是否启动之后检测现有国际化项目是否失效，失效则移除"
           },
           "i18n-extension.mainLanguage": {
-            "type":"string",
-            "enum": [ "ZH_CN", "ZH_HK", "EN_US", "KO_KR", "JA_JP", "UN_KNOWN" ],
-            "enumDescriptions": [ "中文简体", "中文繁体", "英文", "韩文", "日文", "未知" ],
+            "type": "string",
+            "enum": [
+              "ZH_CN",
+              "ZH_HK",
+              "EN_US",
+              "KO_KR",
+              "JA_JP",
+              "UN_KNOWN"
+            ],
+            "enumDescriptions": [
+              "中文简体",
+              "中文繁体",
+              "英文",
+              "韩文",
+              "日文",
+              "未知"
+            ],
             "default": "ZH_CN",
             "description": "配置当前识别语言"
           },
           "i18n-extension.scanFolders": {
-            "type":"array",
-            "default": [ "locales", "locale" ],
+            "type": "array",
+            "default": [
+              "locales",
+              "locale"
+            ],
             "description": "支持扫描的国际化目录匹配"
+          },
+          "i18n-extension.generateTemplate": {
+            "type": "string",
+            "enum": [
+              "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})\n",
+              "formatMessage({\nid: '${id}',\n})\n",
+              "intl.formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})\n",
+              "intl.formatMessage({\nid: '${id}',\n})\n",
+              "i18n.t('${id}')",
+              "t('${id}')",
+              "$t('${id}')"
+            ],
+            "enumItemLabels": [
+              "formatMessage 渲染国际化 key&val",
+              "formatMessage 渲染国际化 key",
+              "formatMessage 渲染国际化 key&val， 添加 intl 前缀",
+              "formatMessage 渲染国际化 key， 添加 intl 前缀",
+              "i18n.t 渲染国际化 key， 添加 intl 前缀",
+              "t 渲染国际化 key， 添加 intl 前缀"
+            ],
+            "enumDescriptions": [
+              "formatMessage 渲染国际化 key&val",
+              "formatMessage 渲染国际化 key",
+              "formatMessage 渲染国际化 key&val， 添加 intl 前缀",
+              "formatMessage 渲染国际化 key， 添加 intl 前缀",
+              "i18n.t 渲染国际化 key， 添加 intl 前缀",
+              "t 渲染国际化 key， 添加 intl 前缀"
+            ],
+            "default": "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})\n",
+            "description": "配置复制键值对产生的模板文本，后期会其它文本渲染场景。"
           }
         }
       }

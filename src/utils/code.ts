@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { Uri, type ExtensionContext, type WebviewPanel } from 'vscode';
 import template from 'lodash/template';
 import { sify } from 'chinese-conv';
+import { GlobalExtensionSubject } from 'utils/conf';
 import { I18nType } from 'types/index';
 
 const CHINESE_LANGUAGE_REG = /[\u4e00-\u9fa5]/g;
@@ -72,6 +73,11 @@ const getCharsI18nType = (code: string): I18nType => {
 export const generateDynamicTemplateString = (code: string, context: Record<string, string|boolean|number>) => {
 	return template(code, {
 	})(context);
+};
+
+export const renderI18nCode = (i18nItem: { id: string, msg: string }) => {
+	const { generateTemplate: codeTemplate } = GlobalExtensionSubject.getValue();
+	return generateDynamicTemplateString(codeTemplate, i18nItem);
 };
 
 /** 匹配正则
