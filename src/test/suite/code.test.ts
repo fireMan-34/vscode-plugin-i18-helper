@@ -1,6 +1,11 @@
 import { equal, } from 'node:assert';
 import { describe, it, } from 'mocha';
-import { getCharsI18nType, FORMAT_MESSAGE_REGEX, FORMAT_MESSAGE_ID_REGEX } from 'utils/code';
+import { 
+  getCharsI18nType, 
+  generateDynamicTemplateString,
+  FORMAT_MESSAGE_REGEX, 
+  FORMAT_MESSAGE_ID_REGEX, 
+ } from 'utils/code';
 import { I18nType } from 'types/index';
 
 describe('国际化文本检测测试', function () {
@@ -34,31 +39,90 @@ describe('代码提示 formatMessage 系列', function () {
   });
 });
 
-describe('代码自动跳转', function() {
-  it('测试识别普通键值对', function() {
+describe('代码自动跳转', function () {
+  it('测试识别普通键值对', function () {
     equal(FORMAT_MESSAGE_ID_REGEX.test(`id: '1234'`), true);
   });
-  it('测试识别对象键值对', function() {
+  it('测试识别对象键值对', function () {
     equal(FORMAT_MESSAGE_ID_REGEX.test(`{id: '1234'}`), true);
   });
-  it('测试识别对象双引号键值对', function() {
+  it('测试识别对象双引号键值对', function () {
     equal(FORMAT_MESSAGE_ID_REGEX.test(`{"id": "1234"}`), true);
   });
-  it('测试识别函数调用对象双引号键值对', function() {
+  it('测试识别函数调用对象双引号键值对', function () {
     equal(FORMAT_MESSAGE_ID_REGEX.test(`({"id": "1234"}),`), true);
   });
 
-  
-  it('测试提取普通键值对', function() {
+
+  it('测试提取普通键值对', function () {
     equal(`id: '1234'`.match(FORMAT_MESSAGE_ID_REGEX)?.[1], '1234');
   });
-  it('测试提取对象键值对', function() {
+  it('测试提取对象键值对', function () {
     equal(`{id: '1234'}`.match(FORMAT_MESSAGE_ID_REGEX)?.[1], '1234');
   });
-  it('测试提取对象双引号键值对', function() {
+  it('测试提取对象双引号键值对', function () {
     equal(`{"id": "1234"}`.match(FORMAT_MESSAGE_ID_REGEX)?.[1], '1234');
   });
-  it('测试提取函数调用对象双引号键值对', function() {
+  it('测试提取函数调用对象双引号键值对', function () {
     equal(`({"id": "1234"}),`.match(FORMAT_MESSAGE_ID_REGEX)?.[1], '1234');
+  });
+});
+
+describe('代码模板测试解析生成', function () {
+  const ctx = {
+    id: 'i18n.key',
+    message: 'i18n.value',
+  };
+  const template_1 = [
+    "formatMessage({",
+    " id: '${id}'",
+    " defaultMessage: '${message}'",
+    "})",
+  ].join('\n');
+  const render_1 = [
+    "formatMessage({",
+    " id: 'i18n.key'",
+    " defaultMessage: 'i18n.value'",
+    "})",
+  ].join('\n');
+
+  const template_2 = [
+    "t({",
+    " id: '${id}'",
+    " defaultMessage: '${message}'",
+    "})",
+  ].join('\n');
+  const render_2 = [
+    "t({",
+    " id: 'i18n.key'",
+    " defaultMessage: 'i18n.value'",
+    "})",
+  ].join('\n');
+
+  const template_3 = [
+    "t(${id}, ${message})",
+  ].join('\n');
+  const render_3 = [
+    "t(i18n.key, i18n.value)",
+  ].join('\n');
+  const template_4 = [
+    "$t(${id})",
+  ].join('\n');
+  const render_4 = [
+    "$t(i18n.key)",
+  ].join('\n');
+
+  it('判断默认渲染文本函数是否生效', function() {
+    equal(generateDynamicTemplateString(template_1, ctx), render_1);
+  });
+
+  it('判断默认缩写调用函数文本是否生效', function() {
+    equal(generateDynamicTemplateString(template_2, ctx), render_2);
+  });
+  it('判断默认缩写多参调用函数文本是否生效', function() {
+    equal(generateDynamicTemplateString(template_3, ctx), render_3);
+  });
+  it('生成 vue 国际化代码测试', function() {
+    equal(generateDynamicTemplateString(template_4, ctx), render_4);
   });
 });
