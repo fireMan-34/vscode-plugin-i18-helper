@@ -96,3 +96,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ~~接下来的版本会以 0.2.x 开头，继续优化我的插件~~
 
 - 暂时还是 0.1.xx 吧
+
+## 0.1.63
+- feat: 支持 jsx tsx 智能提示
+- refactor: 调整注册 provider 逻辑
+- refactor: 重命名 正则变量名
+- feat: 添加获取工作目录新增匹配类型原生获取
+- feat: 自动跳转功能
+- tets: 链接跳转匹配正则测试
+- refactor: 精简智能提示 & 自定义跳转代码
+- feat: 高亮国际化信息

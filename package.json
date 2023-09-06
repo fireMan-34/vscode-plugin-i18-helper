@@ -13,7 +13,7 @@
     "url": "https://github.com/fireMan-34/vscode-plugin-i18n-helper/issues"
   },
   "publisher": "fireMan-34",
-  "version": "0.1.55",
+  "version": "0.1.63",
   "engines": {
     "vscode": "^1.81.0"
   },
