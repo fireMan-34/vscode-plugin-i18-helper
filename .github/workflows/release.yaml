@@ -1,0 +1,16 @@
+name: 自动发布 i18n-extension 版本
+run-name: ${{ github.actor }} 正在发布 i18n-extension 版本
+on:
+  release:
+    branches:
+      - main
+jobs:
+  build-package:
+    runs-on: ubuntu-lastest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - run: npm ci
+      - run: npm run package
