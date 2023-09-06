@@ -17,16 +17,17 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{github.workspace}}
-
-      - run: echo "The job status is ${{job.status}}"
-
-  Build-Package:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/setup-node@v3.8.1
-        with:
-          node-version: 16.14.2
-          cache: npm
-          cache-dependency-path: ./package-lock.json
+          - run: echo "The job status is ${{job.status}}"
+          
+        # @see https://github.com/actions/setup-node#caching-packages-dependencies
+          Build-Package:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: actions/setup-node@v3.8.1
+              with:
+                node-version: 16.14.2
+                cache: npm
+                cache-dependency-path: package-lock.json
+                
       - run: npm ci
       - run: npm run package
