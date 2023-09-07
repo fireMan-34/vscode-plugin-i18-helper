@@ -7,6 +7,7 @@ import {
 import {
   FORMAT_MESSAGE_REGEX,
   FORMAT_MESSAGE_ID_REGEX,
+  I18N_T_REGEX,
 } from 'constants/index';
 import { I18nType } from 'types/index';
 
@@ -127,4 +128,13 @@ describe('代码模板测试解析生成', function () {
   it('生成 vue 国际化代码测试', function () {
     equal(generateDynamicTemplateString(template_4, ctx), render_4);
   });
+});
+
+describe('测试 i18n 调用 t 的方式', function () {
+  it('默认输入文本匹配', function () {
+    equal(I18N_T_REGEX.test("i18n.t('xxxx')"), true);
+  });  
+  it('默认输入双引号文本匹配', function () {
+    equal(I18N_T_REGEX.test('i18n.t("xxxx")'), true);
+  });  
 });
