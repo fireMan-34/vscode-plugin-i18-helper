@@ -10,7 +10,7 @@ import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
  * @see http://blog.haoji.me/vscode-plugin-jump-completion-hover.html
  * 按住 ctrl + click 会触发
  ** 跳转精确位置 - [ ]
- ** 多行匹配 - []
+ ** 多行匹配 - [x]
  */
 const definitionProvider: DefinitionProvider = {
     async provideDefinition(document, position, _token) {
