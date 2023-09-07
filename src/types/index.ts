@@ -94,7 +94,7 @@ export interface i18nDirItem {
   /** 插件生成路径 */
   targetPath: string;
   /** 国际化归属路径 激活的国际化项目会提供响应的国际化提示 */
-  projectPath: string;  
+  projectPath: string;
 }
 
 /** 项目配置信息 json */
@@ -111,14 +111,33 @@ export interface ProjectMetaJson {
  * 国际化代码解析插件
  */
 export interface I18nTextParsePlugin {
-  /** 生成模板字符串 */  
+  /** 生成模板字符串 */
   generateTemplate: string;
   /** 插件上下文 */
   context: I18nTextParse;
+  /** 局部正则 */
+  partReg: RegExp,
+  /** 整体正则 */
+  wholeRule: RegExp,
   /** 判断是否该插件处理 */
-  isThisPlugin: boolean;
+  readonly isThisPlugin: boolean;
+  /** 匹配值 */
+  matchValue: string | null | undefined;
   /** 获取从代码中匹配的 i18n key */
-  getMatchI18nKey:() => string;
+  getMatchI18nKey: () => string;
+}
+
+export interface I18nTextParseIsPluginThisSupportOptions {
+  /** 局部正则 */
+  partReg: RegExp,
+  /** 整体正则 */
+  wholeRule: RegExp,
+  /** 扩散行数 0 则不扩散，最小数 0 */
+  diffuse?: number,
+  /** 成功匹配文本回调 
+   * @param {string} text
+  */
+  matchTextCb: (text: string) => void
 }
 
 /** 国际化代码解析对象
@@ -127,9 +146,16 @@ export interface I18nTextParse {
   /** 从当前目录获取获取至多上下两行的文本作为识别
    * 从工具库扩展 工具库泛化 此方法实化
    */
-  getRangeTextFromProvider(): string;
+  getRangeTextFromProvider(line: number): string;
   /** 获取当前行文本 */
   getLineText(): string;
+  /** 格式化处理文本 */
+  getformatText2Parse(str: string): string;
+  /**
+   * 局部匹配成功后有限次启动范围性扩大匹配，返回最终匹配结果
+   * @returns {boolean} 多轮校验是否成功
+   */
+  isPluginThisSupported(options: I18nTextParseIsPluginThisSupportOptions): boolean;
   /** 文档对象 */
   document: TextDocument;
   /** 当前位置 */

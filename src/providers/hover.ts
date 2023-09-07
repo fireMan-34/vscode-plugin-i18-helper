@@ -11,8 +11,8 @@ import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
  */
 const hoverProvider: HoverProvider = {
   async provideHover(document, position, token) {
-    const i18nTExtParser = new I18nTextParserClass(document, position);
-    const matchValue = i18nTExtParser.getMatchI18nKey();
+    const i18nTextParser = new I18nTextParserClass(document, position);
+    const matchValue = i18nTextParser.getMatchI18nKey();
     
     if (matchValue) {
       const currentWorkFolder = await getWrokspaceFloder({
