@@ -3,7 +3,7 @@ import type { CompletionItemProvider, ExtensionContext } from 'vscode';
 import { languages, CompletionItem } from 'vscode';
 import isEmpty from 'lodash/isEmpty';
 import { getWrokspaceFloder } from 'utils/path';
-import { FORMAT_MESSAGE_REGEX } from 'utils/code';
+import { FORMAT_MESSAGE_REGEX } from 'constants/index';
 import { thorwNewError } from 'utils/log';
 import { I18nMetaJson, I18nType, i18nDirItem } from 'types/index';
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/provider';

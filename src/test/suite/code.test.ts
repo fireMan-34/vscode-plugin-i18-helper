@@ -1,11 +1,13 @@
 import { equal, } from 'node:assert';
 import { describe, it, } from 'mocha';
-import { 
-  getCharsI18nType, 
+import {
+  getCharsI18nType,
   generateDynamicTemplateString,
-  FORMAT_MESSAGE_REGEX, 
-  FORMAT_MESSAGE_ID_REGEX, 
- } from 'utils/code';
+} from 'utils/code';
+import {
+  FORMAT_MESSAGE_REGEX,
+  FORMAT_MESSAGE_ID_REGEX,
+} from 'constants/index';
 import { I18nType } from 'types/index';
 
 describe('国际化文本检测测试', function () {
@@ -112,17 +114,17 @@ describe('代码模板测试解析生成', function () {
     "$t(i18n.key)",
   ].join('\n');
 
-  it('判断默认渲染文本函数是否生效', function() {
+  it('判断默认渲染文本函数是否生效', function () {
     equal(generateDynamicTemplateString(template_1, ctx), render_1);
   });
 
-  it('判断默认缩写调用函数文本是否生效', function() {
+  it('判断默认缩写调用函数文本是否生效', function () {
     equal(generateDynamicTemplateString(template_2, ctx), render_2);
   });
-  it('判断默认缩写多参调用函数文本是否生效', function() {
+  it('判断默认缩写多参调用函数文本是否生效', function () {
     equal(generateDynamicTemplateString(template_3, ctx), render_3);
   });
-  it('生成 vue 国际化代码测试', function() {
+  it('生成 vue 国际化代码测试', function () {
     equal(generateDynamicTemplateString(template_4, ctx), render_4);
   });
 });

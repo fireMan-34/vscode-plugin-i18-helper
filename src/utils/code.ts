@@ -80,12 +80,9 @@ const renderI18nCode = (i18nItem: { id: string, msg: string }) => {
 	return generateDynamicTemplateString(codeTemplate, i18nItem);
 };
 
-/** 匹配正则
- * @description 键值对后面触发提示
- */
-const FORMAT_MESSAGE_REGEX = /formatMessage\(\{\s*/;
 
-const FORMAT_MESSAGE_ID_REGEX = /["']?id["']?\s*:\s*["']([^"']*)?["']/;
+
+
 
 
 export {
@@ -94,6 +91,4 @@ export {
 	getCharsI18nType,
 	generateDynamicTemplateString,
 	renderI18nCode,
-	FORMAT_MESSAGE_REGEX,
-	FORMAT_MESSAGE_ID_REGEX,
 };
