@@ -43,7 +43,7 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                     matchI18nDirList,
                 } = await getProviderI18nJsonAndMainLanguage(currentWorkspaceFolder);
                 
-                const isUseCache = runTimeVersionNote && runtimeCache.clearWhile(runTimeVersionNote, runTimeVersionNote !== runTimeVersion);
+                const isUseCache = runTimeVersionNote && !runtimeCache.clearWhile(runTimeVersionNote, runTimeVersionNote !== runTimeVersion);
                 if (isUseCache) {
                     return runtimeCache.getKey(runTimeVersionNote) as typeof i18nContents;
                 };
