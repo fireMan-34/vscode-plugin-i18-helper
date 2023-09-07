@@ -1,5 +1,6 @@
 import { Position, Range, TextDocument, } from "vscode";
 import { adjustNumberRange } from 'utils/num';
+import { GlobalExtensionSubject } from 'utils/conf';
 import { BaseI18nTextParsePlugin } from 'models/i18nTextParser/index';
 import { I18nTextParse, I18nTextParseIsPluginThisSupportOptions } from "types/index";
 
@@ -17,7 +18,10 @@ export class I18nTextParserClass implements I18nTextParse {
     }
 
     getMatchI18nText(): string | null {
-        const plugin = this.plugins.find(plugin => plugin.isThisPlugin);
+        const curTemplate = GlobalExtensionSubject.getValue().generateTemplate;
+        const plugin = this.plugins
+        .filter(plugin => plugin.generateTemplate.includes(curTemplate))
+        .find(plugin => plugin.isThisPlugin);
         if (plugin) {
             return plugin.getMatchI18nText();
         }
