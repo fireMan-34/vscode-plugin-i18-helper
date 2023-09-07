@@ -1,3 +1,4 @@
+import { GENERATE_TEMPLATE_MAP } from 'constants/provider';
 import { I18nType, I18nDescriptionItem, I18nMetaJson, ProjectMetaJson } from 'types/index';
 
 type I18nDescriptionMap = Record<I18nType, I18nDescriptionItem>;
@@ -53,7 +54,7 @@ export const DEFAULT_I18N_META: I18nMetaJson = {
 export const PROJECT_META_JSON: ProjectMetaJson = {
   isOpenCheckDir: true,
   mainLanguage: I18nType[I18nType.ZH_CN] as keyof typeof I18nType,
-  generateTemplate: "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})\n",
+  generateTemplate: GENERATE_TEMPLATE_MAP.FORMAT_MESSSAGE_WITH_KEY_VAL,
   i18nDirList: [],
 };
 

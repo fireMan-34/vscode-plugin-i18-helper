@@ -56,11 +56,10 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                                     label: msg,
                                     detail: relative(metaJson.originalPath, i18nItem.path),
                                     documentation: i18nItem.path,
-                                    insertText: renderI18nCode({id, msg}),
+                                    insertText: renderI18nCode({id, msg, isRemoveBrace: true, isRemoveBracket: true }),
                                 })))
                         );
                 };
-
                 return i18nContents;
             }
             return [];
@@ -77,5 +76,5 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
 
 /** 创建国际化智能提示 */
 export const createI18nCompetionItemProvider = (context: ExtensionContext) => {
-    return languages.registerCompletionItemProvider(SUPPORT_DOCUMENT_SELECTOR, I18nCompetionItemProvider, `{`,);
+    return languages.registerCompletionItemProvider(SUPPORT_DOCUMENT_SELECTOR, I18nCompetionItemProvider, `{`, '(');
 };

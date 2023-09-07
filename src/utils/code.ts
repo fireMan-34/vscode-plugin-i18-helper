@@ -75,9 +75,23 @@ const generateDynamicTemplateString = (code: string, context: Record<string, str
 	})(context);
 };
 
-const renderI18nCode = (i18nItem: { id: string, msg: string }) => {
+const renderI18nCode = (i18nItem: { id: string, msg: string, isRemoveBracket?: boolean, isRemoveBrace?: boolean }) => {
+	const {
+		/** 是否移除括号以及括号外内容 */
+		isRemoveBracket = false,
+		/** 是否移除花括号以及花括号外内容 */
+		isRemoveBrace = false,
+	} = i18nItem;
 	const { generateTemplate: codeTemplate } = GlobalExtensionSubject.getValue();
-	return generateDynamicTemplateString(codeTemplate, i18nItem);
+	let i18nCode = generateDynamicTemplateString(codeTemplate, i18nItem);
+		if (isRemoveBracket) {
+			i18nCode = i18nCode.replace(/.*\(/, '').replace(/\).*/, '');
+		}
+		if (isRemoveBrace) {
+			i18nCode = i18nCode.replace(/.*\{/, '').replace(/\}.*/g, '');
+		}
+
+	return i18nCode;
 };
 
 
