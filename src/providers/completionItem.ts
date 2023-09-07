@@ -3,10 +3,11 @@ import type { CompletionItemProvider, ExtensionContext } from 'vscode';
 import { languages, CompletionItem } from 'vscode';
 import isEmpty from 'lodash/isEmpty';
 import { getWrokspaceFloder } from 'utils/path';
-import { FORMAT_MESSAGE_REGEX } from 'constants/index';
 import { thorwNewError } from 'utils/log';
+import { renderI18nCode } from 'utils/code';
 import { I18nMetaJson, I18nType, i18nDirItem } from 'types/index';
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/provider';
+import { I18nTextParserClass, createMatchI18nFnPlugin } from 'models/index';
 import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 
 
@@ -23,9 +24,11 @@ import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 const I18nCompetionItemProvider: CompletionItemProvider = {
     async provideCompletionItems(document, position, token, context) {
         try {
-            const line = document.lineAt(position);
-            const lineText = line.text;
-            if (FORMAT_MESSAGE_REGEX.test(lineText)) {
+            const i18nTextParser = new I18nTextParserClass(document, position);
+            createMatchI18nFnPlugin(i18nTextParser);
+            const matchVal = i18nTextParser.getMatchI18nText();
+
+            if (matchVal) {
                 const documnetUrl = document.uri.fsPath;
                 const currentWorkspaceFolder = await getWrokspaceFloder({
                     multiplySelect: 'matchI18n',
@@ -49,11 +52,11 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                         .saveContent[i18nType]
                         .flatMap(i18nItem =>
                             Object.entries(i18nItem.content)
-                                .map<CompletionItem>((([key, val]) => ({
-                                    label: val,
+                                .map<CompletionItem>((([id, msg]) => ({
+                                    label: msg,
                                     detail: relative(metaJson.originalPath, i18nItem.path),
                                     documentation: i18nItem.path,
-                                    insertText: `id: '${key}',defaultMessage: '${val}',`
+                                    insertText: renderI18nCode({id, msg}),
                                 })))
                         );
                 };

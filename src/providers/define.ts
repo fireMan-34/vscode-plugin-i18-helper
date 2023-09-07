@@ -2,7 +2,7 @@ import { languages, Location, Position, Uri } from 'vscode';
 import type { DefinitionProvider, ExtensionContext } from 'vscode';
 import { getWrokspaceFloder } from 'utils/path';
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/index';
-import { I18nTextParserClass } from 'models/index';
+import { I18nTextParserClass, createMatchI18nIdPlugin } from 'models/index';
 import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 
 /**
@@ -15,7 +15,9 @@ import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 const definitionProvider: DefinitionProvider = {
     async provideDefinition(document, position, _token) {
         const i18nTextParser = new I18nTextParserClass(document, position);
-        const matchValue = i18nTextParser.getMatchI18nKey();
+        createMatchI18nIdPlugin(i18nTextParser);
+        
+        const matchValue = i18nTextParser.getMatchI18nText();
 
         if (matchValue) {
             const currentWorkFolder = await getWrokspaceFloder({

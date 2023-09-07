@@ -1,48 +1,25 @@
 import { Position, Range, TextDocument, } from "vscode";
-import { FORMAT_MESSAGE_ID_REGEX } from 'utils/code';
 import { adjustNumberRange } from 'utils/num';
-import { I18nTextParse, I18nTextParseIsPluginThisSupportOptions, I18nTextParsePlugin } from "types/index";
-
-class BaseI18nTextParsePllugin implements I18nTextParsePlugin {
-    context: I18nTextParse;
-    partReg: RegExp = FORMAT_MESSAGE_ID_REGEX;
-    wholeRule: RegExp = FORMAT_MESSAGE_ID_REGEX;
-    generateTemplate: string = "formatMessage({\nid: ${id},\nmsg: ${msg},\n})";
-    matchValue: string | undefined | null;
-
-    constructor(host: I18nTextParse) {
-        this.context = host;
-    }
-    get isThisPlugin(): boolean {
-        return this.context.isPluginThisSupported({
-            partReg: this.partReg,
-            wholeRule: this.wholeRule,
-            matchTextCb: (text) => this.matchValue = text,
-        });
-    };
-    getMatchI18nKey() {
-        return this.matchValue!;
-    };
-};
+import { BaseI18nTextParsePlugin } from 'models/i18nTextParser/index';
+import { I18nTextParse, I18nTextParseIsPluginThisSupportOptions } from "types/index";
 
 
+/*** i18n 代码解析对象 */
 export class I18nTextParserClass implements I18nTextParse {
     document: TextDocument;
     currentPosition: Position;
-    plugins: BaseI18nTextParsePllugin[];
+    plugins: BaseI18nTextParsePlugin[];
 
     constructor(document: TextDocument, currentPosition: Position) {
         this.document = document;
         this.currentPosition = currentPosition;
-        this.plugins = [
-            new BaseI18nTextParsePllugin(this),
-        ];
+        this.plugins = [];
     }
 
-    getMatchI18nKey(): string | null {
+    getMatchI18nText(): string | null {
         const plugin = this.plugins.find(plugin => plugin.isThisPlugin);
         if (plugin) {
-            return plugin.getMatchI18nKey();
+            return plugin.getMatchI18nText();
         }
         return null;
     }

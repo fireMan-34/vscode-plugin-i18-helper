@@ -111,8 +111,8 @@ export interface ProjectMetaJson {
  * 国际化代码解析插件
  */
 export interface I18nTextParsePlugin {
-  /** 生成模板字符串 */
-  generateTemplate: string;
+  /** 生成模板字符串类型 */
+  generateTemplate: string[];
   /** 插件上下文 */
   context: I18nTextParse;
   /** 局部正则 */
@@ -123,8 +123,8 @@ export interface I18nTextParsePlugin {
   readonly isThisPlugin: boolean;
   /** 匹配值 */
   matchValue: string | null | undefined;
-  /** 获取从代码中匹配的 i18n key */
-  getMatchI18nKey: () => string;
+  /** 获取从代码中匹配的 i18n 文本 */
+  getMatchI18nText: () => string;
 }
 
 export interface I18nTextParseIsPluginThisSupportOptions {
@@ -163,7 +163,7 @@ export interface I18nTextParse {
 
   plugins: I18nTextParsePlugin[];
 
-  /** 获取匹配的 i18n Key */
-  getMatchI18nKey(): string | null;
+  /** 获取匹配的 i18n 文本 */
+  getMatchI18nText(): string | null;
 };
 // ---------------------------------------------------------------- 国际化代码识别相关相关 ⬆

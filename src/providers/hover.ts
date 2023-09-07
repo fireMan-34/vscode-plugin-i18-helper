@@ -2,7 +2,7 @@ import type { ExtensionContext, HoverProvider } from 'vscode';
 import { Hover, languages } from 'vscode';
 import { SUPPORT_DOCUMENT_SELECTOR, I18N_DESCRIPTION_MAP } from 'constants/index';
 import { getWrokspaceFloder } from 'utils/path';
-import { I18nTextParserClass } from 'models/index';
+import { I18nTextParserClass, createMatchI18nIdPlugin } from 'models/index';
 import { I18nMetaJsonSaveContentItem, I18nType, } from 'types/index';
 import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 
@@ -12,7 +12,10 @@ import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 const hoverProvider: HoverProvider = {
   async provideHover(document, position, token) {
     const i18nTextParser = new I18nTextParserClass(document, position);
-    const matchValue = i18nTextParser.getMatchI18nKey();
+    createMatchI18nIdPlugin(i18nTextParser);
+
+    const matchValue = i18nTextParser.getMatchI18nText();
+    console.log('匹配值', matchValue);
     
     if (matchValue) {
       const currentWorkFolder = await getWrokspaceFloder({
