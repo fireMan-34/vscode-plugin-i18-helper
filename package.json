@@ -69,10 +69,10 @@
           "i18n-extension.generateTemplate": {
             "type": "string",
             "enum": [
-              "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})\n",
-              "formatMessage({\nid: '${id}',\n})\n",
-              "intl.formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})\n",
-              "intl.formatMessage({\nid: '${id}',\n})\n",
+              "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
+              "formatMessage({\nid: '${id}',\n})",
+              "intl.formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
+              "intl.formatMessage({\nid: '${id}',\n})",
               "i18n.t('${id}')",
               "t('${id}')",
               "$t('${id}')"
@@ -86,15 +86,15 @@
               "t 渲染国际化 key， 添加 intl 前缀"
             ],
             "enumDescriptions": [
-              "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})\n",
-              "formatMessage({\nid: '${id}',\n})\n",
-              "intl.formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})\n",
-              "intl.formatMessage({\nid: '${id}',\n})\n",
+              "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
+              "formatMessage({\nid: '${id}',\n})",
+              "intl.formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
+              "intl.formatMessage({\nid: '${id}',\n})",
               "i18n.t('${id}')",
               "t('${id}')",
               "$t('${id}')"
             ],
-            "default": "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})\n",
+            "default": "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
             "description": "配置复制键值对产生的模板文本，后期会其它文本渲染场景。"
           }
         }
