@@ -152,7 +152,7 @@ export interface I18nTextParse {
   /** 获取当前行文本 */
   getLineText(): string;
   /** 格式化处理文本 */
-  getformatText2Parse(str: string): string;
+  getFormatText2Parse(str: string): string;
   /**
    * 局部匹配成功后有限次启动范围性扩大匹配，返回最终匹配结果
    * @returns {boolean} 多轮校验是否成功

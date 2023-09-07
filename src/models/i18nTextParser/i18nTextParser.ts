@@ -3,6 +3,7 @@ import { adjustNumberRange } from 'utils/num';
 import { GlobalExtensionSubject } from 'utils/conf';
 import { BaseI18nTextParsePlugin } from 'models/i18nTextParser/index';
 import { I18nTextParse, I18nTextParseIsPluginThisSupportOptions } from "types/index";
+import { findStartAndEndIndex } from "utils/str";
 
 
 /*** i18n 代码解析对象 */
@@ -20,8 +21,8 @@ export class I18nTextParserClass implements I18nTextParse {
     getMatchI18nText(): string | null {
         const curTemplate = GlobalExtensionSubject.getValue().generateTemplate;
         const plugin = this.plugins
-        .filter(plugin => plugin.generateTemplate.includes(curTemplate))
-        .find(plugin => plugin.isThisPlugin);
+            .filter(plugin => plugin.generateTemplate.includes(curTemplate))
+            .find(plugin => plugin.isThisPlugin);
         if (plugin) {
             return plugin.getMatchI18nText();
         }
@@ -32,20 +33,20 @@ export class I18nTextParserClass implements I18nTextParse {
         const curPos = this.currentPosition;
         const doucment = this.document;
 
-        const startLine = doucment.lineAt(curPos.line - line)
+        const startLine = doucment.lineAt(curPos.line - line);
         const startPosition = doucment.validatePosition(startLine.range.start);
         const endLine = doucment.lineAt(curPos.line + line);
         const endPositon = doucment.validatePosition(endLine.range.end);
 
         const range = doucment.validateRange(new Range(startPosition, endPositon));
-        const rangeText = this.getformatText2Parse(doucment.getText(range));
+        const rangeText = this.getFormatText2Parse(doucment.getText(range));
         return rangeText;
     }
 
     getLineText(): string {
         const { document, currentPosition } = this;
         const line = document.lineAt(currentPosition);
-        return this.getformatText2Parse(line.text);
+        return this.getFormatText2Parse(line.text);
     }
 
     isPluginThisSupported(options: I18nTextParseIsPluginThisSupportOptions): boolean {
@@ -55,17 +56,34 @@ export class I18nTextParserClass implements I18nTextParse {
             wholeRule,
             matchTextCb,
         } = options;
-        const diffuseVal = adjustNumberRange(diffuse?? 0, 0, 2);
+        const diffuseVal = adjustNumberRange(diffuse ?? 0, 0, 2);
         const lineText = this.getLineText();
         const isPartPassTest = partReg.test(lineText);
+        const line = this.currentPosition.line;
+        const doucment = this.document;
 
         if (!isPartPassTest) { return false; };
         const isSupportMoreCheck = !!diffuse;
-        if (!isSupportMoreCheck) { 
-            const matchText = lineText.match(wholeRule)?.[0];
+        if (!isSupportMoreCheck) {
+            let lineMatchText = lineText;
+            const matchPartResult = lineText.match(new RegExp(partReg, 'g'))!;
+            const hasMorePartResult = matchPartResult.length > 1;
+            if (hasMorePartResult) {
+                const matchRanges = matchPartResult
+                    .map((item) => ({ text: item, range: findStartAndEndIndex(lineMatchText, item)! }))
+                    .map(({ text, range: [start, end] }) => ({ 
+                        text, 
+                        range: new Range(new Position(line, start), new Position(line, end)),
+                     }))
+                    .map((item) => ({ text: item.text, range: doucment.validateRange(item.range), }))
+                    ;
+                lineMatchText = matchRanges.find((item) => item.range.contains(this.currentPosition))?.text ?? lineMatchText;
+            }
+
+            const matchText = lineMatchText.match(wholeRule)?.[0];
             if (matchText) { matchTextCb(matchText); };
             return !!matchText;
-         };
+        };
 
         for (let line = 1; line <= diffuseVal; line++) {
             const rangeText = this.getRangeTextFromProvider(line);
@@ -76,16 +94,16 @@ export class I18nTextParserClass implements I18nTextParse {
             const wholePassResult = rangeText.match(wholeRule)![0];
             const isInludeLineText = wholePassResult.includes(lineText);
             if (!isInludeLineText) { continue; };
-            if (isWholePasssTest && isInludeLineText) { 
+            if (isWholePasssTest && isInludeLineText) {
                 matchTextCb(wholePassResult);
                 return true;
-             }
+            }
         };
 
         return false;
     }
 
-    getformatText2Parse(str: string): string {
+    getFormatText2Parse(str: string): string {
         return str.replace(/\s/g, '');
     }
 };
