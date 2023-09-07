@@ -1,5 +1,6 @@
 import { languages, Location, Position, Uri } from 'vscode';
 import type { DefinitionProvider, ExtensionContext } from 'vscode';
+import { readFile } from 'fs/promises';
 import { getWrokspaceFloder } from 'utils/path';
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/index';
 import { I18nTextParserClass, createMatchI18nIdPlugin } from 'models/index';
@@ -9,7 +10,7 @@ import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
  * 自定义跳转
  * @see http://blog.haoji.me/vscode-plugin-jump-completion-hover.html
  * 按住 ctrl + click 会触发
- ** 跳转精确位置 - [ ]
+ ** 跳转精确位置 - [x]
  ** 多行匹配 - [x]
  */
 const definitionProvider: DefinitionProvider = {
@@ -33,8 +34,12 @@ const definitionProvider: DefinitionProvider = {
             if (!matchI18nContent) {
                 return;
             }
-
-            return new Location(Uri.file(matchI18nContent.path), new Position(0, 0));
+            const fileContent = await readFile(matchI18nContent.path, { encoding: 'utf8' });
+            const fileLines = fileContent.split('\n');
+            const line = fileLines.findIndex(item => item.includes(matchValue)) + 1;
+            const charts = fileLines[line - 1].indexOf(matchValue);
+            
+            return new Location(Uri.file(matchI18nContent.path), new Position(line, charts));
 
         }
     },
