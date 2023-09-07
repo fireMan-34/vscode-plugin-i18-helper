@@ -29,9 +29,24 @@ export class I18nTWithKeyMatchFnPlugin extends BaseI18nTextParsePlugin {
   partReg: RegExp = I18N_T_REGEX;
   wholeRule: RegExp = I18N_T_REGEX;
 }
+
+export class $TWithKeyMatchFnPlugin extends BaseI18nTextParsePlugin {
+  constructor(host: I18nTextParse) {
+    super(host);
+  }
+
+  generateTemplate: string[] = [
+    GENERATE_TEMPLATE_MAP.$T_WITH_KEY,
+  ];
+
+  partReg: RegExp = I18N_T_REGEX;
+  wholeRule: RegExp = I18N_T_REGEX;
+}
+
 export const createMatchI18nFnPlugin = (host: I18nTextParse) => {
   host.plugins = [
     new FormatMessageWithKeyAndValMatchFnPlugin(host),
     new I18nTWithKeyMatchFnPlugin(host),
+    new $TWithKeyMatchFnPlugin(host),
   ];
 };

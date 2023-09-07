@@ -6,3 +6,6 @@ export const FORMAT_MESSAGE_ID_REGEX = /["']?id["']?\s*:\s*["']([^"']*)?["']/;
 
 export const I18N_T_REGEX = /i18n\.t\(\s*/;
 export const I18N_T_KEY_REGEX = /i18n\.t\(\s*["']([^)]*)["']\)/;
+
+export const $_T_REGEX = /t\(\s*/;
+export const $_T_KEY_REGEX = /t\(\s*["']([^)]*)["']\)/;

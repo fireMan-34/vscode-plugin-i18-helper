@@ -1,5 +1,5 @@
 /** @fileoverview 匹配国际化 key 相关 */
-import { GENERATE_TEMPLATE_MAP, I18N_T_KEY_REGEX } from 'constants/index'
+import { $_T_KEY_REGEX, GENERATE_TEMPLATE_MAP, I18N_T_KEY_REGEX } from 'constants/index'
 import { FORMAT_MESSAGE_ID_REGEX, } from 'constants/index';
 import { I18nTextParse } from 'types/index';
 import { BaseI18nTextParsePlugin } from './base';
@@ -41,9 +41,25 @@ export class I18nTWithKeyMatchIdPlugin extends BaseI18nTextParsePlugin {
   };
 }
 
+export class $TWhthKeyMatchIdPlugin extends BaseI18nTextParsePlugin {
+  constructor(host: I18nTextParse) {
+    super(host);
+  }
+
+  generateTemplate: string[] = [ GENERATE_TEMPLATE_MAP.$T_WITH_KEY ];
+
+  partReg: RegExp = $_T_KEY_REGEX;
+  wholeRule: RegExp = $_T_KEY_REGEX;
+
+  matchTextCb: (text: string) => void = (text: string) => {
+    this.matchValue = text.match(this.wholeRule)![1];
+  };
+}
+
 export const createMatchI18nIdPlugin = (host: I18nTextParse) => {
   host.plugins = [
     new FormatMessageWithKeyAndValMatchIdPlugin(host),
     new I18nTWithKeyMatchIdPlugin(host),
+    new $TWhthKeyMatchIdPlugin(host),
   ];
 };
