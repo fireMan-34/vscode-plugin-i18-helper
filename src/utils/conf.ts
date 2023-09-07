@@ -82,7 +82,7 @@ export async function refreshI18nConfigJson(context: ExtensionContext, options: 
         }
 
         if (isSave) {
-            await saveJsonFile(runTimeConfigPath, metaJson);
+            await saveJsonFile(runTimeConfigPath, { ...metaJson, runTimeVersion: metaJson.runTimeVersion + 1 });
         }
 
         GlobalExtensionSubject.next(metaJson);

@@ -55,6 +55,7 @@ export const PROJECT_META_JSON: ProjectMetaJson = {
   isOpenCheckDir: true,
   mainLanguage: I18nType[I18nType.ZH_CN] as keyof typeof I18nType,
   generateTemplate: GENERATE_TEMPLATE_MAP.FORMAT_MESSSAGE_WITH_KEY_VAL,
+  runTimeVersion: 1,
   i18nDirList: [],
 };
 

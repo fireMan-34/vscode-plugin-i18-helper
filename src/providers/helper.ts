@@ -8,12 +8,21 @@ import { isSamePath } from "utils/path";
 import { thorwNewError } from "utils/log";
 import { I18nMetaJson, I18nType } from "types/index";
 import { readJsonFile } from "utils/fs";
+import { createRunTimeCahce } from 'utils/runtimeCache';
+
+const providerComputeCache = createRunTimeCahce('provider');
+let runTimeVersionNote: number;
 
 /** 获取 i18n 相关数据 辅助提供上下文函数 */
 export async function getProviderI18nJsonAndMainLanguage(folder: WorkspaceFolder) {
-  const { i18nDirList, mainLanguage } = await firstValueFrom(GlobalExtensionSubject);
-  const i18nType = I18nType[mainLanguage];
+  const { i18nDirList, mainLanguage, runTimeVersion } = await firstValueFrom(GlobalExtensionSubject);
+  const isUseCache = runTimeVersionNote && !providerComputeCache.clearWhile(runTimeVersionNote, runTimeVersionNote !== runTimeVersion);
 
+  if (isUseCache) {
+    return providerComputeCache.getKey(runTimeVersionNote) as typeof ctx;
+  }
+
+  const i18nType = I18nType[mainLanguage];
   const workspaceFolderPath = folder.uri.fsPath;
   const matchI18nDirList = i18nDirList
     .filter((i18nItem) => isSamePath(i18nItem.projectPath, workspaceFolderPath));
@@ -30,7 +39,9 @@ export async function getProviderI18nJsonAndMainLanguage(folder: WorkspaceFolder
 
   const i18nMainFileContents = i18nDirJsons.map((json => json.saveContent[i18nType])).flat();
 
-  return {
+  const ctx = {
+    /** 运行版本 */
+    runTimeVersion,
     /** 当前激活语言 */
     mainLanguage,
     /** 主语言相关枚举 */
@@ -44,4 +55,9 @@ export async function getProviderI18nJsonAndMainLanguage(folder: WorkspaceFolder
     /** i18n 主语言对应的文件数据 */
     i18nMainFileContents,
   };
+
+  providerComputeCache.setKey(runTimeVersion, ctx);
+  runTimeVersionNote = runTimeVersion;
+
+  return ctx;
 };

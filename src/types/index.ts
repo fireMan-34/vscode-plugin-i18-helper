@@ -102,6 +102,8 @@ export interface ProjectMetaJson {
   isOpenCheckDir: boolean,
   mainLanguage: keyof typeof I18nType,
   generateTemplate: string,
+  /** 运行刷新版本 */
+  runTimeVersion: number,
   i18nDirList: i18nDirItem[],
 }
 
