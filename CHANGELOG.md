@@ -106,3 +106,21 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - tets: 链接跳转匹配正则测试
 - refactor: 精简智能提示 & 自定义跳转代码
 - feat: 高亮国际化信息
+
+## 0.2.16
+- ci: 推送构建测试相关 ** (目前还在开发阶段)
+- feat: 配置动态模板基础功能
+- test: 动态模板测试用例
+- feat: 国际化模板功能部分开发
+- feat: 复制键值对生成动态国际化模板完成
+- refactor: 添加模型目录，扫描逻辑抽离
+- feat: 多种国际化代码功能类型开发
+- feat: 文本匹配解析类局部完善
+- refactor: 正则常量位置调整
+- feat: 添加渲染模板字符串常量
+- feat: 函数库添加字符串格式化判断
+- test: 添加 i8n.t 正则测试
+- pref: 添加国际化集合运行时缓存
+- pref: 添加智能提示缓存
+- feat: 添加 vue 字符串范围匹配
+- feat: 添加配置过滤解析对象
