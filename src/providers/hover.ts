@@ -16,7 +16,6 @@ const hoverProvider: HoverProvider = {
     createMatchI18nIdPlugin(i18nTextParser);
 
     const matchValue = i18nTextParser.getMatchI18nText();
-    console.log('匹配值', matchValue);
     
     if (matchValue) {
       const currentWorkFolder = await getWrokspaceFloder({
