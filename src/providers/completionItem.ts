@@ -5,12 +5,14 @@ import isEmpty from 'lodash/isEmpty';
 import { getWrokspaceFloder } from 'utils/path';
 import { thorwNewError } from 'utils/log';
 import { renderI18nCode } from 'utils/code';
+import { createRunTimeCahce } from 'utils/runtimeCache';
 import { I18nMetaJson, I18nType, i18nDirItem } from 'types/index';
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/provider';
 import { I18nTextParserClass, createMatchI18nFnPlugin } from 'models/index';
 import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 
-
+const runtimeCache = createRunTimeCahce('CompletionItem');
+let runTimeVersionNote: number;
 
 /** @see http://blog.haoji.me/vscode-plugin-jump-completion-hover.html
  * * 步骤分解
@@ -35,10 +37,16 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                     matchI18nPath: documnetUrl,
                 });
                 const {
+                    runTimeVersion,
                     i18nDirJsons,
                     mainLanguage,
                     matchI18nDirList,
                 } = await getProviderI18nJsonAndMainLanguage(currentWorkspaceFolder);
+                
+                const isUseCache = runTimeVersionNote && runtimeCache.clearWhile(runTimeVersionNote, runTimeVersionNote !== runTimeVersion);
+                if (isUseCache) {
+                    return runtimeCache.getKey(runTimeVersionNote) as typeof i18nContents;
+                };
 
                 if (isEmpty(matchI18nDirList)) {
                     thorwNewError('全局配置匹配不到此工作区文件夹', RangeError);
@@ -60,6 +68,10 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                                 })))
                         );
                 };
+
+                runtimeCache.setKey(runTimeVersionNote, i18nContents);
+                runTimeVersionNote = runTimeVersion;
+
                 return i18nContents;
             }
             return [];
