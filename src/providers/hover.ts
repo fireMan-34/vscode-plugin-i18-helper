@@ -1,4 +1,4 @@
-import type { ExtensionContext, HoverProvider } from 'vscode';
+import { ExtensionContext, HoverProvider, Uri } from 'vscode';
 import { Hover, languages } from 'vscode';
 import { SUPPORT_DOCUMENT_SELECTOR, I18N_DESCRIPTION_MAP } from 'constants/index';
 import { getWrokspaceFloder } from 'utils/path';
@@ -8,6 +8,7 @@ import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 
 /**
  * 国际化高亮
+ * 
  */
 const hoverProvider: HoverProvider = {
   async provideHover(document, position, token) {
@@ -33,11 +34,11 @@ const hoverProvider: HoverProvider = {
       const generateTextFromI18nFileContent = (item: I18nMetaJsonSaveContentItem) => {
         const value = item.content[matchValue]!;
         const i18nDescription = I18N_DESCRIPTION_MAP[item.i18nType];
-        const path = item.path;
+        const path = Uri.file(item.path).toString();
         const strs = [
           `- ${i18nDescription.name}:`,
           `   - 翻译: ${value}`,
-          `   - 文件: ${path} `,
+          `   - 文件: [${item.path}](${path}) `,
         ];
         return strs;
       };
