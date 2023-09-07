@@ -12,18 +12,25 @@ import { createRunTimeCahce } from 'utils/runtimeCache';
 
 const providerComputeCache = createRunTimeCahce('provider');
 let runTimeVersionNote: number;
+let workspacePath: string;
 
 /** 获取 i18n 相关数据 辅助提供上下文函数 */
 export async function getProviderI18nJsonAndMainLanguage(folder: WorkspaceFolder) {
   const { i18nDirList, mainLanguage, runTimeVersion } = await firstValueFrom(GlobalExtensionSubject);
-  const isUseCache = runTimeVersionNote && !providerComputeCache.clearWhile(runTimeVersionNote, runTimeVersionNote !== runTimeVersion);
+
+  const i18nType = I18nType[mainLanguage];
+  const workspaceFolderPath = folder.uri.fsPath;
+
+  const isUseCache = runTimeVersionNote && workspacePath && !providerComputeCache.clearWhile(runTimeVersionNote,
+    runTimeVersionNote !== runTimeVersion
+    || workspacePath !== workspaceFolderPath
+  );
 
   if (isUseCache) {
     return providerComputeCache.getKey(runTimeVersionNote) as typeof ctx;
   }
+  workspacePath = workspaceFolderPath;
 
-  const i18nType = I18nType[mainLanguage];
-  const workspaceFolderPath = folder.uri.fsPath;
   const matchI18nDirList = i18nDirList
     .filter((i18nItem) => isSamePath(i18nItem.projectPath, workspaceFolderPath));
 
