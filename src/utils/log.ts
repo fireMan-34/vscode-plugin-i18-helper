@@ -1,4 +1,4 @@
-import { window } from "vscode";
+import { window, Range, Position } from "vscode";
 import { Subject } from 'rxjs/internal/Subject';
 import { Subscription } from 'rxjs/internal/Subscription';
 
@@ -59,6 +59,24 @@ const thorwNewError = (msg: string, errorClass: ErrorConstructor
 ) => {
   LoggerSubject.next({ level: LoggerLevel.err, message: msg });
   throw new errorClass(msg);
+};
+
+/** 文档对象打印翻遍查询变量 */
+export const printDocumentObjectLog = (o: Position | Range): { x: number, y: number }
+  | { x: number, y: number }[]
+  | {} => {
+  if (o instanceof Position) {
+    return {
+      x: o.character,
+      y: o.line,
+    };
+  }
+
+  if (o instanceof Range) {
+    return [o.start, o.end].map(printDocumentObjectLog);
+  }
+
+  return {};
 };
 
 export {
