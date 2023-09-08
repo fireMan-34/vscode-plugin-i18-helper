@@ -153,7 +153,7 @@
       ]
     },
     "views": {
-      "i1n-map-views": [
+      "i18n-map-views": [
         {
           "id": "i18n-map-view",
           "name": "国际化文本"
