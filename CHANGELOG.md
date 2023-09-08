@@ -124,3 +124,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - pref: 添加智能提示缓存
 - feat: 添加 vue 字符串范围匹配
 - feat: 添加配置过滤解析对象
+
+## 0.2.24
+- fix: 修复工作目录切换后因缓存无法读取最新值问题
+- feat: 添加部分插件常量
+- feat: 添加日志、字符串相关函数
+- fix: 单行模式下匹配异常问题
+- feat: 链接关联跳转精确文件行列
+- style: 移除多余的换行符
+- feat: 添加悬浮后显示可跳转文件地址链接
+- feat: defaultMessage 识别 key
