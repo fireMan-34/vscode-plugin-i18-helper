@@ -24,3 +24,10 @@ export const GENERATE_TEMPLATE_MAP = {
     $T_WITH_KEY: "$t('${id}')",
 
 };
+
+/** 视图映射 ID */
+export const VIEW_ID_MAP = {
+    DIR: 'i18n-map-dir',
+    VIEW: 'i18n-map-view',
+    CONF: 'i18n-map-config',
+};

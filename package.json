@@ -155,6 +155,11 @@
     "views": {
       "i18n-map-views": [
         {
+          "id": "i18n-map-dir",
+          "name": "国际化目录",
+          "contextualTitle": "国际化目录语言类型划分"
+        },
+        {
           "id": "i18n-map-view",
           "name": "国际化文本"
         },

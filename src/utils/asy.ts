@@ -12,3 +12,9 @@ export function PromiseAllMap<T extends Record<string, Promise<any>>, K extends 
           (val) => ({ [key]: val })
         ))).then(newSets => assign({}, ...newSets));
 };
+
+export function sleep(time: number = 1000): Promise<number>{
+  return new Promise((resolve) => {
+    setTimeout(() => { resolve(time); }, time);
+  });
+};

@@ -169,3 +169,18 @@ export interface I18nTextParse {
   getMatchI18nText(): string | null;
 };
 // ---------------------------------------------------------------- 国际化代码识别相关相关 ⬆
+
+/** i18n 数据目录 */
+export interface I18nDirViewItem {
+  /** 国际化目录下的文件路径
+   * 最顶层路径由 project Meta 提供
+   */
+  path: string;
+  /** 以 工作区项目目录为基准的 glob 字符串匹配模式
+   * @see https://www.npmjs.com/package/glob
+   * * 如无则代表是通用匹配，在所有文件上下文都可以消费该国际化数据
+   */
+  matchUseI18nRegs?: string[];
+}
+
+// ---------------------------------------------------------------- 国际化代码目录设置代码语言识别权重相关 ⬆
