@@ -38,4 +38,7 @@
 	"exclude": [
 		"./client/*"
 	],
+	"ts-node": {
+		"require": [ "tsconfig-paths/register" ]
+	}
 }
