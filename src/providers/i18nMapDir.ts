@@ -45,10 +45,11 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
     treeItem.id = element.path;
     treeItem.description = '国际化扫描目录, 这里提供处理国际化文本消费的操作功能';
     treeItem.tooltip = element.path;
-    treeItem.command= {
-      title: '打开 webview 视图',
-      command: 'i18n.openWebView',
-    };
+    // treeItem.command= {
+    //   title: '打开 webview 视图',
+    //   command: 'i18n.openWebView',
+    // };
+    treeItem.contextValue = 'i18n.dir';
     // 命令标记
     // treeItem.contextValue
     // ? https://w3c.github.io/aria/#widget_roles

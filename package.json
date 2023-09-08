@@ -140,6 +140,12 @@
           "group": "9_cutcopypaste",
           "when": "editorTextFocus && editorHasSelection && i18n.isInI18nDirOne"
         }
+      ],
+      "view/item/context": [
+        {
+          "command": "i18n.openWebView",
+          "when": "viewItem == i18n.dir"
+        }
       ]
     },
     "snippets": [],
