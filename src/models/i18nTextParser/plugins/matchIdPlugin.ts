@@ -44,7 +44,6 @@ export class FormatMessageWithDefaultMessageMatchIdPlugin extends BaseI18nTextPa
 
   matchTextCb: (text: string) => void = (text: string) => {
     this.matchValue = Array.from(text.matchAll(this.wholeRule))[0][2] ?? '';
-    console.log(this.matchValue, [...text.matchAll(this.wholeRule)])
   };
 }
 

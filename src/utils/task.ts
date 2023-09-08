@@ -35,7 +35,6 @@ export const createConfgiChangeSubscript = (context: ExtensionContext) => {
  * ! onDidOpenTextDocument 打开后就不再触发
  */
 export const createSelectionChangeSubscript = (context: ExtensionContext) => {
-  console.log('注册成功');
   return window.onDidChangeActiveTextEditor(editor => {
     if (!editor) { return; };
     const { i18nDirList } =  GlobalExtensionSubject.getValue();

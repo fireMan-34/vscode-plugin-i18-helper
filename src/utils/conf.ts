@@ -90,12 +90,10 @@ export async function refreshI18nConfigJson(context: ExtensionContext, options: 
     } catch (err) {
         GlobalExtensionSubject.error(err);
     } finally {
-        console.log('finish refresh');
     };
 };
 
 
 export const GlobalExtensionSubscription = GlobalExtensionSubject.subscribe({
-    next: console.log,
     error: console.error,
 });
