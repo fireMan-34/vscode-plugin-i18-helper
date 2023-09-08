@@ -1,5 +1,6 @@
-import { commands, workspace, type ExtensionContext } from 'vscode';
-import { refreshI18nConfigJson } from 'utils/conf';
+import { commands, workspace, type ExtensionContext, window } from 'vscode';
+import { refreshI18nConfigJson, GlobalExtensionSubject } from 'utils/conf';
+import { isSubPath } from 'utils/path';
 import { EXTENSION_NAME, VSCODE_KEYS_MAP } from 'constants/index';
 
 /** 扫描国际化上下文任务 */
@@ -25,5 +26,22 @@ export const createConfgiChangeSubscript = (context: ExtensionContext) => {
       const isNeedRefresh = ev.affectsConfiguration(EXTENSION_NAME);
       if (!isNeedRefresh) { return; };
       refreshContextTask(context);
+  });
+};
+
+/** 判断当前文件是否在国际化目录中
+ * * workspace
+ * ! onDidChangeTextDocument 这个是监听用户修改文件的并非监听文件切换的。
+ * ! onDidOpenTextDocument 打开后就不再触发
+ */
+export const createSelectionChangeSubscript = (context: ExtensionContext) => {
+  console.log('注册成功');
+  return window.onDidChangeActiveTextEditor(editor => {
+    if (!editor) { return; };
+    const { i18nDirList } =  GlobalExtensionSubject.getValue();
+    const isInI18nDirOne = i18nDirList
+    .map((dir) => dir.originalPath)
+    .some(path => isSubPath(path, editor.document.uri.fsPath));
+    commands.executeCommand('setContext', 'i18n.isInI18nDirOne' , isInI18nDirOne );
   });
 };
