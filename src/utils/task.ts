@@ -6,7 +6,7 @@ import { EXTENSION_NAME, VSCODE_KEYS_MAP } from 'constants/index';
 /** 扫描国际化上下文任务 */
 export const refreshScan18FileTaskContext = (context: ExtensionContext) => {
   const scanFolders = workspace.getConfiguration(EXTENSION_NAME).get(VSCODE_KEYS_MAP.scanFolders);
-  commands.executeCommand('setContext', 'ext.supportedFolders', scanFolders);
+  commands.executeCommand('setContext', 'i18n.supportedFolders', scanFolders);
 };
 
 /** 刷新配置上下文

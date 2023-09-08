@@ -131,7 +131,7 @@
         {
           "command": "i18n.scanI18File",
           "group": "7_modification",
-          "when": "explorerResourceIsFolder && resourceFilename in ext.supportedFolders"
+          "when": "explorerResourceIsFolder && resourceFilename in i18n.supportedFolders"
         }
       ],
       "editor/context": [
