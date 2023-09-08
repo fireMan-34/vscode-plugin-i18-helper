@@ -36,7 +36,7 @@ module.exports = {
   // recursive: false,
   // reporter: 'spec',
   // 'reporter-option': ['foo=bar', 'baz=quux'], // array, not object
-  // require: 'ts-node/register',
+  require: 'ts-node/register',
   // retries: 1,
   // slow: '75',
   // sort: false,
