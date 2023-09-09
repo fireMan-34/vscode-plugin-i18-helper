@@ -1,11 +1,12 @@
-import { ExtensionContext, window, TreeDataProvider, TreeItem, } from 'vscode';
+import { ExtensionContext, window, TreeDataProvider, TreeItem, TreeItemCollapsibleState, } from 'vscode';
 import { relative } from 'path';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { VIEW_ID_MAP } from 'constants/index';
 import { GlobalExtensionSubject } from 'utils/conf';
-import { isSamePath } from 'utils/path';
+import { isSamePath, isSubPath } from 'utils/path';
 import { getWrokspaceFloder } from 'utils/path.code';
 import { sleep } from 'utils/asy';
+import { getSubDirectoryFromDirectoryPath } from 'utils/fs';
 import { I18nDirViewItem } from 'types/index';
 
 /**
@@ -15,7 +16,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
 
   async getChildren(element?: I18nDirViewItem | undefined): Promise<I18nDirViewItem[] | undefined> {
     try {
-      const isRoot = !element;
+            const isRoot = !element;
       if (isRoot) {
         await sleep();
 
@@ -23,12 +24,17 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
         const curWorkspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
         const rootPath = curWorkspaceFolder.uri.fsPath;
 
-        const i18nDirViews = i18nDirList
+        const i18nDirViews = (await Promise.all(i18nDirList
           .filter((item => isSamePath(item.projectPath, rootPath)))
-          .map(dir => ({ path: dir.originalPath }));
+          .map((dir) => dir.originalPath)
+          .map(getSubDirectoryFromDirectoryPath)
+        )).flatMap(paths => paths.map(path => ({ path })));
 
         return i18nDirViews;
       }
+
+      const paths = await getSubDirectoryFromDirectoryPath(element.path);
+      return paths.map(path => ({ path }));
     } catch (err) {
       console.log(err);
     }
@@ -37,7 +43,12 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
 
   async getTreeItem(element: I18nDirViewItem): Promise<TreeItem> {
     const curWorkspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
-    const rootPath = curWorkspaceFolder.uri.fsPath;
+    const { i18nDirList } = await firstValueFrom(GlobalExtensionSubject);
+    const [ curI18nDir ] = i18nDirList
+    .filter(item =>  isSamePath(item.projectPath, curWorkspaceFolder.uri.fsPath))
+    .filter(item => isSubPath(item.originalPath, element.path) || isSamePath(item.originalPath, element.path));
+
+    const rootPath = curI18nDir.originalPath;
 
     const treeItem = new TreeItem({
       label: relative(rootPath, element.path),
@@ -51,6 +62,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
     //   command: 'i18n.openWebView',
     // };
     treeItem.contextValue = 'i18n.dir';
+    treeItem.collapsibleState = TreeItemCollapsibleState.Collapsed;
     // 命令标记
     // treeItem.contextValue
     // ? https://w3c.github.io/aria/#widget_roles
