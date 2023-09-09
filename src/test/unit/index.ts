@@ -1,7 +1,9 @@
 import { equal } from 'assert';
-import { describe, it, } from 'mocha';
+import Mocha, { describe, it, } from 'mocha';
+import { glob } from 'glob';
 import { isSameTrimString } from 'utils/str';
 import { isSamePath } from 'utils/path';
+import { join } from 'path';
 
 function simpleTest (n: number) {
   return n**n;
@@ -21,3 +23,34 @@ describe('单元测试', function () {
   });
 });
 
+const root = join(__dirname, '..');
+
+async function main() {
+  const mocha = new Mocha({
+    ui: 'tdd',
+    color: true,
+  });
+
+  await new Promise((resolve, reject) => {
+    glob('unit/**.test.ts', { cwd: root }, (err, files) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      files.map(file => join(root, file))
+      .forEach(path => mocha.addFile(path));
+
+      mocha.run((fails) => {
+        if (fails) {
+          reject(fails);
+        } else {
+          resolve(files);
+        }
+      });
+    });
+  });
+
+};
+
+main();
