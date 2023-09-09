@@ -3,6 +3,7 @@ import { createDisableFromSubscription } from 'utils/rxHelper';
 import { LoggerSubscription } from 'utils/log';
 import { GlobalExtensionSubscription, } from 'utils/conf';
 import { createConfgiChangeSubscript, createSelectionChangeSubscript } from 'utils/task';
+import 'utils/log.code';
 
 /** 资源释放处理 */
 export const createTotalRxSubscriptionDisable = (context: ExtensionContext) => {
