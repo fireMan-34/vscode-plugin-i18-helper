@@ -1,4 +1,4 @@
-import { ExtensionContext, window, TreeDataProvider, TreeItem, TreeItemCollapsibleState, } from 'vscode';
+import { ExtensionContext, window, TreeDataProvider, TreeItem, TreeItemCollapsibleState, ProviderResult, } from 'vscode';
 import { relative } from 'path';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { VIEW_ID_MAP } from 'constants/index';
@@ -16,7 +16,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
 
   async getChildren(element?: I18nDirViewItem | undefined): Promise<I18nDirViewItem[] | undefined> {
     try {
-            const isRoot = !element;
+      const isRoot = !element;
       if (isRoot) {
         await sleep();
 
@@ -34,7 +34,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
       }
 
       const paths = await getSubDirectoryFromDirectoryPath(element.path);
-      return paths.map(path => ({ path }));
+      return paths.map(path => ({ path, parent: element }));
     } catch (err) {
       console.log(err);
     }
@@ -42,13 +42,18 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
   }
 
   async getTreeItem(element: I18nDirViewItem): Promise<TreeItem> {
-    const curWorkspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
-    const { i18nDirList } = await firstValueFrom(GlobalExtensionSubject);
-    const [ curI18nDir ] = i18nDirList
-    .filter(item =>  isSamePath(item.projectPath, curWorkspaceFolder.uri.fsPath))
-    .filter(item => isSubPath(item.originalPath, element.path) || isSamePath(item.originalPath, element.path));
-
-    const rootPath = curI18nDir.originalPath;
+    
+    const rootPath = await (async function () {
+      if (element.parent) {
+        return element.parent.path;
+      }
+      const curWorkspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
+      const { i18nDirList } = await firstValueFrom(GlobalExtensionSubject);
+      const [curI18nDir] = i18nDirList
+        .filter(item => isSamePath(item.projectPath, curWorkspaceFolder.uri.fsPath))
+        .filter(item => isSubPath(item.originalPath, element.path) || isSamePath(item.originalPath, element.path));
+      return curI18nDir.projectPath;
+    }());
 
     const treeItem = new TreeItem({
       label: relative(rootPath, element.path),
@@ -62,13 +67,19 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
     //   command: 'i18n.openWebView',
     // };
     treeItem.contextValue = 'i18n.dir';
-    treeItem.collapsibleState = TreeItemCollapsibleState.Collapsed;
+    treeItem.collapsibleState = ((await getSubDirectoryFromDirectoryPath(element.path)).length > 0)
+      ? TreeItemCollapsibleState.Collapsed
+      : TreeItemCollapsibleState.None;
     // 命令标记
     // treeItem.contextValue
     // ? https://w3c.github.io/aria/#widget_roles
     // treeItem.accessibilityInformation
 
     return treeItem;
+  }
+
+  getParent(element: I18nDirViewItem): ProviderResult<I18nDirViewItem> {
+    return element.parent;
   }
 }
 
