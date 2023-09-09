@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync, } from 'fs';
 import { readdir, stat, writeFile, readFile } from 'node:fs/promises';
 import { join, } from 'node:path';
+import { thorwNewError } from 'utils/log';
 
 const TEST = false;
 
@@ -92,16 +93,30 @@ export const checkPathIsFileOrDirectory = async (paths: string[]): Promise<FileA
     if (pathStat.stat.isDirectory()) {
       set.dirPaths.push(pathStat.path);
     }
-    else if(pathStat.stat.isFile()) {
+    else if (pathStat.stat.isFile()) {
       set.filePaths.push(pathStat.path);
     }
     else {
       set.unknowTypePaths.push(pathStat.path);
     }
-    
+
   });
 
   return set;
+};
+
+/** 异步获取某个目录的子级目录 */
+export const getSubDirectoryFromDirectoryPath = async (path: string) => {
+  const isDirectory = (await stat(path)).isDirectory();
+
+  if (!isDirectory) {
+    thorwNewError(`${path} is not a directory`, TypeError);
+  }
+
+  const filenames = await readdir(path, { encoding: 'utf-8' });
+  const paths = filenames.map((filename) => join(path, filename));
+
+  return (await checkPathIsFileOrDirectory(paths)).dirPaths;
 };
 
 if (TEST) {
