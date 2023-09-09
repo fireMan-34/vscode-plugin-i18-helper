@@ -1,6 +1,8 @@
 import { ExtensionContext, Uri, workspace } from 'vscode';
 import pick from 'lodash/pick';
+import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { ProjectMetaJson, i18nDirItem, XTextEditor } from "types/index";
 import { readJsonFile, saveJsonFile } from "utils/fs";
 import { getRunTimeConfigPath } from "utils/path";
@@ -98,3 +100,7 @@ export async function refreshI18nConfigJson(context: ExtensionContext, options: 
 export const GlobalExtensionSubscription = GlobalExtensionSubject.subscribe({
     error: console.error,
 });
+
+export const getGlobalConfiguration = () => {
+    return firstValueFrom(GlobalExtensionSubject.pipe(first( conf => !!conf.i18nDirList )));
+};

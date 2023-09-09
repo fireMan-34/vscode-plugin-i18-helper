@@ -1,11 +1,9 @@
 import { ExtensionContext, window, TreeDataProvider, TreeItem, TreeItemCollapsibleState, ProviderResult, } from 'vscode';
 import { relative } from 'path';
-import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { VIEW_ID_MAP } from 'constants/index';
-import { GlobalExtensionSubject } from 'utils/conf';
+import { getGlobalConfiguration } from 'utils/conf';
 import { isSamePath, isSubPath } from 'utils/path';
 import { getWrokspaceFloder } from 'utils/path.code';
-import { sleep } from 'utils/asy';
 import { getSubDirectoryFromDirectoryPath } from 'utils/fs';
 import { I18nDirViewItem } from 'types/index';
 
@@ -18,9 +16,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
     try {
       const isRoot = !element;
       if (isRoot) {
-        await sleep();
-
-        const { i18nDirList } = await firstValueFrom(GlobalExtensionSubject);
+        const { i18nDirList } = await getGlobalConfiguration();
         const curWorkspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
         const rootPath = curWorkspaceFolder.uri.fsPath;
 
@@ -48,7 +44,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
         return element.parent.path;
       }
       const curWorkspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
-      const { i18nDirList } = await firstValueFrom(GlobalExtensionSubject);
+      const { i18nDirList } = await getGlobalConfiguration();
       const [curI18nDir] = i18nDirList
         .filter(item => isSamePath(item.projectPath, curWorkspaceFolder.uri.fsPath))
         .filter(item => isSubPath(item.originalPath, element.path) || isSamePath(item.originalPath, element.path));
