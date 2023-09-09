@@ -3,7 +3,8 @@ import pick from 'lodash/pick';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ProjectMetaJson, i18nDirItem, XTextEditor } from "types/index";
 import { readJsonFile, saveJsonFile } from "utils/fs";
-import { getWrokspaceFloder, getRunTimeConfigPath } from "utils/path";
+import { getRunTimeConfigPath } from "utils/path";
+import { getWrokspaceFloder } from 'utils/path.code';
 import { PROJECT_META_JSON, EXTENSION_NAME,  VSCODE_KEYS } from 'constants/index';
 
 /** 全局发布订阅中心 */

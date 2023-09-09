@@ -3,7 +3,8 @@ import { relative } from 'path';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { VIEW_ID_MAP } from 'constants/index';
 import { GlobalExtensionSubject } from 'utils/conf';
-import { getWrokspaceFloder, isSamePath } from 'utils/path';
+import { isSamePath } from 'utils/path';
+import { getWrokspaceFloder } from 'utils/path.code';
 import { sleep } from 'utils/asy';
 import { I18nDirViewItem } from 'types/index';
 
@@ -28,7 +29,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
 
         return i18nDirViews;
       }
-    } catch (err) { 
+    } catch (err) {
       console.log(err);
     }
 

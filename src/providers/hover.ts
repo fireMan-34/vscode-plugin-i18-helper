@@ -1,7 +1,7 @@
 import { ExtensionContext, HoverProvider, Uri } from 'vscode';
 import { Hover, languages } from 'vscode';
 import { SUPPORT_DOCUMENT_SELECTOR, I18N_DESCRIPTION_MAP } from 'constants/index';
-import { getWrokspaceFloder } from 'utils/path';
+import { getWrokspaceFloder } from 'utils/path.code';
 import { I18nTextParserClass, createMatchI18nIdPlugin } from 'models/index';
 import { I18nMetaJsonSaveContentItem, I18nType, } from 'types/index';
 import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
@@ -16,7 +16,7 @@ const hoverProvider: HoverProvider = {
     createMatchI18nIdPlugin(i18nTextParser);
 
     const matchValue = i18nTextParser.getMatchI18nText();
-    
+
     if (matchValue) {
       const currentWorkFolder = await getWrokspaceFloder({
         multiplySelect: 'matchFile',

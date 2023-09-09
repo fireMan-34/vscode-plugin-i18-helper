@@ -2,7 +2,7 @@ import { relative } from 'path';
 import type { CompletionItemProvider, ExtensionContext } from 'vscode';
 import { languages, CompletionItem } from 'vscode';
 import isEmpty from 'lodash/isEmpty';
-import { getWrokspaceFloder } from 'utils/path';
+import { getWrokspaceFloder } from 'utils/path.code';
 import { thorwNewError } from 'utils/log';
 import { renderI18nCode } from 'utils/code';
 import { createRunTimeCahce } from 'utils/runtimeCache';
@@ -42,7 +42,7 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                     mainLanguage,
                     matchI18nDirList,
                 } = await getProviderI18nJsonAndMainLanguage(currentWorkspaceFolder);
-                
+
                 const isUseCache = runTimeVersionNote && !runtimeCache.clearWhile(runTimeVersionNote, runTimeVersionNote !== runTimeVersion);
                 if (isUseCache) {
                     return runtimeCache.getKey(runTimeVersionNote) as typeof i18nContents;
@@ -64,7 +64,7 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                                     label: msg,
                                     detail: relative(metaJson.originalPath, i18nItem.path),
                                     documentation: i18nItem.path,
-                                    insertText: renderI18nCode({id, msg, isRemoveBrace: true, isRemoveBracket: true }),
+                                    insertText: renderI18nCode({ id, msg, isRemoveBrace: true, isRemoveBracket: true }),
                                 })))
                         );
                 };

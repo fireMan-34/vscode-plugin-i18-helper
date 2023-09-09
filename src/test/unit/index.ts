@@ -1,6 +1,7 @@
 import { equal } from 'assert';
 import { describe, it, } from 'mocha';
 import { isSameTrimString } from 'utils/str';
+import { isSamePath } from 'utils/path';
 
 function simpleTest (n: number) {
   return n**n;
@@ -13,6 +14,10 @@ describe('单元测试', function () {
 
   it('测试是否能够正常识别别名路径', function(){
     equal(isSameTrimString(__dirname, __dirname), true);
+  });
+
+  it('测试是否能够只导入 vscode 类型包进行工作', function(){
+    equal(isSamePath(__dirname, __dirname), true);
   });
 });
 
