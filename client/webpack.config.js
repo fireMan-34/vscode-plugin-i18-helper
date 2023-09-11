@@ -17,6 +17,10 @@ const webpackConfig = {
         test: /\.(jsx?|tsx?)$/,
         loader: 'ts-loader',
       },
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ],
+      },
     ]
   },
   plugins: [
