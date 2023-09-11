@@ -11,7 +11,8 @@
 			"type": "extensionHost",
 			"args": [
 				// * https://github.com/microsoft/vscode/issues/122006
-				"D:\/Project\/pro-micro-services",
+				// "D:\/Project\/pro-micro-services",
+				"D:\/Project\/pro-micro-services\/.vscode\/pro-micro-services.code-workspace",
 				"--extensionDevelopmentPath=${workspaceFolder}",
 			],
 			"outFiles": [
