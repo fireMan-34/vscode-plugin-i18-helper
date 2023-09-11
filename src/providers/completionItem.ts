@@ -6,7 +6,7 @@ import { getWrokspaceFloder } from 'utils/path.code';
 import { thorwNewError } from 'utils/log';
 import { renderI18nCode } from 'utils/code';
 import { createRunTimeCahce } from 'utils/runtimeCache';
-import { I18nMetaJson, I18nType, i18nDirItem } from 'types/index';
+import { I18nMetaJson, I18nType, I18nDirItem } from 'types/index';
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/provider';
 import { I18nTextParserClass, createMatchI18nFnPlugin } from 'models/index';
 import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
@@ -54,7 +54,7 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
 
                 const i18nContents = i18nDirJsons.flatMap(getI18nList);
 
-                function getI18nList(metaJson: I18nMetaJson & i18nDirItem) {
+                function getI18nList(metaJson: I18nMetaJson & I18nDirItem) {
                     const i18nType = I18nType[mainLanguage];
                     return metaJson
                         .saveContent[i18nType]

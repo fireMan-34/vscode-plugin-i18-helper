@@ -5,7 +5,7 @@ import omit from 'lodash/omit';
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
-import { ProjectSaveConfig, VScodeConfig, ProjectGlobalConfig, i18nDirItem, XTextEditor } from "types/index";
+import { ProjectSaveConfig, VScodeConfig, ProjectGlobalConfig, I18nDirItem, XTextEditor } from "types/index";
 import { readJsonFile, saveJsonFile } from "utils/fs";
 import { getRunTimeConfigPath } from "utils/path";
 import { getWrokspaceFloder } from 'utils/path.code';
@@ -48,7 +48,7 @@ export async function writeI18nConfigJson(context: ExtensionContext, excuter: XT
 
     const projectSaveJson = await readJsonFile<ProjectSaveConfig>(extensionMetaJsonPath);
     const projectPath = await getWrokspaceFloder();
-    const item: i18nDirItem = {
+    const item: I18nDirItem = {
         originalPath: excutePath,
         targetPath: saveJsonPath,
         projectPath: projectPath.uri.fsPath,

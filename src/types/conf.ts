@@ -42,7 +42,7 @@ export interface I18nMetaJson {
   saveContent: Record<I18nType, I18nMetaJsonSaveContentItem[]>
 }
 
-export interface i18nDirItem {
+export interface I18nDirItem {
   /** 源路径 */
   originalPath: string;
   /** 插件生成路径 */
@@ -56,7 +56,7 @@ export interface ProjectSaveConfig {
 
   /** 运行刷新版本 */
   runTimeVersion: number,
-  i18nDirList: i18nDirItem[],
+  i18nDirList: I18nDirItem[],
 }
 
 /** VS code 配置 */
