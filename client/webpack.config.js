@@ -2,6 +2,8 @@ const { join } = require('path');
 const { cwd } = require('process');
 const HtmlPlugin = require('html-webpack-plugin');
 
+const postcssOptions = require('./postcss.config');
+
 /** @type {import('webpack').Configuration} */
 const webpackConfig = {
   mode: 'production',
@@ -16,6 +18,15 @@ const webpackConfig = {
       {
         test: /\.(jsx?|tsx?)$/,
         loader: 'ts-loader',
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader', {
+          loader: 'postcss-loader',
+          options: {
+            postcssOptions: postcssOptions,
+          }
+        }],
       },
     ]
   },

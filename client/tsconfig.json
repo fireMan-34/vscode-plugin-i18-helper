@@ -19,6 +19,7 @@
   "include": [
     "./pages/*",
     "./templates/*",
+    "./types/*",
     // 包括这个才能处理模块中的东西
     "../node_modules/*",
   ],
