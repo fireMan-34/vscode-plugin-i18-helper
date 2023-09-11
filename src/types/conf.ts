@@ -51,19 +51,41 @@ export interface I18nDirItem {
   projectPath: string;
 }
 
+/** 国际化解析 目录规则指定对应语种 */
+export interface I18nRuleDirItem {
+  /** 国际化类型 */
+  i18nType: keyof typeof I18nType;
+  /** 当前扫描国际化目录 */
+  i18nDirPath: string;
+  /** 指定路径对应国际化规则路径 */
+  rulePath: string;
+  /** 对应目录路径 */
+  projectPath: string;
+}
+
 /** 保存配置信息 json */
 export interface ProjectSaveConfig {
 
   /** 运行刷新版本 */
   runTimeVersion: number,
+  /** 国际化目录 */
   i18nDirList: I18nDirItem[],
+  /** 关联国际化目录 */
+  i18nRuleDirList: I18nRuleDirItem[],
 }
 
 /** VS code 配置 */
 export interface VScodeConfig {
+  /** 是否开始前检测目录是否失效
+   * todo 待做功能
+   */
   isOpenCheckDir: boolean,
+  /** 主要项目使用语言 */
   mainLanguage: keyof typeof I18nType,
+  /** 生成的代码模板 */
   generateTemplate: string,
+  /** 可扫描的国际化目录路径 */
+  scanFolders: string[],
 }
 
 /** 全局配置 */

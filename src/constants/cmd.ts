@@ -6,6 +6,7 @@ export const CMD_KEY = {
     PARSE_KEY_AND_VALUE2_FORMAT_MESSAGE_CMD: 'i18n.parseKeyAndValue2FormatMessage',
     /** 扫描国际化文件 */
     SCAN_I18_FILE: 'i18n.scanI18File',
-
+    /** 国际化目录规则 */
+    I18N_RULE_DIR: 'i18n.i18nRuleDir',
 };
 

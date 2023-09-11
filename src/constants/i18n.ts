@@ -53,6 +53,7 @@ export const DEFAULT_I18N_META: I18nMetaJson = {
 export const PROJECT_META_JSON: ProjectSaveConfig = {
   runTimeVersion: 1,
   i18nDirList: [],
+  i18nRuleDirList: [],
 };
 
 /** vscode 配置 Map */
