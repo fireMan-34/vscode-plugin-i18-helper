@@ -1,5 +1,4 @@
-import { GENERATE_TEMPLATE_MAP } from 'constants/provider';
-import { I18nType, I18nDescriptionItem, I18nMetaJson, ProjectMetaJson } from 'types/index';
+import { I18nType, I18nDescriptionItem, I18nMetaJson, ProjectSaveConfig } from 'types/index';
 
 type I18nDescriptionMap = Record<I18nType, I18nDescriptionItem>;
 
@@ -51,10 +50,7 @@ export const DEFAULT_I18N_META: I18nMetaJson = {
 };
 
 /** 默认国际化文件配置 */
-export const PROJECT_META_JSON: ProjectMetaJson = {
-  isOpenCheckDir: true,
-  mainLanguage: I18nType[I18nType.ZH_CN] as keyof typeof I18nType,
-  generateTemplate: GENERATE_TEMPLATE_MAP.FORMAT_MESSSAGE_WITH_KEY_VAL,
+export const PROJECT_META_JSON: ProjectSaveConfig = {
   runTimeVersion: 1,
   i18nDirList: [],
 };
@@ -69,8 +65,8 @@ export const VSCODE_KEYS_MAP = {
 
 /** vscode 配置 */
 export const VSCODE_KEYS = [
-  VSCODE_KEYS_MAP.isOpenCheckDir, 
-  VSCODE_KEYS_MAP.mainLanguage, 
+  VSCODE_KEYS_MAP.isOpenCheckDir,
+  VSCODE_KEYS_MAP.mainLanguage,
   VSCODE_KEYS_MAP.scanFolders,
   VSCODE_KEYS_MAP.generateTemplate,
 ];

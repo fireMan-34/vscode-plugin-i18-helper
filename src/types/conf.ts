@@ -51,14 +51,24 @@ export interface i18nDirItem {
   projectPath: string;
 }
 
-/** 项目配置信息 json */
-export interface ProjectMetaJson {
-  isOpenCheckDir: boolean,
-  mainLanguage: keyof typeof I18nType,
-  generateTemplate: string,
+/** 保存配置信息 json */
+export interface ProjectSaveConfig {
+
   /** 运行刷新版本 */
   runTimeVersion: number,
   i18nDirList: i18nDirItem[],
 }
+
+/** VS code 配置 */
+export interface VScodeConfig {
+  isOpenCheckDir: boolean,
+  mainLanguage: keyof typeof I18nType,
+  generateTemplate: string,
+}
+
+/** 全局配置 */
+export interface ProjectGlobalConfig extends ProjectSaveConfig, VScodeConfig {
+
+};
 
 // ---------------------------------------------------------------- 国际化配置相关 ⬆
