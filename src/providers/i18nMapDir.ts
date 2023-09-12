@@ -1,7 +1,16 @@
-import { ExtensionContext, window, TreeDataProvider, TreeItem, TreeItemCollapsibleState, ProviderResult, Event, Disposable, } from 'vscode';
+import { 
+  window, 
+  TreeItem, 
+  TreeItemCollapsibleState, 
+  Disposable, 
+  EventEmitter, } from 'vscode';
+import type { 
+  ExtensionContext, 
+  ProviderResult, 
+  TreeDataProvider, } from 'vscode';
 import { relative } from 'path';
 import { VIEW_ID_MAP } from 'constants/index';
-import { getGlobalConfiguration } from 'utils/conf';
+import { getGlobalConfiguration, GlobalExtensionSubject, GlobalExtensionSubscription } from 'utils/conf';
 import { isSamePath, isSubPath } from 'utils/path';
 import { getWrokspaceFloder } from 'utils/path.code';
 import { getSubDirectoryFromDirectoryPath } from 'utils/fs';
@@ -16,18 +25,21 @@ import { I18nDirViewItem } from 'types/index';
  */
 class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
 
+  refreshEM = new EventEmitter<void | I18nDirViewItem | I18nDirViewItem[] | null | undefined>();
+
+  refresh() { this.refreshEM.fire(); }
+
+  disposeEM = new Disposable(() => this.refreshEM.dispose());
+
   /** 
     这个 api 应该是用来刷新视图，头疼
    * @link https://stackoverflow.com/questions/52421724/how-to-refresh-treeview-on-underlying-data-change
    * @link https://stackoverflow.com/questions/56859900/command-on-treeviewitem-item-click-vscode-extension/74061006#74061006
    */
-  // onDidChangeTreeData
-  onDidChangeTreeData?: Event<void | I18nDirViewItem | I18nDirViewItem[] | null | undefined> | undefined = (ev) => {
-    setInterval(() => {
-      ev();
-    }, 3000);
-    return new Disposable(() => {});
+  get onDidChangeTreeData() {
+    return this.refreshEM.event;
   };
+
 
   async getChildren(element?: I18nDirViewItem | undefined): Promise<I18nDirViewItem[] | undefined> {
     try {
@@ -55,7 +67,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
   }
 
   async getTreeItem(element: I18nDirViewItem): Promise<TreeItem> {
-    
+
     const rootPath = await (async function () {
       if (element.parent) {
         return element.parent.path;
@@ -98,6 +110,22 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
 export const i18nMapDirDataProvider = new I18nMapDirDataProvider();
 
 export const createTreeI18nMapDirProvider = (context: ExtensionContext) => {
-  return window.registerTreeDataProvider(
-    VIEW_ID_MAP.DIR, i18nMapDirDataProvider);
+
+  context.subscriptions.push(i18nMapDirDataProvider.disposeEM);
+
+  const providerDispose = window.registerTreeDataProvider(VIEW_ID_MAP.DIR, i18nMapDirDataProvider);
+
+  const refreshViewSubjection = GlobalExtensionSubject.subscribe({
+    next(value) {
+      if (value.i18nDirList.length > 0) {
+        i18nMapDirDataProvider.refresh();
+      }
+    },
+  });
+  GlobalExtensionSubscription.add(refreshViewSubjection);
+
+  return new Disposable(() => {
+    providerDispose.dispose();
+    i18nMapDirDataProvider.disposeEM.dispose();
+  });
 };
