@@ -108,24 +108,27 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
 }
 
 export const i18nMapDirDataProvider = new I18nMapDirDataProvider();
+const providerDispose = window.registerTreeDataProvider(VIEW_ID_MAP.DIR, i18nMapDirDataProvider);
+
+/** 视图实例 */
+export const i18nMapDirTreeView = window.createTreeView(VIEW_ID_MAP.DIR, {
+  treeDataProvider: i18nMapDirDataProvider,
+});
+
+const refreshViewSubjection = GlobalExtensionSubject.subscribe({
+  next(value) {
+    if (value.i18nDirList.length > 0) {
+      i18nMapDirDataProvider.refresh();
+    }
+  },
+});
+GlobalExtensionSubscription.add(refreshViewSubjection);
 
 export const createTreeI18nMapDirProvider = (context: ExtensionContext) => {
 
-  context.subscriptions.push(i18nMapDirDataProvider.disposeEM);
-
-  const providerDispose = window.registerTreeDataProvider(VIEW_ID_MAP.DIR, i18nMapDirDataProvider);
-
-  const refreshViewSubjection = GlobalExtensionSubject.subscribe({
-    next(value) {
-      if (value.i18nDirList.length > 0) {
-        i18nMapDirDataProvider.refresh();
-      }
-    },
-  });
-  GlobalExtensionSubscription.add(refreshViewSubjection);
-
   return new Disposable(() => {
     providerDispose.dispose();
+    i18nMapDirTreeView.dispose();
     i18nMapDirDataProvider.disposeEM.dispose();
   });
 };
