@@ -1,4 +1,4 @@
-import { ExtensionContext, window, TreeDataProvider, TreeItem, TreeItemCollapsibleState, ProviderResult, } from 'vscode';
+import { ExtensionContext, window, TreeDataProvider, TreeItem, TreeItemCollapsibleState, ProviderResult, Event, Disposable, } from 'vscode';
 import { relative } from 'path';
 import { VIEW_ID_MAP } from 'constants/index';
 import { getGlobalConfiguration } from 'utils/conf';
@@ -9,8 +9,25 @@ import { I18nDirViewItem } from 'types/index';
 
 /**
  * 国际化目录操作视图
+ * 😢官方好像不支持这么菜单处理， 头疼
+ * @link https://qa.1r1g.com/sf/ask/3555182431/
+ * @link https://github.com/microsoft/vscode/issues/26948
+ * @link https://stackoverflow.com/search?q=vscode+TreeDataProvider+command
  */
 class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
+
+  /** 
+    这个 api 应该是用来刷新视图，头疼
+   * @link https://stackoverflow.com/questions/52421724/how-to-refresh-treeview-on-underlying-data-change
+   * @link https://stackoverflow.com/questions/56859900/command-on-treeviewitem-item-click-vscode-extension/74061006#74061006
+   */
+  // onDidChangeTreeData
+  onDidChangeTreeData?: Event<void | I18nDirViewItem | I18nDirViewItem[] | null | undefined> | undefined = (ev) => {
+    setInterval(() => {
+      ev();
+    }, 3000);
+    return new Disposable(() => {});
+  };
 
   async getChildren(element?: I18nDirViewItem | undefined): Promise<I18nDirViewItem[] | undefined> {
     try {
@@ -70,7 +87,6 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
     // treeItem.contextValue
     // ? https://w3c.github.io/aria/#widget_roles
     // treeItem.accessibilityInformation
-
     return treeItem;
   }
 
