@@ -4,6 +4,7 @@ import vscode from 'vscode';
 import formatMessageCmd from 'commands/parseKeyAndValue2FormatMessage';
 import openWebViewCmd from 'commands/openWebView';
 import scanI18FileCmd from 'commands/scanI18File';
+import i18nRuleDirCmd from 'commands/i18nRuleDir';
 import { createI18nProvider } from 'providers/index';
 import { createTotalRxSubscriptionDisable } from 'utils/disable';
 import { refreshContextTask } from 'utils/task';
@@ -26,6 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
 		formatMessageCmd,
 		openWebViewCmd,
 		scanI18FileCmd,
+		i18nRuleDirCmd,
 	];
 	const disposables = commands
 		.map((cmdItem) =>

@@ -11,6 +11,7 @@ describe('lodash 疑问功能测试', function() {
             generateTemplate: '测试',
             isOpenCheckDir: true,
             mainLanguage: 'ZH_HK',
+            scanFolders: [],
         };
 
         deepEqual(omit(projectConfig, VSCODE_KEYS), PROJECT_META_JSON);

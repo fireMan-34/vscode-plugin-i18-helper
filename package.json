@@ -115,6 +115,11 @@
         "command": "i18n.scanI18File",
         "title": "扫描国际化代码",
         "icon": "./assets/icons/扫描.svg"
+      },
+      {
+        "command": "i18n.i18nRuleDirSet",
+        "title": "文件规则设定命令",
+        "icon": "./assets/icons/提取.svg"
       }
     ],
     "keybindings": [
@@ -144,6 +149,10 @@
       "view/item/context": [
         {
           "command": "i18n.openWebView",
+          "when": "viewItem == i18n.dir"
+        },
+        {
+          "command": "i18n.i18nRuleDirSet",
           "when": "viewItem == i18n.dir"
         }
       ]

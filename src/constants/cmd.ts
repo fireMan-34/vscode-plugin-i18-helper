@@ -7,6 +7,6 @@ export const CMD_KEY = {
     /** 扫描国际化文件 */
     SCAN_I18_FILE: 'i18n.scanI18File',
     /** 国际化目录规则 */
-    I18N_RULE_DIR: 'i18n.i18nRuleDir',
+    I18N_RULE_DIR_SET: 'i18n.i18nRuleDirSet',
 };
 
