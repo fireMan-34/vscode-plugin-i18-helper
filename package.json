@@ -148,12 +148,8 @@
       ],
       "view/item/context": [
         {
-          "command": "i18n.openWebView",
-          "when": "viewItem == i18n.dir"
-        },
-        {
           "command": "i18n.i18nRuleDirSet",
-          "when": "viewItem == i18n.dir"
+          "when": "view =~ /i18n-map/ && viewItem == i18n.dir"
         }
       ]
     },
