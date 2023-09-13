@@ -1,14 +1,18 @@
-import { 
-  window, 
-  TreeItem, 
-  TreeItemCollapsibleState, 
-  Disposable, 
-  EventEmitter, } from 'vscode';
-import type { 
-  ExtensionContext, 
-  ProviderResult, 
-  TreeDataProvider, } from 'vscode';
 import { relative } from 'path';
+import {
+  window,
+  TreeItem,
+  TreeItemCollapsibleState,
+  Disposable,
+  EventEmitter,
+} from 'vscode';
+import type {
+  ExtensionContext,
+  ProviderResult,
+  TreeDataProvider,
+} from 'vscode';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { VIEW_ID_MAP } from 'constants/index';
 import { getGlobalConfiguration, GlobalExtensionSubject, GlobalExtensionSubscription } from 'utils/conf';
 import { isSamePath, isSubPath } from 'utils/path';
@@ -115,6 +119,44 @@ export const i18nMapDirTreeView = window.createTreeView(VIEW_ID_MAP.DIR, {
   treeDataProvider: i18nMapDirDataProvider,
 });
 
+/** 多选事件 */
+// i18nMapDirTreeView.onDidChangeCheckboxState((e) => {
+//   console.log('onDidChangeCheckboxState', e);
+// });
+
+/** 监听是否切换选择 可以获取当前 treeItem */
+// const clickRuleDir$ = new Observable<readonly I18nDirViewItem[]>((o) => {
+//   const disposable = i18nMapDirTreeView.onDidChangeSelection((ev) => {
+//     o.next(ev.selection);
+//   });
+
+//   return () => disposable.dispose();
+// });
+
+const ruleDirSelection$ = new BehaviorSubject<readonly I18nDirViewItem[]>([]);
+const selectRuleDirItemDispose = i18nMapDirTreeView.onDidChangeSelection((ev) => {
+  ruleDirSelection$.next(ev.selection);
+});
+/** 获取最新选中的规则视图选项 */
+export const getI18nDirViewItem =  () => {
+  return ruleDirSelection$.getValue();
+};
+
+/** 监听视图是否展示 */
+// i18nMapDirTreeView.onDidChangeVisibility((e) => {
+//   console.log('onDidChangeVisibility', e);
+// });
+
+/** 折叠事件 传入当前 treeItem */
+// i18nMapDirTreeView.onDidCollapseElement(e => {
+//   console.log('onDidCollapseElement', e);
+// });
+
+/** 展开事件 */
+// i18nMapDirTreeView.onDidExpandElement((e) => {
+//   console.log('onDidExpandElement', e);
+// });
+
 const refreshViewSubjection = GlobalExtensionSubject.subscribe({
   next(value) {
     if (value.i18nDirList.length > 0) {
@@ -127,6 +169,8 @@ GlobalExtensionSubscription.add(refreshViewSubjection);
 export const createTreeI18nMapDirProvider = (context: ExtensionContext) => {
 
   return new Disposable(() => {
+    ruleDirSelection$.unsubscribe();
+    selectRuleDirItemDispose.dispose();
     providerDispose.dispose();
     i18nMapDirTreeView.dispose();
     i18nMapDirDataProvider.disposeEM.dispose();
