@@ -4,7 +4,7 @@ import {
 import { join } from "path";
 import { readDeepDir } from 'utils/fs';
 import { CMD_KEY } from 'constants/index';
-import { I18FileItemClass } from 'models/index';
+import { I18nFileItemClass } from 'models/index';
 import {
   ICommondItem
 } from 'types/index';
@@ -32,14 +32,14 @@ const scanI18File: ICommondItem['cmdExcuter'] = async (context, eidtor) => {
   window.showInformationMessage('准备扫描', rootPath, context.extension.extensionPath);
 
   try {
-    await I18FileItemClass.init(context, eidtor);
+    await I18nFileItemClass.init(context, eidtor);
 
-    window.showInformationMessage('插件根路径', I18FileItemClass.rootPath);
+    window.showInformationMessage('插件根路径', I18nFileItemClass.rootPath);
 
     const { filePaths } = await readDeepDir(dirPath);
-    const i18nFileItems = filePaths.map(path => new I18FileItemClass(path));
+    const i18nFileItems = filePaths.map(path => new I18nFileItemClass(path));
 
-    await I18FileItemClass.writeI18nFileContent2Json(i18nFileItems);
+    await I18nFileItemClass.writeI18nFileContent2Json(i18nFileItems);
 
   } catch (err) {
     console.error(err);

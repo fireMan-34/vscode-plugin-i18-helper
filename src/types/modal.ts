@@ -2,7 +2,7 @@ import type { TextDocument, Position } from "vscode";
 import { I18nType } from "types/conf";
 
 /** 国际化文件管理原子对象 */
-export interface I18FileItem {
+export interface I18nFileItem {
   /** 文件路径 */
   path: string;
   /** 国际化类型 */
