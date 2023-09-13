@@ -5,17 +5,79 @@ import { readFile } from "fs/promises";
 import { join } from 'path';
 import countBy from 'lodash/countBy';
 import cloneDeep from 'lodash/cloneDeep';
-import { PromiseAllMap } from "utils/asy";
+import isEmpty from 'lodash/isEmpty';
+import { PromiseAllMap, asyncChain } from "utils/asy";
 import { getCharsI18nType, parseKeyAndValTexts2Object } from "utils/code";
-import { writeI18nConfigJson } from "utils/conf";
+import { writeI18nConfigJson, getSaveJsonConfig } from "utils/conf";
 import { saveJsonFile } from "utils/fs";
-import { generateRuntimeProjectI18nHashPath } from "utils/path";
-import { I18FileItem, XTextEditor, I18nMetaJsonSaveContentItem, I18nMetaJson, I18nType } from "types/index";
+import { generateRuntimeProjectI18nHashPath, getPathSameVal, isSubPath } from "utils/path";
+import { I18nFileItem, XTextEditor, I18nMetaJsonSaveContentItem, I18nMetaJson, I18nType, I18nRuleDirItem } from "types/index";
+
+/** 默认 文件 utf-8 字符范围频率 判断国际化类型 */
+class BaseFile2I18nTypeClass {
+    file: I18nFileItemClass;
+
+    constructor(file: I18nFileItemClass) {
+        this.file = file;
+    }
+
+    isThisTransformer(): Promise<BaseFile2I18nTypeClass> {
+        return Promise.resolve(this);
+    };
+
+    getI18nType(): Promise<I18nType> {
+        const file = this.file;
+
+        return file.parseKeyAndVals
+            .then((record) => {
+                const list = Object.values(record);
+                const i18nTypes = list.map(getCharsI18nType);
+                const countMap = countBy(i18nTypes);
+                const i18nType = +Object
+                    .entries(countMap)
+                    .reduce((maxKeyAndVal, curKeyAndVal) => curKeyAndVal[1] > maxKeyAndVal[1] ? curKeyAndVal : maxKeyAndVal, [`${I18nType.UN_KNOWN}`, 0])
+                [0] as I18nType;
+                return i18nType;
+            });
+    }
+}
+
+class RuleDir2I18nTypeClass extends BaseFile2I18nTypeClass {
+
+    suitI18nRuleDirList: I18nRuleDirItem[] = [];
+
+    constructor(file: I18nFileItemClass) {
+        super(file);
+    }
+
+    async isThisTransformer(): Promise<BaseFile2I18nTypeClass> {
+        const file = this.file;
+        const { i18nRuleDirList } = await getSaveJsonConfig(I18nFileItemClass.Context);
+        this.suitI18nRuleDirList = i18nRuleDirList.filter((dirItem) => isSubPath(dirItem.rulePath, file.path));
+        if (isEmpty(this.suitI18nRuleDirList)) {
+            return Promise.reject();
+        }
+        return this;
+    }
+
+    async getI18nType(): Promise<I18nType> {
+        const i18nDirRuleItem = this.suitI18nRuleDirList
+            .map((item) => ({
+                item,
+                point: getPathSameVal(item.rulePath, this.file.path),
+            }))
+            .reduce((acc, cur) => {
+                if (!acc) { return cur; };
+                return acc.point >= cur.point ? acc : cur;
+            }).item;
+        return I18nType[i18nDirRuleItem.i18nType]
+    }
+}
 
 /**
  * @todo 国际化文件对象 有点稍微臃肿
  */
-export class I18FileItemClass implements I18FileItem {
+export class I18nFileItemClass implements I18nFileItem {
 
     /** 键值对文本提取正则 */
     static KEY_AND_VALUE_REG = /["'][^"']*?["']:\s*["'].*["'],/gi;
@@ -38,7 +100,7 @@ export class I18FileItemClass implements I18FileItem {
     }
 
     /** 将国际化内容写入路径中 */
-    static async writeI18nFileContent2Json(set: I18FileItem[]) {
+    static async writeI18nFileContent2Json(set: I18nFileItem[]) {
         const i18nItems = await Promise.all(
             set
                 .map((item) =>
@@ -66,30 +128,36 @@ export class I18FileItemClass implements I18FileItem {
     static Context: ExtensionContext;
     static Editor: XTextEditor;
 
-    cacheMap: Partial<I18FileItem>;
+    i18nFile2Types: BaseFile2I18nTypeClass[];
+
+    cacheMap: Partial<I18nFileItem>;
 
     path: string;
 
     constructor(path: string) {
         this.cacheMap = {};
         this.path = path;
+        this.i18nFile2Types = [
+            new RuleDir2I18nTypeClass(this),
+            new BaseFile2I18nTypeClass(this),
+        ];
     }
 
     get i18nType(): Promise<I18nType> {
         if (this.cacheMap.i18nType) {
             return this.cacheMap.i18nType;
         }
-        return this.parseKeyAndVals
-            .then((record) => {
-                const list = Object.values(record);
-                const i18nTypes = list.map(getCharsI18nType);
-                const countMap = countBy(i18nTypes);
-                const i18nType = +Object
-                    .entries(countMap)
-                    .reduce((maxKeyAndVal, curKeyAndVal) => curKeyAndVal[1] > maxKeyAndVal[1] ? curKeyAndVal : maxKeyAndVal, [`${I18nType.UN_KNOWN}`, 0])
-                [0] as I18nType;
-                return i18nType;
-            });
+
+        return new Promise((resolve, reject) => {
+            asyncChain(
+                this.i18nFile2Types.map(
+                    i18nFile2i18nType => () => i18nFile2i18nType.isThisTransformer()
+                ))
+                .then((i18nFile2Type) => {
+                    i18nFile2Type.getI18nType().then(resolve);
+                })
+                .catch((err) => reject(err));
+        });
     }
 
     get keyAndVals(): Promise<string[]> {
@@ -98,7 +166,7 @@ export class I18FileItemClass implements I18FileItem {
         }
         else {
             return this.getFileContent().then((content) => {
-                const keyAndVals = content.match(I18FileItemClass.KEY_AND_VALUE_REG) || [''];
+                const keyAndVals = content.match(I18nFileItemClass.KEY_AND_VALUE_REG) || [''];
                 this.cacheMap.keyAndVals = Promise.resolve(keyAndVals);
                 return keyAndVals;
             });
