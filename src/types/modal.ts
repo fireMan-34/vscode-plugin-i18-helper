@@ -89,6 +89,10 @@ export interface I18nTextParsePlugin {
     matchUseI18nRegs?: string[];
     /** 父指针 */
     parent?: I18nDirViewItem;
+    /** 顶部指针 */
+    root?: Omit<I18nDirViewItem, 'parent'|'root'>;
+    /** 项目路径 */
+    projectPath: string;
   }
   
   // ---------------------------------------------------------------- 国际化代码目录设置代码语言识别权重相关 ⬆

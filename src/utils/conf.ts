@@ -11,6 +11,14 @@ import { getRunTimeConfigPath } from "utils/path";
 import { getWrokspaceFloder } from 'utils/path.code';
 import { PROJECT_META_JSON, EXTENSION_NAME, VSCODE_KEYS } from 'constants/index';
 
+/** 获取插件全局保存配置 */
+export const getSaveJsonConfig = async (context: ExtensionContext): Promise<ProjectSaveConfig> => {
+    /** 全局插件 元信息位置 */
+    const extensionMetaJsonPath = await getRunTimeConfigPath(context);
+    const saveJsonConfig = await readJsonFile<ProjectSaveConfig>(extensionMetaJsonPath);
+    return saveJsonConfig;
+};
+
 /** 获取 vscode 配置 */
 export const getVScodeConfig = (): VScodeConfig => {
     return pick(workspace.getConfiguration(EXTENSION_NAME), VSCODE_KEYS) as VScodeConfig;
@@ -29,11 +37,8 @@ export const GlobalExtensionSubject = new BehaviorSubject<ProjectGlobalConfig>(r
 
 /** 读取国际化全局配置 国际化信息 */
 export async function readConfigJson(context: ExtensionContext): Promise<ProjectGlobalConfig> {
-    /** 全局插件 元信息位置 */
-    const extensionMetaJsonPath = await getRunTimeConfigPath(context);
-    const extendMetaJson = await readJsonFile<ProjectSaveConfig>(extensionMetaJsonPath);
     const refreshReadConfig = {
-        ...extendMetaJson,
+        ...await getSaveJsonConfig(context),
         ...getVScodeConfig(),
     };
     return refreshReadConfig;

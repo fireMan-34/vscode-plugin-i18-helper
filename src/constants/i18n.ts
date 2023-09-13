@@ -35,6 +35,15 @@ export const I18N_DESCRIPTION_MAP: I18nDescriptionMap = {
   }
 };
 
+export const I18N_ENTRY_ENUM_VALUE: readonly I18nType[] = [ 
+  I18nType.ZH_CN,
+  I18nType.ZH_HK,
+  I18nType.EN_US,
+  I18nType.JA_JP,
+  I18nType.KO_KR,
+  I18nType.UN_KNOWN,
+];
+
 /** 默认国际化保存文本 meta 类型 */
 export const DEFAULT_I18N_META: I18nMetaJson = {
   default: {

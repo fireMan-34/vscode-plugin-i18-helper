@@ -12,7 +12,6 @@ import type {
   TreeDataProvider,
 } from 'vscode';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { VIEW_ID_MAP } from 'constants/index';
 import { getGlobalConfiguration, GlobalExtensionSubject, GlobalExtensionSubscription } from 'utils/conf';
 import { isSamePath, isSubPath } from 'utils/path';
@@ -57,13 +56,14 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
           .filter((item => isSamePath(item.projectPath, rootPath)))
           .map((dir) => dir.originalPath)
           .map(getSubDirectoryFromDirectoryPath)
-        )).flatMap(paths => paths.map(path => ({ path })));
+        )).flatMap(paths => paths.map(path => ({ path, projectPath: rootPath })));
 
         return i18nDirViews;
       }
 
       const paths = await getSubDirectoryFromDirectoryPath(element.path);
-      return paths.map(path => ({ path, parent: element }));
+      const root = element.root ?? element;
+      return paths.map(path => ({ path, parent: element, root, projectPath: root.projectPath }));
     } catch (err) {
       console.log(err);
     }
