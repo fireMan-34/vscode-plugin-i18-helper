@@ -134,3 +134,41 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - style: 移除多余的换行符
 - feat: 添加悬浮后显示可跳转文件地址链接
 - feat: defaultMessage 识别 key
+
+## 0.2.60
+- feat: 添加单元测试
+- feat: 添加单元测试别名路径支持
+- docs: 添加国际化扫描目录思维导图
+- feat: 提取国际化命令右键菜单
+- refactor: 替换环境变量名
+- fix: 修复国际化视图配置错误导致的异常
+- fix: 添加国际化自定义右键菜单方式
+- refactor: 区分宿主包， 重构包工具模块，添加测试
+- feat: 函数库异步路径判断文件类型
+- test: 添加异步单元目录测试
+- feat: 工具库新增获取子目录函数
+- test: 测试子目录函数获取功能
+- refactor: log 模块分离
+- feat: 扫描文件目录树基础功能开发
+- feat: 添加目录视图是否相对子级和相对父路径
+- fix: 修复获取初始化数据异常
+- refactor: 类型模块文件拆分
+- perf: 添加测试工作目录
+- refacor: 全局配置功能重置
+- test: omit 用例
+- feat: 添加默认保存配置规则开发
+- feat: 添加命令配置 omit 测试数据补全调整命令
+- docs: 自定义开发视图备注
+- feat: 添加自定义规则文件夹刷新逻辑
+- feat: 添加规则文件夹添加目录级别条件
+- feat: 添加目录规则文件夹视图管理对象
+- feat: 添加视图命令获取最新菜单
+- chore: 忽略 node_modules 相关文件
+- feat: 添加国际化扫描规则到视图中
+- docs: 更新任务文档
+- feat: 工具库异步链式返回
+- test: 添加异步链式返回测试
+- refactor: i18 -> i18n 变量名
+- feat: 添加规则目录扫描功能基础
+- test: 添加路径检测测试
+- feat: 添加初始化失效数据扫描
