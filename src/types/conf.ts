@@ -77,7 +77,6 @@ export interface ProjectSaveConfig {
 /** VS code 配置 */
 export interface VScodeConfig {
   /** 是否开始前检测目录是否失效
-   * todo 待做功能
    */
   isOpenCheckDir: boolean,
   /** 主要项目使用语言 */

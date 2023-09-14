@@ -1,14 +1,16 @@
 import { ExtensionContext } from "vscode";
 import { DEFAULT_I18N_META } from "constants/i18n";
 import { existsSync, } from 'fs';
-import { readFile } from "fs/promises";
+import { readFile, unlink } from "fs/promises";
 import { join } from 'path';
 import countBy from 'lodash/countBy';
 import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
+import union from "lodash/union";
+import intersection from 'lodash/intersection';
 import { PromiseAllMap, asyncChain } from "utils/asy";
 import { getCharsI18nType, parseKeyAndValTexts2Object } from "utils/code";
-import { writeI18nConfigJson, getSaveJsonConfig } from "utils/conf";
+import { writeI18nConfigJson, getSaveJsonConfig, getGlobalConfiguration, refreshI18nConfigJson } from "utils/conf";
 import { saveJsonFile } from "utils/fs";
 import { generateRuntimeProjectI18nHashPath, getPathSameVal, isSubPath } from "utils/path";
 import { I18nFileItem, XTextEditor, I18nMetaJsonSaveContentItem, I18nMetaJson, I18nType, I18nRuleDirItem } from "types/index";
@@ -199,3 +201,53 @@ export class I18nFileItemClass implements I18nFileItem {
         }
     };
 }
+
+export const reScanI18nFileContentJson = async (context: ExtensionContext) => {
+    // const curWrokspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
+    const globalConfig = await getGlobalConfiguration();
+    const {
+        isOpenCheckDir,
+        i18nDirList,
+        i18nRuleDirList,
+    } = cloneDeep(globalConfig);
+
+    let nextDirList = i18nDirList,
+        nextI18nRuleDirList = i18nRuleDirList;
+    let isWrite = false;
+
+    if (isOpenCheckDir) {
+        const pathCheckNoExists = union(
+            i18nDirList.flatMap(item => [item.originalPath, item.targetPath, item.projectPath]),
+            i18nRuleDirList.flatMap((item) => [item.i18nDirPath, item.projectPath, item.rulePath]),
+        )
+            .map((path) => ({ path, isExist: existsSync(path) }))
+            .filter(item => !item.isExist)
+            .map((item) => item.path);
+        // 存在可移除文件
+        if (pathCheckNoExists.length > 0) {
+            isWrite = true;
+
+            const requireRemoveDirList = i18nDirList.filter((item) => intersection([item.originalPath, item.targetPath, item.projectPath], pathCheckNoExists));
+            // 移除无效目录文件
+            nextDirList = i18nDirList.filter((item) => !intersection([item.originalPath, item.targetPath, item.projectPath], pathCheckNoExists));
+            nextI18nRuleDirList = i18nRuleDirList.filter(item => !requireRemoveDirList.find((removeDirItem) =>
+                removeDirItem.projectPath === item.projectPath
+                || removeDirItem.originalPath === item.i18nDirPath
+            ));
+            // 删除运行时临时配置
+            await Promise.allSettled(requireRemoveDirList.map((removeDirItem) => unlink(removeDirItem.targetPath)));
+
+        }
+
+
+
+        if (isWrite) {
+            await refreshI18nConfigJson(context, {
+                projectConf: { ...globalConfig, i18nDirList: nextDirList, i18nRuleDirList: nextI18nRuleDirList },
+                isSave: true,
+                refreshType: 'set',
+            });
+        }
+    }
+
+};

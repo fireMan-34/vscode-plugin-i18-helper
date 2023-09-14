@@ -128,5 +128,5 @@ export const GlobalExtensionSubscription = GlobalExtensionSubject.subscribe({
 });
 
 export const getGlobalConfiguration = () => {
-    return firstValueFrom(GlobalExtensionSubject.pipe(first(conf => !!conf.i18nDirList)));
+    return firstValueFrom(GlobalExtensionSubject.pipe(first(conf => !!conf.i18nDirList.length)));
 };
