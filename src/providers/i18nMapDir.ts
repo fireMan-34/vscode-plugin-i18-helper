@@ -56,7 +56,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
           .filter((item => isSamePath(item.projectPath, rootPath)))
           .map((dir) => dir.originalPath)
           .map(getSubDirectoryFromDirectoryPath)
-        )).flatMap(paths => paths.map(path => ({ path, projectPath: rootPath })));
+        )).flatMap(paths => paths.map(path => ({ path, projectPath: rootPath, root: { path, projectPath: rootPath } })));
 
         return i18nDirViews;
       }
