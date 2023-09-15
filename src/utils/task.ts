@@ -1,7 +1,8 @@
 import { commands, workspace, type ExtensionContext, window, Uri } from 'vscode';
+import { Observable } from 'rxjs/internal/Observable';
 import { refreshI18nConfigJson, GlobalExtensionSubject, getGlobalConfiguration } from 'utils/conf';
 import { isSamePath, isSubPath } from 'utils/path';
-import { getWrokspaceFloder } from 'utils/path.code';
+import { getWrokspaceFloder, AcitveTextEditorSubject } from 'utils/path.code';
 import { CMD_KEY, EXTENSION_NAME, VSCODE_KEYS_MAP } from 'constants/index';
 
 /** 扫描国际化上下文任务 */
@@ -43,6 +44,15 @@ export const createSelectionChangeSubscript = (context: ExtensionContext) => {
     .map((dir) => dir.originalPath)
     .some(path => isSubPath(path, editor.document.uri.fsPath));
     commands.executeCommand('setContext', 'i18n.isInI18nDirOne' , isInI18nDirOne );
+  });
+};
+
+/** 订阅编辑文件变更源 */
+export const createTextEditofrChangeSubscript = (context: ExtensionContext) => {
+  return window.onDidChangeActiveTextEditor(ev => {
+    if (ev) {
+      AcitveTextEditorSubject.next(ev);
+    }
   });
 };
 

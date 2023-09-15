@@ -1,8 +1,12 @@
-import isEmpty from "lodash/isEmpty";
 import { normalize } from "path";
+import isEmpty from "lodash/isEmpty";
+import { ReplaySubject } from "rxjs/internal/ReplaySubject";
+import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { type WorkspaceFolder, workspace, window, Uri, type TextEditor } from "vscode";
 import { thorwNewError } from "utils/log";
 import { isSubPath, getPathSameVal } from "utils/path";
+
+export const AcitveTextEditorSubject = new ReplaySubject<TextEditor>();
 
 /** 检测 workfloder 是否不满足条件
  * 如果满足返回非空值类型
@@ -54,11 +58,17 @@ export function matchI18nWorkspaceFolder(matchI18nPath: string) {
   return workspaceMatchFolder;
 }
 
-/** 匹配当前活跃的编辑器 */
-export function matchActiveFileWorkspaceFolder() {
-  const activeTextEditoror = checkActiveEditor(window.activeTextEditor);
-  return workspace.getWorkspaceFolder(activeTextEditoror!.document.uri);
+/** 匹配当前活跃的编辑文件返回目录 */
+export function matchActiveFileWorkspaceFolder(activeTextEditor?: TextEditor) {
+  activeTextEditor = activeTextEditor || checkActiveEditor(window.activeTextEditor);
+  return workspace.getWorkspaceFolder(activeTextEditor!.document.uri);
 };
+
+/** 根据目前最近的编辑文件返回目录 */
+export async function matchActiveFileFromSourceWorkspaceFolder () {
+  const activeTextEditor = await firstValueFrom(AcitveTextEditorSubject);
+  return matchActiveFileWorkspaceFolder(activeTextEditor)!;
+}
 
 interface GetWrokspaceFloderOptions {
   /** 用户选择模式 , 首个模式
@@ -67,8 +77,9 @@ interface GetWrokspaceFloderOptions {
    * * matchI18n 是作者自己实现的目录匹配逻辑
    * * matchFile 是根据 vscode getWrokfolder Api 获取对应的目录
    * * matchActiveFile 匹配当前活跃的编辑器对象对应的目录
+   * * matchActiveFileSource 匹配当前从变更源的目录
     */
-  multiplySelect?: 'pick' | 'default' | 'matchI18n' | 'matchFile' | 'matchActiveFile',
+  multiplySelect?: 'pick' | 'default' | 'matchI18n' | 'matchFile' | 'matchActiveFile' | 'matchActiveFileSource',
   /** 需要匹配的路径国际化路径 */
   matchI18nPath?: string,
   /** match File 模式需要的资源定位 */
@@ -112,6 +123,11 @@ export async function getWrokspaceFloder(options?: GetWrokspaceFloderOptions): P
     if (matchI18nWorspaceFolder) {
       return matchI18nWorspaceFolder;
     }
+  }
+
+  const isMatchActiveFileFromSource = multiplySelect === 'matchActiveFileSource';
+  if (isMatchActiveFileFromSource) {
+    return matchActiveFileFromSourceWorkspaceFolder();
   }
 
   return pickWrokspaceFolder();

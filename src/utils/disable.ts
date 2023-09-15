@@ -2,7 +2,7 @@ import { ExtensionContext } from 'vscode';
 import { createDisableFromSubscription } from 'utils/rxHelper';
 import { LoggerSubscription } from 'utils/log';
 import { GlobalExtensionSubscription, } from 'utils/conf';
-import { createConfgiChangeSubscript, createSelectionChangeSubscript, initScanCurrentLocals } from 'utils/task';
+import { createConfgiChangeSubscript, createSelectionChangeSubscript, createTextEditofrChangeSubscript , initScanCurrentLocals } from 'utils/task';
 import { rescanI18nFileContentJson } from 'models/i18nFileItem';
 import 'utils/log.code';
 
@@ -12,6 +12,7 @@ export const createTotalRxSubscriptionDisable = async (context: ExtensionContext
   [
     createConfgiChangeSubscript,
     createSelectionChangeSubscript,
+    createTextEditofrChangeSubscript,
   ].forEach(createDisable => context.subscriptions.push(createDisable(context)));
 
   // * Rxjs 资源释放
