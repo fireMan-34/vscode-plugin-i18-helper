@@ -5,6 +5,7 @@ import {
   TreeItemCollapsibleState,
   Disposable,
   EventEmitter,
+  MarkdownString,
 } from 'vscode';
 import type {
   ExtensionContext,
@@ -12,12 +13,12 @@ import type {
   TreeDataProvider,
 } from 'vscode';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { VIEW_ID_MAP } from 'constants/index';
+import { I18N_DESCRIPTION_MAP, VIEW_ID_MAP } from 'constants/index';
 import { getGlobalConfiguration, GlobalExtensionSubject, GlobalExtensionSubscription } from 'utils/conf';
 import { isSamePath, isSubPath } from 'utils/path';
 import { getWrokspaceFloder } from 'utils/path.code';
 import { getSubDirectoryFromDirectoryPath } from 'utils/fs';
-import { I18nDirViewItem } from 'types/index';
+import { I18nDirViewItem, I18nType } from 'types/index';
 
 /**
  * 国际化目录操作视图
@@ -49,7 +50,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
       const isRoot = !element;
       if (isRoot) {
         const { i18nDirList } = await getGlobalConfiguration();
-        const curWorkspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
+        const curWorkspaceFolder = await getWrokspaceFloder();
         const rootPath = curWorkspaceFolder.uri.fsPath;
 
         const i18nDirViews = (await Promise.all(i18nDirList
@@ -60,6 +61,10 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
 
         return i18nDirViews;
       }
+      //* 目前规则不支持权重这一个概念
+      const { i18nRuleDirList } = await getGlobalConfiguration();
+      const mayI18nRuleDirItem = i18nRuleDirList.find((item) => isSamePath(item.rulePath, element.path));
+      if (mayI18nRuleDirItem) { return; };
 
       const paths = await getSubDirectoryFromDirectoryPath(element.path);
       const root = element.root ?? element;
@@ -72,12 +77,14 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
 
   async getTreeItem(element: I18nDirViewItem): Promise<TreeItem> {
 
+    const { i18nDirList, i18nRuleDirList } = await getGlobalConfiguration();
+    const mayI18nRuleDirItem = i18nRuleDirList.find((item) => isSamePath(item.rulePath, element.path));
+
     const rootPath = await (async function () {
       if (element.parent) {
         return element.parent.path;
       }
-      const curWorkspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
-      const { i18nDirList } = await getGlobalConfiguration();
+      const curWorkspaceFolder = await getWrokspaceFloder();
       const [curI18nDir] = i18nDirList
         .filter(item => isSamePath(item.projectPath, curWorkspaceFolder.uri.fsPath))
         .filter(item => isSubPath(item.originalPath, element.path) || isSamePath(item.originalPath, element.path));
@@ -89,8 +96,15 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
     });
 
     treeItem.id = element.path;
-    treeItem.description = '国际化扫描目录, 这里提供处理国际化文本消费的操作功能';
-    treeItem.tooltip = element.path;
+
+    treeItem.description = '国际化扫描目录，操作国际化文件类型分析功能';
+    treeItem.tooltip = new MarkdownString(`
+    # 目录信息
+    - 路径: ${element.path}
+    - 项目路径: ${element.projectPath}
+    - 国际化规则: ${mayI18nRuleDirItem ? I18N_DESCRIPTION_MAP[I18nType[mayI18nRuleDirItem.i18nType]].name : '默认'}
+    - 是否已覆盖子级目录规则: ${mayI18nRuleDirItem ? '是': '否'}
+    `, true);
     // treeItem.command= {
     //   title: '打开 webview 视图',
     //   command: 'i18n.openWebView',
@@ -138,7 +152,7 @@ const selectRuleDirItemDispose = i18nMapDirTreeView.onDidChangeSelection((ev) =>
   ruleDirSelection$.next(ev.selection);
 });
 /** 获取最新选中的规则视图选项 */
-export const getI18nDirViewItem =  () => {
+export const getI18nDirViewItem = () => {
   return ruleDirSelection$.getValue();
 };
 
