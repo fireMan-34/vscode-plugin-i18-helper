@@ -35,7 +35,7 @@ export async function getProviderI18nJsonAndMainLanguage(folder: WorkspaceFolder
     .filter((i18nItem) => isSamePath(i18nItem.projectPath, workspaceFolderPath));
 
   if (isEmpty(matchI18nDirList)) {
-    thorwNewError('全局配置匹配不到此工作区文件夹', RangeError);
+    throw thorwNewError('全局配置匹配不到此工作区文件夹', RangeError);
   }
 
   const i18nDirJsons = await Promise.all(matchI18nDirList

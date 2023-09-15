@@ -110,7 +110,7 @@ export const getSubDirectoryFromDirectoryPath = async (path: string) => {
   const isDirectory = (await stat(path)).isDirectory();
 
   if (!isDirectory) {
-    thorwNewError(`${path} is not a directory`, TypeError);
+    throw thorwNewError(`${path} is not a directory`, TypeError);
   }
 
   const filenames = await readdir(path, { encoding: 'utf-8' });

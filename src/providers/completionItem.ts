@@ -49,7 +49,7 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                 };
 
                 if (isEmpty(matchI18nDirList)) {
-                    thorwNewError('全局配置匹配不到此工作区文件夹', RangeError);
+                    throw thorwNewError('全局配置匹配不到此工作区文件夹', RangeError);
                 }
 
                 const i18nContents = i18nDirJsons.flatMap(getI18nList);

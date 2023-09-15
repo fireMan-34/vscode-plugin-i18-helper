@@ -30,16 +30,16 @@ export const LoggerSubscription = new Subscription();
  */
 const emptyWarningHandler = (msg?: string) => {
   const message = `当前${msg || '上下文'}为空`;
-  thorwNewError(message, TypeError);
+  throw thorwNewError(message, TypeError);
 };
 
 /** 错误处理浅层封装 */
 const thorwNewError = (msg: string, errorClass: ErrorConstructor
   | TypeErrorConstructor
   | RangeErrorConstructor
-) => {
+): Error => {
   LoggerSubject.next({ level: LoggerLevel.err, message: msg });
-  throw new errorClass(msg);
+  return new errorClass(msg);
 };
 
 
