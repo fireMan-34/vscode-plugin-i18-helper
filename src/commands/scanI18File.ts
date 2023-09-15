@@ -1,4 +1,5 @@
 import {
+  Uri,
   window
 } from "vscode";
 import { join } from "path";
@@ -26,13 +27,12 @@ import {
  * * 11.资源视图管理 - [ ]
  * * 12. vscode 配置支持 - [x] 
  */
-const scanI18File: ICommondItem['cmdExcuter'] = async (context, eidtor) => {
-  const dirPath = eidtor.fsPath;
+const scanI18File: ICommondItem['cmdExcuter'] = async (context, uri: Uri) => {
+  const dirPath = uri.fsPath;
   const rootPath = join(dirPath, '..');
   window.showInformationMessage('准备扫描', rootPath, context.extension.extensionPath);
-
   try {
-    await I18nFileItemClass.init(context, eidtor);
+    await I18nFileItemClass.init(context, uri);
 
     window.showInformationMessage('插件根路径', I18nFileItemClass.rootPath);
 

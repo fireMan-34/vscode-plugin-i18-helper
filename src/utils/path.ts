@@ -1,9 +1,8 @@
-import type { ExtensionContext } from 'vscode';
+import type { ExtensionContext, Uri } from 'vscode';
 import { createHash } from 'crypto';
 import { join, normalize, sep, relative, isAbsolute, } from 'path';
 import { existsSync } from 'fs';
 import range from 'lodash/range';
-import type { XTextEditor } from 'types/index';
 import { generatDirPathIfNone, saveJsonFileSync } from 'utils/fs';
 import { PROJECT_META_JSON } from 'constants/index';
 
@@ -20,10 +19,10 @@ export const getRuntimePath = (context: ExtensionContext | { extension: { extens
 };
 
 /** 生成唯一运行时唯一 hash 路径 */
-export function generateRuntimeProjectI18nHashPath(context: ExtensionContext, editor: XTextEditor) {
+export function generateRuntimeProjectI18nHashPath(context: ExtensionContext, uri: Uri) {
   /** 只能调用一次 digest */
   const SHA_256_HASH = createHash('sha256');
-  const I18nDirPath = editor.fsPath;
+  const I18nDirPath = uri.fsPath;
   const runtimePath = getRuntimePath(context);
   const runtimeHashPath = join(runtimePath, SHA_256_HASH.update(I18nDirPath).digest('hex'));
 

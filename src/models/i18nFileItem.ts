@@ -1,4 +1,4 @@
-import { ExtensionContext } from "vscode";
+import { ExtensionContext, Uri } from "vscode";
 import { DEFAULT_I18N_META } from "constants/i18n";
 import { existsSync, } from 'fs';
 import { readFile, unlink } from "fs/promises";
@@ -13,7 +13,7 @@ import { getCharsI18nType, parseKeyAndValTexts2Object } from "utils/code";
 import { writeI18nConfigJson, getSaveJsonConfig, getGlobalConfiguration, refreshI18nConfigJson } from "utils/conf";
 import { saveJsonFile } from "utils/fs";
 import { generateRuntimeProjectI18nHashPath, getPathSameVal, isSubPath } from "utils/path";
-import { I18nFileItem, XTextEditor, I18nMetaJsonSaveContentItem, I18nMetaJson, I18nType, I18nRuleDirItem } from "types/index";
+import { I18nFileItem, I18nMetaJsonSaveContentItem, I18nMetaJson, I18nType, I18nRuleDirItem } from "types/index";
 
 /** 默认 文件 utf-8 字符范围频率 判断国际化类型 */
 class BaseFile2I18nTypeClass {
@@ -85,11 +85,11 @@ export class I18nFileItemClass implements I18nFileItem {
     static KEY_AND_VALUE_REG = /["'][^"']*?["']:\s*["'].*["'],/gi;
 
     /** 初始化类对象 */
-    static async init(context: ExtensionContext, editor: XTextEditor) {
+    static async init(context: ExtensionContext, scanUri: Uri) {
         this.Context = context;
-        this.Editor = editor;
+        this.scanUri = scanUri;
 
-        this.rootPath = await generateRuntimeProjectI18nHashPath(context, editor);
+        this.rootPath = await generateRuntimeProjectI18nHashPath(context, scanUri);
         this.saveJsonPath = join(this.rootPath, 'meta.json');
 
         const hasMetaJson = existsSync(this.saveJsonPath);
@@ -115,7 +115,7 @@ export class I18nFileItemClass implements I18nFileItem {
         );
         i18nItems.forEach(item => this.i18nMetaJson.saveContent[item.i18nType].push(item));
         await saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
-        await writeI18nConfigJson(this.Context, this.Editor, this.saveJsonPath);
+        await writeI18nConfigJson(this.Context, this.scanUri, this.saveJsonPath);
 
         this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
     }
@@ -128,7 +128,8 @@ export class I18nFileItemClass implements I18nFileItem {
     static i18nMetaJson: I18nMetaJson;
 
     static Context: ExtensionContext;
-    static Editor: XTextEditor;
+    /** 扫描路径地址 */
+    static scanUri: Uri;
 
     i18nFile2Types: BaseFile2I18nTypeClass[];
 
@@ -202,7 +203,7 @@ export class I18nFileItemClass implements I18nFileItem {
     };
 }
 
-export const reScanI18nFileContentJson = async (context: ExtensionContext) => {
+export const rescanI18nFileContentJson = async (context: ExtensionContext) => {
     // const curWrokspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
     const globalConfig = await getGlobalConfiguration();
     const {

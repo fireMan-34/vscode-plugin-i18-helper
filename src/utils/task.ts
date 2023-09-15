@@ -1,7 +1,8 @@
-import { commands, workspace, type ExtensionContext, window } from 'vscode';
-import { refreshI18nConfigJson, GlobalExtensionSubject } from 'utils/conf';
-import { isSubPath } from 'utils/path';
-import { EXTENSION_NAME, VSCODE_KEYS_MAP } from 'constants/index';
+import { commands, workspace, type ExtensionContext, window, Uri } from 'vscode';
+import { refreshI18nConfigJson, GlobalExtensionSubject, getGlobalConfiguration } from 'utils/conf';
+import { isSamePath, isSubPath } from 'utils/path';
+import { getWrokspaceFloder } from 'utils/path.code';
+import { CMD_KEY, EXTENSION_NAME, VSCODE_KEYS_MAP } from 'constants/index';
 
 /** 扫描国际化上下文任务 */
 export const refreshScan18FileTaskContext = (context: ExtensionContext) => {
@@ -43,4 +44,19 @@ export const createSelectionChangeSubscript = (context: ExtensionContext) => {
     .some(path => isSubPath(path, editor.document.uri.fsPath));
     commands.executeCommand('setContext', 'i18n.isInI18nDirOne' , isInI18nDirOne );
   });
+};
+
+/** 初始扫描当前目录国际化内容
+ * 
+ */
+export const initScanCurrentLocals = async (context: ExtensionContext) => {
+  const { i18nDirList } = await getGlobalConfiguration();
+  const currentWorlFolder = await getWrokspaceFloder();
+  
+  const projectPath = currentWorlFolder.uri.fsPath;
+  const curI18nDirList = i18nDirList.filter((i18nDir) => isSamePath(i18nDir.projectPath, projectPath));
+
+  const localUris = curI18nDirList.map((i18nDir) => Uri.file(i18nDir.originalPath));
+
+  await Promise.all(localUris.map((uri) => commands.executeCommand(CMD_KEY.SCAN_I18_FILE, uri)));
 };
