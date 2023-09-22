@@ -52,7 +52,10 @@ export async function writeI18nConfigJson(context: ExtensionContext, excuter: XT
     const excutePath = excuter.fsPath;
 
     const projectSaveJson = await readJsonFile<ProjectSaveConfig>(extensionMetaJsonPath);
-    const projectPath = await getWrokspaceFloder();
+    const projectPath = await getWrokspaceFloder({
+        multiplySelect: 'matchI18n',
+        matchI18nPath: excutePath,
+    });
     const item: I18nDirItem = {
         originalPath: excutePath,
         targetPath: saveJsonPath,

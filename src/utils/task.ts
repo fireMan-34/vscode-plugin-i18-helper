@@ -1,8 +1,7 @@
 import { commands, workspace, type ExtensionContext, window, Uri } from 'vscode';
-import { Observable } from 'rxjs/internal/Observable';
 import { refreshI18nConfigJson, GlobalExtensionSubject, getGlobalConfiguration } from 'utils/conf';
 import { isSamePath, isSubPath } from 'utils/path';
-import { getWrokspaceFloder, AcitveTextEditorSubject } from 'utils/path.code';
+import { AcitveTextEditorSubject } from 'utils/path.code';
 import { CMD_KEY, EXTENSION_NAME, VSCODE_KEYS_MAP } from 'constants/index';
 
 /** 扫描国际化上下文任务 */
@@ -60,11 +59,15 @@ export const createTextEditofrChangeSubscript = (context: ExtensionContext) => {
  * 
  */
 export const initScanCurrentLocals = async (context: ExtensionContext) => {
+  if (!workspace.workspaceFolders) {
+    return;
+  }
   const { i18nDirList } = await getGlobalConfiguration();
-  const currentWorlFolder = await getWrokspaceFloder();
   
-  const projectPath = currentWorlFolder.uri.fsPath;
-  const curI18nDirList = i18nDirList.filter((i18nDir) => isSamePath(i18nDir.projectPath, projectPath));
+  const worksoaceFolderPaths = workspace.workspaceFolders!.map((folder) => folder.uri.fsPath);
+
+  const curI18nDirList = i18nDirList
+  .filter((i18nDir) => worksoaceFolderPaths.some((folderPath) => isSamePath(i18nDir.projectPath, folderPath)));
 
   const localUris = curI18nDirList.map((i18nDir) => Uri.file(i18nDir.originalPath));
 

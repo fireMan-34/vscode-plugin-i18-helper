@@ -204,7 +204,6 @@ export class I18nFileItemClass implements I18nFileItem {
 }
 
 export const rescanI18nFileContentJson = async (context: ExtensionContext) => {
-    // const curWrokspaceFolder = await getWrokspaceFloder({ multiplySelect: 'default' });
     const globalConfig = await getGlobalConfiguration();
     const {
         isOpenCheckDir,

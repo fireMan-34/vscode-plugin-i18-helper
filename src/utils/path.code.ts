@@ -60,12 +60,15 @@ export function matchI18nWorkspaceFolder(matchI18nPath: string) {
 
 /** 匹配当前活跃的编辑文件返回目录 */
 export function matchActiveFileWorkspaceFolder(activeTextEditor?: TextEditor) {
-  activeTextEditor = activeTextEditor || checkActiveEditor(window.activeTextEditor);
+  activeTextEditor = activeTextEditor || window.activeTextEditor;
+  if (!activeTextEditor) {
+    return;
+  }
   return workspace.getWorkspaceFolder(activeTextEditor!.document.uri);
 };
 
 /** 根据目前最近的编辑文件返回目录 */
-export async function matchActiveFileFromSourceWorkspaceFolder () {
+export async function matchActiveFileFromSourceWorkspaceFolder() {
   const activeTextEditor = await firstValueFrom(AcitveTextEditorSubject);
   return matchActiveFileWorkspaceFolder(activeTextEditor)!;
 }
@@ -130,6 +133,10 @@ export async function getWrokspaceFloder(options?: GetWrokspaceFloderOptions): P
     return matchActiveFileFromSourceWorkspaceFolder();
   }
 
-  return pickWrokspaceFolder();
+  const isPick = multiplySelect === 'pick';
+  if (isPick) {
+    return pickWrokspaceFolder();
+  }
 
+  return workspaceFolders[0];
 }

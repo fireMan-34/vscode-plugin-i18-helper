@@ -6,11 +6,13 @@ import {
   Disposable,
   EventEmitter,
   MarkdownString,
+  workspace,
 } from 'vscode';
 import type {
   ExtensionContext,
   ProviderResult,
   TreeDataProvider,
+  WorkspaceFolder,
 } from 'vscode';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { I18N_DESCRIPTION_MAP, VIEW_ID_MAP } from 'constants/index';
@@ -29,11 +31,26 @@ import { I18nDirViewItem, I18nType } from 'types/index';
  */
 class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
 
+  cache: Map<string, any> = new Map();
+
   refreshEM = new EventEmitter<void | I18nDirViewItem | I18nDirViewItem[] | null | undefined>();
 
-  refresh() { this.refreshEM.fire(); }
+  refresh() {
+    this.cache.clear();
+    this.refreshEM.fire();
+  }
 
   disposeEM = new Disposable(() => this.refreshEM.dispose());
+
+  async getWrokspaceFloder(): Promise<WorkspaceFolder> {
+    const cacheKey = 'wrokspaceFolder';
+    if (!this.cache.get(cacheKey)) {
+      const workspaceFolder = await getWrokspaceFloder({ multiplySelect: 'matchActiveFile' });
+      this.cache.set(cacheKey, workspaceFolder);
+
+    }
+    return this.cache.get(cacheKey);
+  }
 
   /** 
     这个 api 应该是用来刷新视图，头疼
@@ -49,17 +66,20 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
     try {
       const isRoot = !element;
       if (isRoot) {
+        const workspaceFolders = workspace.workspaceFolders;
+
+        if (!workspaceFolders) {
+          return;
+        }
+
         const { i18nDirList } = await getGlobalConfiguration();
-        const curWorkspaceFolder = await getWrokspaceFloder();
-        const rootPath = curWorkspaceFolder.uri.fsPath;
+        const rootPaths = workspaceFolders.map((folder) => folder.uri.fsPath);
+        const i18nDirFilterList = i18nDirList.filter((item => rootPaths.some((path) => isSamePath(path, item.projectPath))));
+        const i18nDirWithSubDirList = await Promise.all(i18nDirFilterList.map(item => getSubDirectoryFromDirectoryPath(item.originalPath).then((subDirs) => ({ ...item, subDirs }))));
 
-        const i18nDirViews = (await Promise.all(i18nDirList
-          .filter((item => isSamePath(item.projectPath, rootPath)))
-          .map((dir) => dir.originalPath)
-          .map(getSubDirectoryFromDirectoryPath)
-        )).flatMap(paths => paths.map(path => ({ path, projectPath: rootPath, root: { path, projectPath: rootPath } })));
-
-        return i18nDirViews;
+        return i18nDirWithSubDirList
+          .flatMap((item) =>
+            item.subDirs.map((subDir) => ({ path: subDir, projectPath: item.projectPath, root: { path: subDir, projectPath: item.projectPath, } })));
       }
       //* 目前规则不支持权重这一个概念
       const { i18nRuleDirList } = await getGlobalConfiguration();
@@ -84,9 +104,8 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
       if (element.parent) {
         return element.parent.path;
       }
-      const curWorkspaceFolder = await getWrokspaceFloder();
       const [curI18nDir] = i18nDirList
-        .filter(item => isSamePath(item.projectPath, curWorkspaceFolder.uri.fsPath))
+        .filter(item => isSamePath(item.projectPath, element.projectPath))
         .filter(item => isSubPath(item.originalPath, element.path) || isSamePath(item.originalPath, element.path));
       return curI18nDir.projectPath;
     }());
@@ -103,7 +122,7 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
     - 路径: ${element.path}
     - 项目路径: ${element.projectPath}
     - 国际化规则: ${mayI18nRuleDirItem ? I18N_DESCRIPTION_MAP[I18nType[mayI18nRuleDirItem.i18nType]].name : '默认'}
-    - 是否已覆盖子级目录规则: ${mayI18nRuleDirItem ? '是': '否'}
+    - 是否已覆盖子级目录规则: ${mayI18nRuleDirItem ? '是' : '否'}
     `, true);
     // treeItem.command= {
     //   title: '打开 webview 视图',
