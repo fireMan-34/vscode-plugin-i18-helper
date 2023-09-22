@@ -84,52 +84,11 @@ export class I18nFileItemClass implements I18nFileItem {
     /** 键值对文本提取正则 */
     static KEY_AND_VALUE_REG = /["'][^"']*?["']:\s*["'].*["'],/gi;
 
-    /** 初始化类对象 */
-    static async init(context: ExtensionContext, scanUri: Uri) {
-        this.Context = context;
-        this.scanUri = scanUri;
-
-        this.rootPath = await generateRuntimeProjectI18nHashPath(context, scanUri);
-        this.saveJsonPath = join(this.rootPath, 'meta.json');
-
-        const hasMetaJson = existsSync(this.saveJsonPath);
-        if (!hasMetaJson) {
-            this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
-            await saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
-        } else {
-            this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
-        }
-    }
-
-    /** 将国际化内容写入路径中 */
-    static async writeI18nFileContent2Json(set: I18nFileItem[]) {
-        const i18nItems = await Promise.all(
-            set
-                .map((item) =>
-                    PromiseAllMap({
-                        i18nType: item.i18nType,
-                        content: item.parseKeyAndVals,
-                        path: Promise.resolve(item.path),
-                    })
-                        .then((val) => ({ ...val, updateTime: new Date().toDateString() }) as I18nMetaJsonSaveContentItem))
-        );
-        i18nItems.forEach(item => this.i18nMetaJson.saveContent[item.i18nType].push(item));
-        await saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
-        await writeI18nConfigJson(this.Context, this.scanUri, this.saveJsonPath);
-
-        this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
-    }
-
-    /** 项目根路径 */
-    static rootPath: string;
-    /** 保存信息路径 */
-    static saveJsonPath: string;
-    /** 根 metaJson */
-    static i18nMetaJson: I18nMetaJson;
-
     static Context: ExtensionContext;
-    /** 扫描路径地址 */
-    static scanUri: Uri;
+
+    static initContext(context: ExtensionContext): void {
+        this.Context = context;
+    }
 
     i18nFile2Types: BaseFile2I18nTypeClass[];
 
@@ -201,6 +160,53 @@ export class I18nFileItemClass implements I18nFileItem {
             });
         }
     };
+}
+
+export class I18nFileItemUserClass {
+    constructor(context: ExtensionContext,  scanUri: Uri){
+        this.Context = context;
+        this.scanUri = scanUri;
+
+        this.rootPath = generateRuntimeProjectI18nHashPath(context, scanUri);
+        this.saveJsonPath = join(this.rootPath, 'meta.json');
+
+        const hasMetaJson = existsSync(this.saveJsonPath);
+        if (!hasMetaJson) {
+            this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
+            saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
+        } else {
+            this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
+        }
+    }
+
+    /** 项目根路径 */
+    rootPath: string;
+    /** 保存信息路径 */
+    saveJsonPath: string;
+    /** 根 metaJson */
+    i18nMetaJson: I18nMetaJson;
+    Context: ExtensionContext;
+    /** 扫描路径地址 */
+    scanUri: Uri;
+
+    /** 将国际化内容写入路径中 */
+    async writeI18nFileContent2Json(set: I18nFileItem[]) {
+        const i18nItems = await Promise.all(
+            set
+                .map((item) =>
+                    PromiseAllMap({
+                        i18nType: item.i18nType,
+                        content: item.parseKeyAndVals,
+                        path: Promise.resolve(item.path),
+                    })
+                        .then((val) => ({ ...val, updateTime: new Date().toDateString() }) as I18nMetaJsonSaveContentItem))
+        );
+        i18nItems.forEach(item => this.i18nMetaJson.saveContent[item.i18nType].push(item));
+        await saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
+        await writeI18nConfigJson(this.Context, this.scanUri, this.saveJsonPath);
+
+        this.i18nMetaJson = cloneDeep(DEFAULT_I18N_META);
+    }
 }
 
 export const rescanI18nFileContentJson = async (context: ExtensionContext) => {
