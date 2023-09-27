@@ -129,7 +129,8 @@ class I18nMapDirDataProvider implements TreeDataProvider<I18nDirViewItem> {
     //   command: 'i18n.openWebView',
     // };
     treeItem.contextValue = 'i18n.dir';
-    treeItem.collapsibleState = ((await getSubDirectoryFromDirectoryPath(element.path)).length > 0)
+    treeItem.collapsibleState = !i18nRuleDirList.some(ruleDirItem => isSamePath(ruleDirItem.rulePath, element.path)) && 
+    ((await getSubDirectoryFromDirectoryPath(element.path)).length > 0)
       ? TreeItemCollapsibleState.Collapsed
       : TreeItemCollapsibleState.None;
     // 命令标记
