@@ -172,3 +172,15 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - feat: 添加规则目录扫描功能基础
 - test: 添加路径检测测试
 - feat: 添加初始化失效数据扫描
+
+# 0.2.70
+- fix: 修复自定义扫描规则顶部文件夹范文属性空指针
+- feat: 添加初始化扫描命令 移除 editor 强依赖 ，重新调整类型
+- feat: 工具库定时移除缓存
+- refactor ts 无法正确识别 never 类型保护
+- feat: 添加目录获取匹配方式激活文件
+- feat: 添加目录获取最后一次激活文件
+- fix: 切换激活目录逻辑 1. 取消默认 pick 模式 2. 逻辑采用当前活跃文件和首位目录 3. 视图采用多工作区
+- fix: 移除因缓存导致的提示异常问题
+- fix: 修复静态类型常量混用覆盖问题
+- fix: 设置国际化目录规则不可展开
