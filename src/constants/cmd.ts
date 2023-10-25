@@ -8,5 +8,7 @@ export const CMD_KEY = {
     SCAN_I18_FILE: 'i18n.scanI18File',
     /** 国际化目录规则 */
     I18N_RULE_DIR_SET: 'i18n.i18nRuleDirSet',
+    /** 快速翻译单个文本 */
+    FAST_TRANSLATE: 'i18n.fastTranslate',
 };
 

@@ -96,6 +96,46 @@
             ],
             "default": "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
             "description": "配置复制键值对产生的模板文本，后期会其它文本渲染场景。"
+          },
+          "i18n-extension.fastTranslateLanguageType": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "ZH_CN",
+                "ZH_HK",
+                "EN_US",
+                "KO_KR",
+                "JA_JP",
+                "UN_KNOWN"
+              ],
+              "enumDescriptions": [
+                "中文简体",
+                "中文繁体",
+                "英文",
+                "韩文",
+                "日文",
+                "未知"
+              ]
+            },
+            "default": [
+              "EN_US"
+            ],
+            "description": "快速翻译中输出的语言类型"
+          },
+          "i18n-extension.translateEngine": {
+            "type": "string",
+            "enum": [
+              "baidu",
+              "caiYun",
+              "Google"
+            ],
+            "enumDescriptions": [
+              "百度翻译",
+              "彩云翻译",
+              "谷歌翻译"
+            ],
+            "default": "baidu",
+            "description": "翻译引擎类型"
           }
         }
       }
@@ -119,6 +159,11 @@
       {
         "command": "i18n.i18nRuleDirSet",
         "title": "文件规则设定命令",
+        "icon": "./assets/icons/提取.svg"
+      },
+      {
+        "command": "i18n.fastTranslate",
+        "title": "快速翻译单个文本",
         "icon": "./assets/icons/提取.svg"
       }
     ],
@@ -196,7 +241,8 @@
     "prepare": "husky install",
     "commit:talk": "pwsh ./scripts/commitTalk.ps1",
     "version": "npm run commit:talk",
-    "preversion": "pwsh ./scripts/preVersion.ps1"
+    "preversion": "pwsh ./scripts/preVersion.ps1",
+    "simpleMockSever": "ts-node ./mock/mock.simple.server.ts"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",

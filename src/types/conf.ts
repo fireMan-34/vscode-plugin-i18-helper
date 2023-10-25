@@ -85,6 +85,10 @@ export interface VScodeConfig {
   generateTemplate: string,
   /** 可扫描的国际化目录路径 */
   scanFolders: string[],
+  /** 快速翻译文本 */
+  fastTranslateLanguageType: (keyof typeof I18nType)[],
+  /** 翻译引擎 */
+  translateEngine: "baidu"|"caiYun"|"Google",
 }
 
 /** 全局配置 */
