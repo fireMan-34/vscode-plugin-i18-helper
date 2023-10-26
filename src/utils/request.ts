@@ -16,10 +16,51 @@ const paraseIncomingMessageMeta = (incomingMessage: IncomingMessage): {
 
 } => {
   const ContentType = incomingMessage.headers['content-type'] ?? 'application/json; charset=utf-8';
+  const [
+    contentType,
+    charset,
+  ] = ContentType.split(';');
+
+  let dataType: ResponseTypeEnum;
+
+  switch (contentType) {
+    case ResponseTypeEnum.JSON:
+      dataType = ResponseTypeEnum.JSON;
+    break;
+    case ResponseTypeEnum.XML:
+      dataType = ResponseTypeEnum.XML;
+    break;
+    case ResponseTypeEnum.HTML:
+      dataType = ResponseTypeEnum.HTML;
+    break;
+    case ResponseTypeEnum.TEXT:
+      dataType = ResponseTypeEnum.TEXT;
+    break;
+    case ResponseTypeEnum.AUTO:
+    default:
+      dataType = ResponseTypeEnum.JSON;
+  }
+
+  function getEncording(encoding: string): BufferEncoding {
+    const encordings: BufferEncoding[] = [
+      'ascii',
+      'base64',
+      'base64url',
+      'utf-8',
+      'binary',
+      'hex',
+      'latin1',
+      'ucs-2',
+      'utf16le',
+    ];
+
+    return encordings.find(bufferEncoridng => encoding.includes(bufferEncoridng)) || 'utf-8';
+  }
+
 
   return {
-    dataType: ResponseTypeEnum.JSON,
-    encording: 'utf-8',
+    dataType,
+    encording: getEncording(charset),
   };
 };
 
