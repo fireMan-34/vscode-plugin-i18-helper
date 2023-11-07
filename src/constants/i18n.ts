@@ -71,6 +71,8 @@ export const VSCODE_KEYS_MAP = {
   mainLanguage: 'mainLanguage',
   scanFolders: 'scanFolders',
   generateTemplate: 'generateTemplate',
+  fastTranslateLanguageType: 'fastTranslateLanguageType',
+  translateEngine: 'translateEngine',
 };
 
 /** vscode 配置 */
@@ -79,4 +81,6 @@ export const VSCODE_KEYS = [
   VSCODE_KEYS_MAP.mainLanguage,
   VSCODE_KEYS_MAP.scanFolders,
   VSCODE_KEYS_MAP.generateTemplate,
+  VSCODE_KEYS_MAP.fastTranslateLanguageType,
+  VSCODE_KEYS_MAP.translateEngine,
 ];
