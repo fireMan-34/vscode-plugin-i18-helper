@@ -26,7 +26,7 @@ describe("测试文件类型模块", function() {
         deepEqual(subDirPaths, [ suit, unit  ]);
     });
 
-    it('测试路径是否存在: 路径不存在', function() {
-        equal(existsSync("d:\\Study\\i18n-extension\\.i18n\\fa5dafcd319fc9e446121a358bb0c46b6e11b9c6ea1acd820e21e3b6d23ac9f5\\meta.json"), false);
+    it('测试路径是否存在: 路径存在', function() {
+        equal(existsSync("d:\\Study\\i18n-extension\\.i18n\\fa5dafcd319fc9e446121a358bb0c46b6e11b9c6ea1acd820e21e3b6d23ac9f5\\meta.json"), true);
     });
 });
