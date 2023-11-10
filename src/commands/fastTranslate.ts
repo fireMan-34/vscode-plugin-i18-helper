@@ -1,9 +1,13 @@
 import vscode from "vscode";
-import { Certificate, Cipher } from 'crypto';
+import { stringify } from 'querystring';
 import type { ICommondItem } from 'types/index';
 import { CMD_KEY, } from 'constants/index';
 import { I18nType } from 'types/index';
 import { getGlobalConfiguration } from 'utils/conf';
+import { md5Hash, } from 'utils/crypto';
+import { requestX } from "utils/request";
+
+type I18nTypeKey = keyof typeof I18nType;
 
 /** crypto 模块大类笔记
  * 
@@ -14,12 +18,21 @@ import { getGlobalConfiguration } from 'utils/conf';
 
 interface ITransalteOutItem {
   penddingText: string;
-  transalteEngineLanguageType: keyof typeof I18nType;
+  transalteEngineLanguageType: I18nTypeKey;
   transalteText: string;
 }
 
 class TranslateEngine {
-  translate(penddingText: string, transalteEngineLanguageTypes:( keyof typeof I18nType)[]): ITransalteOutItem[] {
+  languageMap: Record<I18nTypeKey, string> = {
+    ZH_CN: 'zh-CN',
+    ZH_HK: 'zh-HK',
+    EN_US: 'en-US',
+    JA_JP: 'ja-JP',
+    KO_KR: 'ko-KR',
+    UN_KNOWN: 'UNKNOWN',
+  };
+
+  async translate(penddingText: string, transalteEngineLanguageTypes: I18nTypeKey[]): Promise<ITransalteOutItem[]> {
     return [
       {
         penddingText,
@@ -34,6 +47,30 @@ class TranslateEngine {
   }
 };
 
+interface BaiduQueryIntl {
+  /**
+   * @description 请求翻译query
+   * @tip UTF-8编码
+   */
+  q: string;
+  /** 
+   * @description 翻译源语言
+   */
+  from: 'auto' | string;
+  /** 
+   * @description 目标语言
+   */
+  to: string;
+  /**　
+   * @description APPID
+   */
+  appId: string;
+  /**　随机数 */
+  salt: string;
+  /** 签名 */
+  sign: string;
+}
+
 class BaiduTranslateEngine extends TranslateEngine {
   baseApi = 'https://fanyi-api.baidu.com/api/trans/vip/translate';
 
@@ -41,7 +78,16 @@ class BaiduTranslateEngine extends TranslateEngine {
 
   appSecrect = '';
 
-  salt = Math.ceil( Math.random() * 1000);
+  salt = `${Math.ceil( Math.random() * 1000)}`;
+
+  languageMap: Record<"ZH_CN" | "ZH_HK" | "EN_US" | "KO_KR" | "JA_JP" | "UN_KNOWN", string> = {
+    ZH_CN: 'zh',
+    ZH_HK: 'cht',
+    KO_KR: 'kor',
+    EN_US: 'en',
+    JA_JP: 'jp',
+    UN_KNOWN: 'auto',
+  };
 
   createSign(
     penddingText: string,
@@ -49,10 +95,34 @@ class BaiduTranslateEngine extends TranslateEngine {
 
   ): string {
     const step1 = `${this.appId}${penddingText}${this.salt}${this.appSecrect}`;
+    const step2 = md5Hash(step1);
+    return step2;
+  }
 
-    
-    
-    return step1;
+  createQuery(penddingText: string, ) {
+    const sign = this.createSign(penddingText);
+    const query = stringify({
+      q: penddingText,
+      from: 'auto',
+      to: '',
+      appId: this.appId,
+      salt: this.salt,
+      sign,
+    } as BaiduQueryIntl as any);
+    return query;
+  };
+
+  init() {
+    this.appId = '20230821001788313';
+    this.appSecrect = 'TPZdN8VL15XRjuob3hSx';
+  }
+  async translate(penddingText: string, transalteEngineLanguageTypes: ("ZH_CN" | "ZH_HK" | "EN_US" | "KO_KR" | "JA_JP" | "UN_KNOWN")[]): Promise<ITransalteOutItem[]> {
+    const [ language ] = transalteEngineLanguageTypes.map(key => this.languageMap[key]);
+    const [ clientReq, clientReqPromise ] = requestX({ 
+      path: this.baseApi + '?' + this.createQuery(penddingText),
+     });
+     clientReqPromise.then(console.log);
+    return [];
   }
 }
 

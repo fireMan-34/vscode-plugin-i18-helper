@@ -1,4 +1,5 @@
-import { request } from 'http';
+import http from 'http';
+import https from 'https';
 import type { RequestOptions, IncomingMessage } from 'http';
 
 enum ResponseTypeEnum {
@@ -41,7 +42,7 @@ const paraseIncomingMessageMeta = (incomingMessage: IncomingMessage): {
       dataType = ResponseTypeEnum.JSON;
   }
 
-  function getEncording(encoding: string): BufferEncoding {
+  function getEncording(encoding?: string): BufferEncoding {
     const encordings: BufferEncoding[] = [
       'ascii',
       'base64',
@@ -54,7 +55,7 @@ const paraseIncomingMessageMeta = (incomingMessage: IncomingMessage): {
       'utf16le',
     ];
 
-    return encordings.find(bufferEncoridng => encoding.includes(bufferEncoridng)) || 'utf-8';
+    return encoding ? encordings.find(bufferEncoridng => encoding.includes(bufferEncoridng)) ?? 'utf-8' : 'utf-8';
   }
 
 
@@ -64,17 +65,18 @@ const paraseIncomingMessageMeta = (incomingMessage: IncomingMessage): {
   };
 };
 
-export interface IrequestX extends RequestOptions {
+export interface IRequestX extends RequestOptions {
   onCallback?: (incomingMessage: IncomingMessage) => void;
 }
 
-function requestX(options: IrequestX) {
+export function requestX(options: IRequestX) {
   const {
     onCallback,
     ...opt
   } = {
     ...options,
   };
+  const request = http.request;
   const clientReq = request(opt, onCallback);
 
   const responsePromise = new Promise((resolve, reject) => {
@@ -91,8 +93,12 @@ function requestX(options: IrequestX) {
           const originContent = data.toString(meta.encording);
           if (ResponseTypeEnum.JSON === meta.dataType) {
             const parseContent = JSON.parse(originContent);
-            resolve(parseContent);
+            result = parseContent;
           }
+          if (ResponseTypeEnum.TEXT === meta.dataType) {
+            result = originContent;
+          }
+          resolve(result);
         }
       });
     });
@@ -124,16 +130,3 @@ function requestX(options: IrequestX) {
     responsePromise,
   ] as const;
 };
-
-const API_FOX_HOST = "127.0.0.1";
-
-const API_FOX_PRIX_PATH = "/m1/3039949-0-default";
-
-const [res, pro] = requestX({
-  port: 4523,
-  host: API_FOX_HOST,
-  path: `${API_FOX_PRIX_PATH}/mian/view/pics`,
-  method: 'GET',
-});
-
-pro.then(console.log)
