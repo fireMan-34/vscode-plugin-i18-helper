@@ -3,3 +3,4 @@ export * from './i18n';
 export * from './project';
 export * from './provider';
 export * from './reg';
+export * from './crypto';

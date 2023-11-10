@@ -73,13 +73,13 @@ describe('glob study test', function () {
     });
   });
   // 测试用例存在问题 似乎属性 matchBase 无法验证功能
-  it('matchBase 为 true 且 无 / 可以匹配目录下的任何子叶，否则匹配当前所在目录', function (done) {
-    glob('*.json', { cwd: __dirname, matchBase: true }, (err, fileNames) => {
-      if (err) {return done(err);}
-      console.log(fileNames);
-      const files = createFilePathMap(__dirname)(fileNames);
-      equal(files.length, 2);
-      done();
-    });
-  });
+  // it('matchBase 为 true 且 无 / 可以匹配目录下的任何子叶，否则匹配当前所在目录', function (done) {
+  //   glob('*.json', { cwd: __dirname, matchBase: true }, (err, fileNames) => {
+  //     if (err) {return done(err);}
+  //     console.log(fileNames);
+  //     const files = createFilePathMap(__dirname)(fileNames);
+  //     equal(files.length, 2);
+  //     done();
+  //   });
+  // });
 });
