@@ -29,10 +29,11 @@ async function main() {
   const mocha = new Mocha({
     ui: 'tdd',
     color: true,
+    timeout: 3400,
   });
 
   await new Promise((resolve, reject) => {
-    glob('unit/**.test.ts', { cwd: root }, (err, files) => {
+    glob('unit/**/**.test.ts', { cwd: root }, (err, files) => {
       if (err) {
         reject(err);
         return;
