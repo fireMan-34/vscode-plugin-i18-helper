@@ -11,3 +11,4 @@ vsc-extension-quickstart.md
 study/**
 .i18n/**
 node_modules/**
+mock/**

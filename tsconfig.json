@@ -38,6 +38,7 @@
 	"exclude": [
 		"./client/*",
 		"./study/*",
+		"./mock/*",
 	],
 	"ts-node": {
 		"require": [ "tsconfig-paths/register" ]
