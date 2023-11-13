@@ -1,10 +1,7 @@
 import { stringify } from "querystring";
 import { Axios, } from 'axios';
 import { md5Hash } from "utils/crypto";
-import { requestX } from "utils/request";
 import { TranslateEngine, ITransalteOutItem, I18nTypeKey, } from "./base";
-import { writeFile } from "fs/promises";
-import { join } from "path";
 
 interface BaiduQueryIntl {
   /**
@@ -23,11 +20,21 @@ interface BaiduQueryIntl {
   /**　
    * @description APPID
    */
-  appId: string;
+  appid: string;
   /**　随机数 */
   salt: string;
   /** 签名 */
   sign: string;
+}
+
+interface BaiduQueryResponse {
+  error_code: number,
+  error_msg: string,
+  from: string;
+  to: string;
+  trans_result: [
+    { src: string/** 源码 */, dst: string/**翻译 */, },
+  ]
 }
 
 export class BaiduTranslateEngine extends TranslateEngine {
@@ -36,7 +43,7 @@ export class BaiduTranslateEngine extends TranslateEngine {
 
   appSecrect = '';
 
-  salt = `${Math.ceil( Math.random() * 1000)}`;
+  salt = `${Math.ceil(Math.random() * 1000)}`;
 
   languageMap: Record<I18nTypeKey, string> = {
     ZH_CN: 'zh',
@@ -52,7 +59,7 @@ export class BaiduTranslateEngine extends TranslateEngine {
 
 
   ): string {
-    const step1 = `${this.appId}${penddingText}${this.salt}${this.appSecrect}`;
+    const step1 = [this.appId, penddingText, this.salt, this.appSecrect].join('');
     const step2 = md5Hash(step1);
     return step2;
   }
@@ -63,19 +70,18 @@ export class BaiduTranslateEngine extends TranslateEngine {
       q: penddingText,
       from: 'auto',
       to: language,
-      appId: this.appId,
+      appid: this.appId,
       salt: this.salt,
       sign,
     } as BaiduQueryIntl as any);
-    // return query;
     return {
       q: penddingText,
       from: 'auto',
       to: language,
-      appId: this.appId,
+      appid: this.appId,
       salt: this.salt,
       sign,
-    } 
+    };
   };
 
   init() {
@@ -83,11 +89,11 @@ export class BaiduTranslateEngine extends TranslateEngine {
     this.appSecrect = 'TPZdN8VL15XRjuob3hSx';
   }
   async translate(penddingText: string, transalteEngineLanguageTypes: I18nTypeKey[]): Promise<ITransalteOutItem[]> {
-    const [ language ] = transalteEngineLanguageTypes.map(key => this.languageMap[key]);
+    const [language] = transalteEngineLanguageTypes.map(key => this.languageMap[key]);
     const axios = new Axios({
       method: 'GET',
     });
-    const { data, } = await axios.request({
+    const { data, } = await axios.request<BaiduQueryResponse>({
       baseURL: 'http://fanyi-api.baidu.com',
       url: '/api/trans/vip/translate',
       params: this.createQuery(penddingText, language),
@@ -98,7 +104,11 @@ export class BaiduTranslateEngine extends TranslateEngine {
     if (data.error_code) {
       throw new Error(data.error_msg);
     }
-
-    return [];
+    const [ trans_result ] = data.trans_result;
+    return [{
+      penddingText: trans_result.src,
+      transalteText: trans_result.dst,
+      transalteEngineLanguageType:transalteEngineLanguageTypes[0],     
+    }];
   }
 }
