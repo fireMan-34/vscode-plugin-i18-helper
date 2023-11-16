@@ -16,7 +16,6 @@ describe('测试百度翻译 api', function() {
     engine.init();
     engine.translate('翻译内容', ['KO_KR'])
     .then((vals) => {
-      console.log('vals ==========>', vals);
       done();
     })
     .catch(done);

@@ -1,6 +1,9 @@
 import { stringify } from "querystring";
 import { Axios, } from 'axios';
+import isEmpty from 'lodash/isEmpty';
+
 import { md5Hash } from "utils/crypto";
+
 import { TranslateEngine, ITransalteOutItem, I18nTypeKey, } from "./base";
 
 interface BaiduQueryIntl {
@@ -88,27 +91,35 @@ export class BaiduTranslateEngine extends TranslateEngine {
     this.appId = '20230821001788313';
     this.appSecrect = 'TPZdN8VL15XRjuob3hSx';
   }
-  async translate(penddingText: string, transalteEngineLanguageTypes: I18nTypeKey[]): Promise<ITransalteOutItem[]> {
-    const [language] = transalteEngineLanguageTypes.map(key => this.languageMap[key]);
+  async translateOne(penddingText: string, transalteEngineLanguageType: I18nTypeKey): Promise<ITransalteOutItem|null> {
+    const language = this.languageMap[transalteEngineLanguageType];
     const axios = new Axios({
       method: 'GET',
+      // 有点奇怪不生效
+      responseType: 'json',
+      headers: {
+        "Content-Type": 'application/json',
+      }
     });
-    const { data, } = await axios.request<BaiduQueryResponse>({
+    const data: BaiduQueryResponse = await axios.request<string>({
       baseURL: 'http://fanyi-api.baidu.com',
       url: '/api/trans/vip/translate',
       params: this.createQuery(penddingText, language),
-      headers: {
-      },
-    });
+    }).then(response => JSON.parse(response.data));
 
     if (data.error_code) {
       throw new Error(data.error_msg);
     }
+    
+    if (isEmpty(data.trans_result)) {
+      return null;
+    }
     const [ trans_result ] = data.trans_result;
-    return [{
+
+    return {
       penddingText: trans_result.src,
       transalteText: trans_result.dst,
-      transalteEngineLanguageType:transalteEngineLanguageTypes[0],     
-    }];
+      transalteEngineLanguageType:transalteEngineLanguageType,     
+    };
   }
 }
