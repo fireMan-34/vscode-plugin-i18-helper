@@ -1,7 +1,8 @@
 /** @fileoverview 匹配国际化 key 相关 */
-import { $_T_KEY_REGEX, FORMAT_MESSAGE_ID_MSG_REGEX, FORMAT_MESSAGE_MSG_REGEX, GENERATE_TEMPLATE_MAP, I18N_T_KEY_REGEX } from 'constants/index'
+import { $_T_KEY_REGEX, FORMAT_MESSAGE_ID_MSG_REGEX, FORMAT_MESSAGE_MSG_REGEX, GENERATE_TEMPLATE_MAP, I18N_T_KEY_REGEX } from 'constants/index';
 import { FORMAT_MESSAGE_ID_REGEX, } from 'constants/index';
 import { I18nTextParse } from 'types/index';
+import { getVScodeConfig } from 'utils/conf';
 import { BaseI18nTextParsePlugin } from './base';
 
 /**
@@ -77,6 +78,21 @@ export class $TWhthKeyMatchIdPlugin extends BaseI18nTextParsePlugin {
   matchTextCb: (text: string) => void = (text: string) => {
     this.matchValue = text.match(this.wholeRule)![1];
   };
+}
+
+export class dynamicTemplateMatchIdPlugin extends BaseI18nTextParsePlugin {
+  constructor(host: I18nTextParse) {
+    super(host);
+    this.init();
+  }
+
+  matchTextCb: (text: string) => void = (text: string) => {
+    this.matchValue = text.match(this.wholeRule)![1];
+  };
+
+  init() {
+    const { generateTemplate, } = getVScodeConfig();
+  }
 }
 
 export const createMatchI18nIdPlugin = (host: I18nTextParse) => {

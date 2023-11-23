@@ -9,6 +9,7 @@ export class BaseI18nTextParsePlugin implements I18nTextParsePlugin {
 
   constructor(host: I18nTextParse) {
       this.context = host;
+      this.init();
   }
   get isThisPlugin(): boolean {
       return this.context.isPluginThisSupported({
@@ -24,4 +25,8 @@ export class BaseI18nTextParsePlugin implements I18nTextParsePlugin {
   matchTextCb: (text: string) => void = (text: string) => {
     this.matchValue = text;
   };
+
+  init() {
+
+  }
 };

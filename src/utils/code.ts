@@ -94,7 +94,23 @@ const renderI18nCode = (i18nItem: { id: string, msg: string, isRemoveBracket?: b
 	return i18nCode;
 };
 
+/** 动态模板转匹配正则 */
+export function stringToRegex(generateTemplate: string) {
+	generateTemplate = generateTemplate
+	.replace('{', '\{')
+	.replace('}', '\}')
+	.replace('(', '\(')
+	.replace(')', '\)')
+	;
+	const variableReg = /\$\{(.*?)\}/g;
+	const normalStrs = generateTemplate.split(variableReg);
+	
+	return {
+		partRegStr: normalStrs[0],
+		// fullRegStr: 
 
+	} as const;
+};
 
 
 
