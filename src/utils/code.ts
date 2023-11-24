@@ -95,19 +95,32 @@ const renderI18nCode = (i18nItem: { id: string, msg: string, isRemoveBracket?: b
 };
 
 /** 动态模板转匹配正则 */
-export function stringToRegex(generateTemplate: string) {
-	generateTemplate = generateTemplate
-	.replace('{', '\{')
-	.replace('}', '\}')
-	.replace('(', '\(')
-	.replace(')', '\)')
-	;
-	const variableReg = /\$\{(.*?)\}/g;
-	const normalStrs = generateTemplate.split(variableReg);
+export function generateTemplateStringToRegex(generateTemplateStr: string) {
+	function toReg(str: string) {
+		return str
+		.replace('{', '\\{')
+		.replace('}', '\\}')
+		.replace('(','\\(')
+		.replace(')', '\\)')
+		;
+	}
+	let generateTemplate = generateTemplateStr;
+	const variableReg = /'\$\{(.*?)\}'/g;
+	/** [x][x][x]  */
+	let normalStrs = generateTemplateStr.split(variableReg).map(toReg);
+	const [ keyWithStr, msgWithStr  ] = generateTemplate.match(variableReg) || [];
 	
+	if (keyWithStr) {
+		/** [x][o][x][x]  */
+		normalStrs.splice(1,0, `'\$\{\(.*?\)\}'`);
+	}
+	if (keyWithStr && msgWithStr) {
+		normalStrs.splice(3, 0, `'\$\{\(.*?\)\}'`);
+	}
+
 	return {
-		partRegStr: normalStrs[0],
-		// fullRegStr: 
+		partRegStr: toReg(normalStrs[0]),
+		fullRegStr: generateTemplate,
 
 	} as const;
 };

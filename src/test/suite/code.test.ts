@@ -3,6 +3,7 @@ import { describe, it, } from 'mocha';
 import {
   getCharsI18nType,
   generateDynamicTemplateString,
+  generateTemplateStringToRegex,
 } from 'utils/code';
 import {
   FORMAT_MESSAGE_REGEX,
@@ -137,4 +138,29 @@ describe('测试 i18n 调用 t 的方式', function () {
   it('默认输入双引号文本匹配', function () {
     equal(I18N_T_REGEX.test('i18n.t("xxxx")'), true);
   });  
+});
+
+describe('测试动态模板转换正则功能', function() {
+  const generateTemplate = "getMessage('${id}','${msg}')";
+  const code1 = `
+    getMessage('auth.logn', 'haha');
+  `;
+  
+  it('验证动态模板正则是否可以生成', function() {
+    const result =  generateTemplateStringToRegex(generateTemplate);  
+    equal(!!(result.fullRegStr && result.partRegStr), true);
+  });
+
+  it('验证动态模板正则测试', function () {
+    const result = generateTemplateStringToRegex(generateTemplate);
+    const reg = {
+      full: new RegExp(result.fullRegStr),
+      part: new RegExp(result.partRegStr),
+    };
+    equal(result.partRegStr, 'getMessage\\(');
+    equal(result.fullRegStr, 'getMessage\\(\\s*("|\')(.*?)\\1,\\s*("|\')(.*?)\\3\\)');
+    // equal(reg.full.test(code1), true);
+    // equal(reg.part.test(code1), true);
+  });
+
 });
