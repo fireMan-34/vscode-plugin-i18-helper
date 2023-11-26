@@ -12,9 +12,10 @@ import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
  */
 const hoverProvider: HoverProvider = {
   async provideHover(document, position, token) {
+    
     const i18nTextParser = new I18nTextParserClass(document, position);
     createMatchI18nIdPlugin(i18nTextParser);
-
+    
     const matchValue = i18nTextParser.getMatchI18nText();
 
     if (matchValue) {

@@ -2,6 +2,7 @@ import { readFileSync, writeFile } from 'node:fs';
 import { join } from 'node:path';
 import { Uri, type ExtensionContext, type WebviewPanel } from 'vscode';
 import template from 'lodash/template';
+import isEmpty from 'lodash/isEmpty';
 import { sify } from 'chinese-conv';
 import { GlobalExtensionSubject } from 'utils/conf';
 import { I18nType } from 'types/index';
@@ -135,14 +136,17 @@ export function generateTemplateStringToRegex(generateTemplateStr: string) {
 		/** 国际化全部正则 */
 		fullReg: new RegExp(fullRegStr, 'm'),
 		getI18nKeyAndVal(i18nCode: string) {
-			const reg = new RegExp(fullRegStr, 'm');
+			const reg = new RegExp(fullRegStr, 'gm');
 			const [matchAllArr = []] = i18nCode.matchAll(reg) || [];
+			if (isEmpty(matchAllArr)) {
+				return {};
+			}
 			const key = matchAllArr[keyIndex + 1];
 			const val = matchAllArr[valIndex + 1];
 			return {
 				key,
 				val,
-			}
+			};
 		},
 	} as const;
 };

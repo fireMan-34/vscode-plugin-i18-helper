@@ -17,36 +17,42 @@ import type { XTextEditor } from 'types/index';
 // 激活事件 插件一开始不一定会启动
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('你的国际化插件已经可以预览啦啦， 😊');
+	try {
+		// Use the console to output diagnostic information (console.log) and errors (console.error)
+		// This line of code will only be executed once when your extension is activated
+		console.log('你的国际化插件已经可以预览啦啦， 😊');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const commands = [
-		formatMessageCmd,
-		openWebViewCmd,
-		scanI18FileCmd,
-		i18nRuleDirCmd,
-		fastTranslateCmd,
-	];
-	const disposables = commands
-		.map((cmdItem) =>
-			vscode.commands.registerCommand(cmdItem.cmd,
-				(...args: any[]) =>
-					cmdItem.cmdExcuter(context,
-						args[0] as XTextEditor,
-						args[1] as vscode.TextEditorEdit,
-						...args.slice(2,))));
-	context.subscriptions.push(...disposables);
-	commands.filter(cmd => cmd.excuter).forEach(cmd => cmd.excuter!(context));
+		// The command has been defined in the package.json file
+		// Now provide the implementation of the command with registerCommand
+		// The commandId parameter must match the command field in package.json
+		const commands = [
+			formatMessageCmd,
+			openWebViewCmd,
+			scanI18FileCmd,
+			i18nRuleDirCmd,
+			fastTranslateCmd,
+		];
+		const disposables = commands
+			.map((cmdItem) =>
+				vscode.commands.registerCommand(cmdItem.cmd,
+					(...args: any[]) =>
+						cmdItem.cmdExcuter(context,
+							args[0] as XTextEditor,
+							args[1] as vscode.TextEditorEdit,
+							...args.slice(2,))));
+		context.subscriptions.push(...disposables);
+		commands.filter(cmd => cmd.excuter).forEach(cmd => cmd.excuter!(context));
 
-	createI18nProvider(context);
+		createI18nProvider(context);
 
-	createTotalRxSubscriptionDisable(context);
+		createTotalRxSubscriptionDisable(context);
 
-	refreshContextTask(context);
+		refreshContextTask(context);
+	} catch (err) { 
+		console.error(err);
+	} finally {
+		
+	}
 }
 
 // This method is called when your extension is deactivated

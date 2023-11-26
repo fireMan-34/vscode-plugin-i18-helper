@@ -1,8 +1,9 @@
-import { Position, Range, TextDocument, } from "vscode";
-import { adjustNumberRange } from 'utils/num';
-import { GlobalExtensionSubject } from 'utils/conf';
+import { Position, Range, TextDocument, window } from "vscode";
+
 import { BaseI18nTextParsePlugin } from 'models/i18nTextParser/index';
 import { I18nTextParse, I18nTextParseIsPluginThisSupportOptions } from "types/index";
+import { GlobalExtensionSubject } from 'utils/conf';
+import { adjustNumberRange } from 'utils/num';
 import { findStartAndEndIndex } from "utils/str";
 
 
@@ -19,14 +20,21 @@ export class I18nTextParserClass implements I18nTextParse {
     }
 
     getMatchI18nText(): string | null {       
-        const curTemplate = GlobalExtensionSubject.getValue().generateTemplate;
-        const plugin = this.plugins
-            .filter(plugin => plugin.generateTemplate.includes(curTemplate))
-            .find(plugin => plugin.isThisPlugin);        
-        if (plugin) {
-            return plugin.getMatchI18nText();
+        try {
+            const curTemplate = GlobalExtensionSubject.getValue().generateTemplate;
+            const plugin = this.plugins
+                .filter(plugin => plugin.generateTemplate.includes(curTemplate))
+                .find(plugin => plugin.isThisPlugin);
+                  
+            if (plugin) {
+                return plugin.getMatchI18nText();
+            }
+            return null;
+        } catch (err) {
+            console.log('get match i18n text error', err);
+            
+            return null;
         }
-        return null;
     }
 
     getRangeTextFromProvider(line: number): string {

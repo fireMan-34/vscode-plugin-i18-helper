@@ -86,15 +86,18 @@ export class dynamicTemplateMatchIdPlugin extends BaseI18nTextParsePlugin {
     super(host);
   }
 
+  regexper!: ReturnType<typeof generateTemplateStringToRegex>;
+
   matchTextCb: (text: string) => void = (text: string) => {
-    this.matchValue = text.match(this.wholeRule)![1];
+    this.matchValue = this.regexper.getI18nKeyAndVal(text).key;
   };
 
   init() {
     const { generateTemplate, } = getVScodeConfig();
-    const regexper = generateTemplateStringToRegex(generateTemplate);
-    this.partReg = regexper.partReg;
-    this.wholeRule = regexper.fullReg;
+    this.regexper = generateTemplateStringToRegex(generateTemplate);
+    this.generateTemplate = [ generateTemplate ];
+    this.partReg = this.regexper.partReg;
+    this.wholeRule = this.regexper.fullReg;
   }
 }
 
