@@ -134,33 +134,75 @@ describe('代码模板测试解析生成', function () {
 describe('测试 i18n 调用 t 的方式', function () {
   it('默认输入文本匹配', function () {
     equal(I18N_T_REGEX.test("i18n.t('xxxx')"), true);
-  });  
+  });
   it('默认输入双引号文本匹配', function () {
     equal(I18N_T_REGEX.test('i18n.t("xxxx")'), true);
-  });  
+  });
 });
 
-describe('测试动态模板转换正则功能', function() {
+describe('测试动态模板转换正则功能', function () {
   const generateTemplate = "getMessage('${id}','${msg}')";
-  const code1 = `
-    getMessage('auth.logn', 'haha');
-  `;
-  
-  it('验证动态模板正则是否可以生成', function() {
-    const result =  generateTemplateStringToRegex(generateTemplate);  
+
+  it('验证动态模板正则是否可以生成', function () {
+    const result = generateTemplateStringToRegex(generateTemplate);
     equal(!!(result.fullRegStr && result.partRegStr), true);
   });
 
-  it('验证动态模板正则测试', function () {
+  it('验证动态模板正则输出比较', function () {
     const result = generateTemplateStringToRegex(generateTemplate);
-    const reg = {
-      full: new RegExp(result.fullRegStr),
-      part: new RegExp(result.partRegStr),
-    };
+
     equal(result.partRegStr, 'getMessage\\(');
-    equal(result.fullRegStr, 'getMessage\\(\\s*("|\')(.*?)\\1,\\s*("|\')(.*?)\\3\\)');
-    // equal(reg.full.test(code1), true);
-    // equal(reg.part.test(code1), true);
+    equal(result.fullRegStr, 'getMessage\\([\\s|\\n]*("|\')(.*?)\\1[\\s|\\n]*,[\\s|\\n]*("|\')(.*?)\\3,?[\\s|\\n]*\\)');
+
   });
 
+  it('动态模板转换单行匹配测试', function () {
+    const result = generateTemplateStringToRegex(generateTemplate);
+    const code = `getMessage('auth.logn', 'haha');`;
+    const reg = {
+      full: new RegExp(result.fullRegStr,),
+      part: new RegExp(result.partRegStr,),
+    };
+    equal(reg.part.test(code), true);
+    equal(reg.full.test(code), true);
+  });
+
+  it('动态模板转换多行匹配测试', function () {
+    const result = generateTemplateStringToRegex(generateTemplate);
+    const reg = {
+      part: new RegExp(result.partRegStr, 'm'),
+      full: new RegExp(result.fullRegStr, 'm'),
+    };
+    const code = `
+    getMessage(
+      'no.login.hah',
+      'goHere',
+    )`;
+    equal(reg.part.test(code), true);
+    equal(reg.full.test(code), true);
+  });
+
+  it('动态正则末尾去掉，加结束符号。', function () {
+    const result = generateTemplateStringToRegex(generateTemplate);
+    const code = `
+    getMessage("auth.logn",   
+    'no.get');
+    `;
+    const reg = {
+      part: new RegExp(result.partRegStr, 'm'),
+      full: new RegExp(result.fullRegStr, 'm'),
+    };
+    equal(reg.part.test(code), true);
+    equal(reg.full.test(code), true);
+  });
+
+  it('动态正则内容提取测试', function () {
+    const result = generateTemplateStringToRegex(generateTemplate);
+    const i18nKey = "login.submit";
+    const i18nVal = '登录';
+    const code = `getMessage("${i18nKey}",'${i18nVal}')`;
+    const r = result.getI18nKeyAndVal(code);
+    equal(r.key, i18nKey);
+    equal(r.val, i18nVal);
+  });
 });

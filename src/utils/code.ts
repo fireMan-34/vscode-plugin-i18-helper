@@ -102,26 +102,48 @@ export function generateTemplateStringToRegex(generateTemplateStr: string) {
 		.replace('}', '\\}')
 		.replace('(','\\(')
 		.replace(')', '\\)')
+		.replace('[','\\[')
+		.replace(']','\\]')
 		;
 	}
 	let generateTemplate = generateTemplateStr;
-	const variableReg = /'\$\{(.*?)\}'/g;
+	const variableReg = /'\$\{.*?\}'/g;
+	const keyIndex = 1;
+	const valIndex = 3;
 	/** [x][x][x]  */
-	let normalStrs = generateTemplateStr.split(variableReg).map(toReg);
+	const withRegFormatStrs = generateTemplateStr.split(variableReg).map(toReg);
+	const replaceKeyValRegStrs = withRegFormatStrs;
 	const [ keyWithStr, msgWithStr  ] = generateTemplate.match(variableReg) || [];
-	
 	if (keyWithStr) {
 		/** [x][o][x][x]  */
-		normalStrs.splice(1,0, `'\$\{\(.*?\)\}'`);
+		replaceKeyValRegStrs.splice(keyIndex,0, `("|')(.*?)\\1`);
 	}
 	if (keyWithStr && msgWithStr) {
-		normalStrs.splice(3, 0, `'\$\{\(.*?\)\}'`);
+		replaceKeyValRegStrs.splice(valIndex, 0, `("|')(.*?)\\3,?`);
 	}
+	const waitJoinRegStrs = replaceKeyValRegStrs.flatMap((v,i, a) => i < a.length - 1 ? [ v, `[\\s|\\n]*` ] : [v]);
+	const [ partRegStr ] = waitJoinRegStrs;
+	const fullRegStr = waitJoinRegStrs.join('');
 
 	return {
-		partRegStr: toReg(normalStrs[0]),
-		fullRegStr: generateTemplate,
-
+		/** 识别国际化正则文本 */
+		partRegStr,
+		/** 全匹配国际正则文本 */
+		fullRegStr: fullRegStr,
+		/** 国际化局部正则 */
+		partReg: new RegExp(partRegStr, 'm'),
+		/** 国际化全部正则 */
+		fullReg: new RegExp(fullRegStr, 'm'),
+		getI18nKeyAndVal(i18nCode: string) {
+			const reg = new RegExp(fullRegStr, 'm');
+			const [matchAllArr = []] = i18nCode.matchAll(reg) || [];
+			const key = matchAllArr[keyIndex + 1];
+			const val = matchAllArr[valIndex + 1];
+			return {
+				key,
+				val,
+			}
+		},
 	} as const;
 };
 
