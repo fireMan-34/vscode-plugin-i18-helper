@@ -6,20 +6,23 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "启动 webpack 调试程序",
+			"name": "启动 插件项目 调试程序",
 			"request": "launch",
 			"type": "extensionHost",
 			"args": [
 				// * https://github.com/microsoft/vscode/issues/122006
 				// "D:\/Project\/pro-micro-services",
-				"D:\/Project\/pro-micro-services\/.vscode\/pro-micro-services.code-workspace",
+				"${workspaceFolder}/demo/demo.code-workspace",
 				"--extensionDevelopmentPath=${workspaceFolder}",
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
 			],
 			// * https://code.visualstudio.com/docs/editor/tasks#vscode
-			"preLaunchTask": "npm: dev"
+			// "preLaunchTask": "npm: dev",
+			"env": {
+				"NODE_TLS_REJECT_UNAUTHORIZED": "0",
+			},
 		},
 		{
 			"name": "Run Extension",

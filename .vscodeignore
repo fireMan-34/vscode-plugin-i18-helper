@@ -12,3 +12,4 @@ study/**
 .i18n/**
 node_modules/**
 mock/**
+demo/**
