@@ -19,7 +19,7 @@
 				"${workspaceFolder}/out/**/*.js"
 			],
 			// * https://code.visualstudio.com/docs/editor/tasks#vscode
-			// "preLaunchTask": "npm: dev",
+			"preLaunchTask": "npm: dev",
 			"env": {
 				"NODE_TLS_REJECT_UNAUTHORIZED": "0",
 			},
