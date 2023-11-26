@@ -3,6 +3,7 @@ import { $_T_KEY_REGEX, FORMAT_MESSAGE_ID_MSG_REGEX, FORMAT_MESSAGE_MSG_REGEX, G
 import { FORMAT_MESSAGE_ID_REGEX, } from 'constants/index';
 import { I18nTextParse } from 'types/index';
 import { getVScodeConfig } from 'utils/conf';
+import { generateTemplateStringToRegex } from 'utils/code';
 import { BaseI18nTextParsePlugin } from './base';
 
 /**
@@ -83,7 +84,6 @@ export class $TWhthKeyMatchIdPlugin extends BaseI18nTextParsePlugin {
 export class dynamicTemplateMatchIdPlugin extends BaseI18nTextParsePlugin {
   constructor(host: I18nTextParse) {
     super(host);
-    this.init();
   }
 
   matchTextCb: (text: string) => void = (text: string) => {
@@ -92,6 +92,9 @@ export class dynamicTemplateMatchIdPlugin extends BaseI18nTextParsePlugin {
 
   init() {
     const { generateTemplate, } = getVScodeConfig();
+    const regexper = generateTemplateStringToRegex(generateTemplate);
+    this.partReg = regexper.partReg;
+    this.wholeRule = regexper.fullReg;
   }
 }
 
@@ -101,5 +104,6 @@ export const createMatchI18nIdPlugin = (host: I18nTextParse) => {
     new FormatMessageWithDefaultMessageMatchIdPlugin(host),
     new I18nTWithKeyMatchIdPlugin(host),
     new $TWhthKeyMatchIdPlugin(host),
+    new dynamicTemplateMatchIdPlugin(host),
   ];
 };

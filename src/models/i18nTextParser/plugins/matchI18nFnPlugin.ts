@@ -1,5 +1,7 @@
 import { FORMAT_MESSAGE_REGEX, GENERATE_TEMPLATE_MAP, I18N_T_REGEX } from 'constants/index';
 import { I18nTextParse } from 'types/index';
+import { getVScodeConfig } from 'utils/conf';
+import { generateTemplateStringToRegex } from 'utils/code';
 import { BaseI18nTextParsePlugin } from './base';
 
 export class FormatMessageWithKeyAndValMatchFnPlugin extends BaseI18nTextParsePlugin {
@@ -43,10 +45,25 @@ export class $TWithKeyMatchFnPlugin extends BaseI18nTextParsePlugin {
   wholeRule: RegExp = I18N_T_REGEX;
 }
 
+export class dynamicTemplateMatchFnPlugin extends BaseI18nTextParsePlugin {
+  constructor(host: I18nTextParse) {
+    super(host);
+  }
+  async init() {
+    const { generateTemplate } = getVScodeConfig();
+    const regexper = generateTemplateStringToRegex(generateTemplate);
+    
+    this.generateTemplate = [ generateTemplate ];
+    this.partReg = regexper.partReg;
+    this.wholeRule = regexper.fullReg;
+  }
+}
+
 export const createMatchI18nFnPlugin = (host: I18nTextParse) => {
   host.plugins = [
     new FormatMessageWithKeyAndValMatchFnPlugin(host),
     new I18nTWithKeyMatchFnPlugin(host),
     new $TWithKeyMatchFnPlugin(host),
+    new dynamicTemplateMatchFnPlugin(host),
   ];
 };

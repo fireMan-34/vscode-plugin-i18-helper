@@ -1,0 +1,3 @@
+{
+    "i18n-extension.generateTemplate": "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})"
+}

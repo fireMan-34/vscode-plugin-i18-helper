@@ -18,11 +18,11 @@ export class I18nTextParserClass implements I18nTextParse {
         this.plugins = [];
     }
 
-    getMatchI18nText(): string | null {
+    getMatchI18nText(): string | null {       
         const curTemplate = GlobalExtensionSubject.getValue().generateTemplate;
         const plugin = this.plugins
             .filter(plugin => plugin.generateTemplate.includes(curTemplate))
-            .find(plugin => plugin.isThisPlugin);
+            .find(plugin => plugin.isThisPlugin);        
         if (plugin) {
             return plugin.getMatchI18nText();
         }
