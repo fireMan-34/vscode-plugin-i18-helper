@@ -52,10 +52,10 @@ export class dynamicTemplateMatchFnPlugin extends BaseI18nTextParsePlugin {
   async init() {
     const { generateTemplate } = getVScodeConfig();
     const regexper = generateTemplateStringToRegex(generateTemplate);
-    
-    this.generateTemplate = [ generateTemplate ];
+
+    this.generateTemplate = [generateTemplate];
     this.partReg = regexper.partReg;
-    this.wholeRule = regexper.fullReg;
+    this.wholeRule = regexper.partReg;
   }
 }
 
