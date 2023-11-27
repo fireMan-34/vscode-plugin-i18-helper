@@ -184,3 +184,29 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - fix: 移除因缓存导致的提示异常问题
 - fix: 修复静态类型常量混用覆盖问题
 - fix: 设置国际化目录规则不可展开
+
+# 0.2.93
+  - feat: 更新插件图标
+  - pref: 添加同类 vscode 国际化插件 repo 代码仅用于个人学习
+  - ci: typescript 跳过临时编译文件
+  - feat: 翻译 api 功能开发中 1
+  - feat: requestX 方法兼容 json（后面改 axios）
+  - feat: 优化 json 请求逻辑
+  - pref: 添加搜索忽略文件
+  - fix: 修复新增缺少的配置
+  - test: 添加 glob package 测试用例
+  - feat: 添加 md5 转换函数和测试函数
+  - test: 注释无效测试函数
+  - pref: 忽略 mock 文件目录
+  - feat: 暂存翻译 api 对接
+  - feat: 联调百度翻译 api
+  - docs: 更新功能计划文档
+  - docs: 类型体操自学课
+  - feat: 动态模板功能开发中 1
+  - feat: 动态模板功能开发中 2
+  - test: 添加动态模板测试用例
+  - feat: 添加动态模板功能
+  - fix: 修复调试不更新问题
+  - feat: 动态模板悬浮提示，跳转
+  - feat: 动态模板智能提示
+  - docs: 更新国际化文档
