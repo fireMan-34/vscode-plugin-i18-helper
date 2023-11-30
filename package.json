@@ -175,8 +175,8 @@
         "icon": "./assets/icons/提取.svg"
       },
       {
-        "command": "i18n.clipToi18nCode",
-        "title": "剪切板文本转国际化代码",
+        "command": "i18n.strToi18nCode",
+        "title": "文本转国际化代码",
         "icon": "./assets/icons/提取.svg"
       }
     ],

@@ -12,5 +12,5 @@ export const CMD_KEY = {
   /** 快速翻译单个文本 */
   FAST_TRANSLATE: "i18n.fastTranslate",
   /** 剪切板文本转国际化代码 */
-  CLIP_TO_I18N_CODE: "i18n.clipToi18nCode",
+  STR_TO_I18N_CODE: "i18n.strToi18nCode",
 };
