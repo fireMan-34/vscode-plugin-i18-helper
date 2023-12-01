@@ -1,5 +1,5 @@
 import { equal } from 'assert';
-import { BaiduTranslateEngine } from 'models/TranslateEngine';
+import { BaiduTranslateEngine, WangYiTranslateEngine } from 'models/TranslateEngine';
 
 describe('测试百度翻译 api', function() {
   it('测试 签名 函数', function() {
@@ -19,5 +19,14 @@ describe('测试百度翻译 api', function() {
       done();
     })
     .catch(done);
+  });
+});
+
+describe('测试网易 api 接入', function(){
+  it('请求结果测试', function() {
+    const engine = new WangYiTranslateEngine();
+    engine.devInit();
+    engine.translate('翻译内容', ['KO_KR']);
+    equal(true, true);
   });
 });
