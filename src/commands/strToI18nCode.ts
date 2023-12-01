@@ -1,5 +1,6 @@
 import isEmpty from "lodash/isEmpty";
-import vscode from "vscode";
+import { env, window, } from 'vscode';
+import type { ExtensionContext, } from 'vscode';
 
 import { CMD_KEY } from 'constants/index';
 import { I18nType, type I18nMetaJson, type ICommondItem } from 'types/index';
@@ -10,9 +11,8 @@ import { renderI18nCode } from 'utils/code';
 import { getWrokspaceFloder, } from 'utils/path.code';
 
 /** 文本转国际化代码 */
-const strToi18nCode = async (context: vscode.ExtensionContext, ...args: any[]) => {
-  const [ Str ] = args;
-  if (!Str) {
+const strToi18nCode = async (context: ExtensionContext, str: string) => {
+  if (!str) {
     return;
   };
   const workfloder = await getWrokspaceFloder({ multiplySelect: 'default' });
@@ -29,20 +29,20 @@ const strToi18nCode = async (context: vscode.ExtensionContext, ...args: any[]) =
   }
   const currentI18nJSONList = await Promise.all(currentI18nDirList.map((item => readJsonFile<I18nMetaJson>(item.targetPath))));
   /** 国际化 key value */
-  const currentContentList:[string, string][] = currentI18nJSONList.flatMap((item) => item.saveContent[I18nType[mainLanguage]]).flatMap(Object.entries);
-  const item = currentContentList.find((key, val) => val === Str);
+  const currentContentList = currentI18nJSONList.flatMap((item) => item.saveContent[I18nType[mainLanguage]]).flatMap(item => Object.entries(item.content));
+  const item = currentContentList.find(([key, val]) =>key === str || val === str);
   if (!item) {
     return;
   }
   const [ id, msg ] = item;
   const newCode = renderI18nCode({ id, msg });
-  vscode.window.showInformationMessage('检测到可识别字符串，已为你转换成代码');
-  vscode.env.clipboard.writeText(newCode);
+  window.showInformationMessage('检测到可识别字符串国际化字符串，已为你转换成动态模板对应的代码');
+  env.clipboard.writeText(newCode);
 };
 
 /** 打开界面视图指令 */
 const item: ICommondItem = {
-  cmd: CMD_KEY.OPEN_WEB_VIEW_CMD,
+  cmd: CMD_KEY.STR_TO_I18N_CODE,
   cmdExcuter: strToi18nCode,
 };
 export default item;

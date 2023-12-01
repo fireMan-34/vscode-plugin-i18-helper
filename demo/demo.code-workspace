@@ -5,6 +5,7 @@
 		}
 	],
 	"settings": {
-		"i18n-extension.generateTemplate": "getMessage('${id}','${msg}')"
+		"i18n-extension.generateTemplate": "getMessage('${id}','${msg}')",
+		"i18n-extension.mainLanguage": "ZH_CN"
 	}
 }

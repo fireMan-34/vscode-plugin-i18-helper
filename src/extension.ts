@@ -6,6 +6,7 @@ import openWebViewCmd from 'commands/openWebView';
 import scanI18FileCmd from 'commands/scanI18File';
 import i18nRuleDirCmd from 'commands/i18nRuleDir';
 import fastTranslateCmd from 'commands/fastTranslate';
+import strToI18nCodeCmd from 'commands/strToI18nCode';
 import { createI18nProvider } from 'providers/index';
 import { createTotalRxSubscriptionDisable } from 'utils/disable';
 import { refreshContextTask } from 'utils/task';
@@ -31,6 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
 			scanI18FileCmd,
 			i18nRuleDirCmd,
 			fastTranslateCmd,
+			strToI18nCodeCmd,
 		];
 		const disposables = commands
 			.map((cmdItem) =>
