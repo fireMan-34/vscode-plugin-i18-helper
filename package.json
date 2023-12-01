@@ -236,7 +236,14 @@
           "name": "国际化配置"
         }
       ]
-    }
+    },
+    "viewsWelcome": [
+      {
+        "view": "i18n-map-config",
+        "contents": "欢迎使用极简 React 国际化开发助手，如果使用有什么建议或者 bug 可以在 [GitHub issue](https://github.com/fireMan-34/vscode-plugin-i18n-helper/issues) 提，作者水平眼界限制，感谢你的建议。",
+        "when": "isWindows||isLinux||isMac"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run dev:webview && npm run dev",
