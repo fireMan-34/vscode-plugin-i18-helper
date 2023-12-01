@@ -23,10 +23,17 @@ describe('测试百度翻译 api', function() {
 });
 
 describe('测试网易 api 接入', function(){
-  it('请求结果测试', function() {
+  it('请求结果测试', function(done) {
     const engine = new WangYiTranslateEngine();
     engine.devInit();
-    engine.translate('翻译内容', ['KO_KR']);
-    equal(true, true);
+    engine.translate('翻译内容', ['KO_KR'])
+    .then(res => {
+      if (!res) {
+        done('Empty');
+      } else {
+        done();
+      }
+    })
+    .catch(done);
   });
 });
