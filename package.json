@@ -233,7 +233,8 @@
         },
         {
           "id": "i18n-map-config",
-          "name": "国际化配置"
+          "name": "国际化配置",
+          "type": "webview"
         }
       ]
     },
