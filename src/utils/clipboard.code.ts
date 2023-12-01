@@ -43,6 +43,6 @@ const clipboardSouce = interval(1000).pipe(
 /** 创建剪切板读取订阅 */
 export const createClipboardTask = () => {
   ClipboardSubscription.add(clipboardSouce.subscribe({
-    next: v => commands.executeCommand(CMD_KEY.STR_TO_I18N_CODE, v).then(() => console.log('读取最新剪切内容')),
+    next: v => commands.executeCommand(CMD_KEY.STR_TO_I18N_CODE, v),
   }));
 };
