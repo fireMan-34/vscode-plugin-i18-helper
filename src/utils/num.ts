@@ -6,5 +6,5 @@
  * @returns 调整后的数值
  */
 export const adjustNumberRange = (input: number, min: number, max: number,) => {
-    return Math.min(Math.max(min, input));
+    return Math.min(Math.max(min, input), max);
 };
