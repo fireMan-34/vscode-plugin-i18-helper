@@ -36,7 +36,7 @@ const strToi18nCode = async (context: ExtensionContext, str: string) => {
   }
   const [ id, msg ] = item;
   const newCode = renderI18nCode({ id, msg });
-  window.showInformationMessage('检测到可识别字符串国际化字符串，已为你转换成动态模板对应的代码');
+  window.showInformationMessage('检测到可识别的国际化字符串，已为你转换成动态模板对应的代码');
   env.clipboard.writeText(newCode);
 };
 
