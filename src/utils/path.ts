@@ -1,6 +1,6 @@
 import type { ExtensionContext, Uri } from 'vscode';
 import { createHash } from 'crypto';
-import { join, normalize, sep, relative, isAbsolute, } from 'path';
+import { join, sep, relative, isAbsolute, win32, } from 'path';
 import { existsSync } from 'fs';
 import range from 'lodash/range';
 import { generatDirPathIfNone, saveJsonFileSync } from 'utils/fs';
@@ -61,8 +61,10 @@ export function isSubPath(parentPath: string, mayChildPath: string): boolean {
   return !!(relativePath && !relativePath.startsWith('..') && !isAbsolute(relativePath));
 };
 
-/** 判断是否是相同路径 */
-export function isSamePath(path1: string, path2: string): boolean {
-  return normalize(path1) === normalize(path2);
+/** 判断是否是相同路径
+ * @see http://www.nodejs.com.cn/api-v16/path.html#windows-vs-posix
+ */
+export function isSamePath(path1: string, path2: string): boolean {  
+  return win32.normalize(path1) === win32.normalize(path2);
 };
 
