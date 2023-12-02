@@ -5,7 +5,7 @@ import type {
   WebviewViewProvider,
   ExtensionContext,
 } from "vscode";
-import { window, EventEmitter } from "vscode";
+import { window, EventEmitter, Uri } from "vscode";
 
 import { getGlobalConfiguration } from "utils/conf";
 import { VIEW_ID_MAP } from "constants/index";
@@ -16,7 +16,7 @@ import { getRuntimePath, isSamePath } from "utils/path";
 class I18nMapConfigWebview implements WebviewViewProvider {
   refreshEM = new EventEmitter<ProjectGlobalConfig>();
 
-  constructor(public context: ExtensionContext) {}
+  constructor(public context: ExtensionContext) { }
 
   async refresh(conf?: ProjectGlobalConfig) {
     const config = conf ?? (await getGlobalConfiguration());
@@ -43,14 +43,22 @@ class I18nMapConfigWebview implements WebviewViewProvider {
     const curretnI18nDirList = i18nDirList.filter((item) =>
       isSamePath(item.projectPath, projectPath)
     );
-
+    const renderUrlConfig = (props: {
+      label: string,
+      message: string,
+      href: string
+    }) => {
+      const { label, message, href } = props;
+      return `<p><span class="text-white font-bold text-sm" >${label}</span> : <a class="text-gray-300 font-light text-xs"  href="${href}" >${message}</a></p>`;
+    };
     const localString = curretnI18nDirList
       .map(
         (item) =>
-          `<p>多语言文件夹 ----> <a href="${item.originalPath}" title="${item.targetPath}">${item.originalPath}</a></p>`
+          `<p><span class="text-white font-bold text-sm">多语言文件夹<span> : <a class="text-gray-300 font-light text-xs" href="${item.originalPath}" title="${"生成配置路径：" + item.targetPath}">国际化关联目录：${item.originalPath}</a></p>`
       )
       .join();
 
+    const tailwindcssFilePath = webviewView.webview.asWebviewUri(Uri.joinPath(this.context.extensionUri, 'src', 'media', 'tailwindcss.js'));
     webviewView.title = "国际化插件配置";
     webviewView.description = "提供国际化插件配置状态。";
     webviewView.badge = {
@@ -62,12 +70,25 @@ class I18nMapConfigWebview implements WebviewViewProvider {
       enableCommandUris: true,
     };
     webviewView.webview.html = `
-      <script src="https://cdn.tailwindcss.com"></script>
+      <script src="${tailwindcssFilePath}"></script>
       <h3 class="my-2 font-bold underline text-red-100">
           Use Tailwind WebView!
       </h3>
-      <p>项目配置路径 ----> <a href="${runtimePath}" >${runtimePath}</a></p>
-      <p>项目文件夹 ----> <a href="${projectPath}">${projectPath}</a></p>
+      ${renderUrlConfig({
+      label: "项目配置路径",
+      message: runtimePath,
+      href: runtimePath,
+    })}
+      ${renderUrlConfig({
+      label: "项目文件夹",
+      message: projectPath,
+      href: projectPath,
+    })}
+    ${renderUrlConfig({
+      label: "插件安装路径",
+      message: this.context.extensionPath,
+      href: this.context.extensionPath,
+    })}
       ${localString}
     `;
   }
