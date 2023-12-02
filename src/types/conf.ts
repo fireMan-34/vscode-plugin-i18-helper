@@ -74,6 +74,22 @@ export interface ProjectSaveConfig {
   i18nRuleDirList: I18nRuleDirItem[],
 }
 
+export enum TranslateEngineType {
+  baidu = "baidu",
+  caiYun = "caiYun",
+  Google = "Google",
+  wangyi = "wangyi",
+}
+
+export enum GeneratedCodeFromStrMode {
+  /** 询问 */
+  ask = 'ask',
+  /** 静默 */
+  silent = 'silent',
+  /** 罢工 */
+  none = 'none',
+};
+
 /** VS code 配置 */
 export interface VScodeConfig {
   /** 是否开始前检测目录是否失效
@@ -88,7 +104,9 @@ export interface VScodeConfig {
   /** 快速翻译文本 */
   fastTranslateLanguageType: (keyof typeof I18nType)[],
   /** 翻译引擎 */
-  translateEngine: "baidu"|"caiYun"|"Google",
+  translateEngine: TranslateEngineType,
+  /** 检测可识别国际化代码是否自动生成到剪切板 */
+  generatedCodeFromStrMode: GeneratedCodeFromStrMode,
 }
 
 /** 全局配置 */

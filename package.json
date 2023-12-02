@@ -143,6 +143,27 @@
             ],
             "default": "baidu",
             "description": "翻译引擎类型"
+          },
+          "i18n-extension.generatedCodeFromStrMode": {
+            "type":"string",
+            "title": "字符串自动生成国际化代码功能启用模式",
+            "description": "修改启用模式，避免一些场景强制写入，或者性能浪费。",
+            "enum": [
+              "ask",
+              "silent",
+              "none"
+            ],
+            "enumDescriptions": [
+              "询问模式",
+              "静默模式",
+              "罢工模式"
+            ],
+            "enumItemLabels": [
+              "询问",
+              "静默",
+              "罢工"
+            ],
+            "default": "ask"
           }
         }
       }

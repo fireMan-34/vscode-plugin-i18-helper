@@ -3,7 +3,7 @@ import { env, window, } from 'vscode';
 import type { ExtensionContext, } from 'vscode';
 
 import { CMD_KEY } from 'constants/index';
-import { I18nType, type I18nMetaJson, type ICommondItem } from 'types/index';
+import { I18nType, type I18nMetaJson, type ICommondItem, GeneratedCodeFromStrMode, } from 'types/index';
 import { getGlobalConfiguration } from 'utils/conf';
 import { readJsonFile } from "utils/fs";
 import { isSamePath } from "utils/path";
@@ -22,7 +22,11 @@ const strToi18nCode = async (context: ExtensionContext, str: string) => {
   const { 
     i18nDirList, 
     mainLanguage,
+    generatedCodeFromStrMode,
   } = await getGlobalConfiguration();
+  if (generatedCodeFromStrMode === GeneratedCodeFromStrMode.none) {
+    return;
+  }
   const currentI18nDirList = i18nDirList.filter((item) => isSamePath(item.projectPath, workfloder.uri.fsPath));
   if (isEmpty(currentI18nDirList)) {
     return;
@@ -34,9 +38,18 @@ const strToi18nCode = async (context: ExtensionContext, str: string) => {
   if (!item) {
     return;
   }
+  if (generatedCodeFromStrMode === GeneratedCodeFromStrMode.ask) {
+    const result  = await window.showQuickPick([ '是', '否' ], {
+      title: '检测到可识别的国际化字符串，是否需要帮你转换到剪切板中',
+    });
+    if (result === '否' || !result) {
+      return;
+    }
+  } else {
+    window.showInformationMessage('检测到可识别的国际化字符串，已为你转换成动态模板对应的代码');
+  }
   const [ id, msg ] = item;
   const newCode = renderI18nCode({ id, msg });
-  window.showInformationMessage('检测到可识别的国际化字符串，已为你转换成动态模板对应的代码');
   env.clipboard.writeText(newCode);
 };
 

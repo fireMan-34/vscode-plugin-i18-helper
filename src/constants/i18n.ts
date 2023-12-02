@@ -73,6 +73,7 @@ export const VSCODE_KEYS_MAP = {
   generateTemplate: 'generateTemplate',
   fastTranslateLanguageType: 'fastTranslateLanguageType',
   translateEngine: 'translateEngine',
+  generatedCodeFromStrMode: "generatedCodeFromStrMode",
 };
 
 /** vscode 配置 */
@@ -83,4 +84,5 @@ export const VSCODE_KEYS = [
   VSCODE_KEYS_MAP.generateTemplate,
   VSCODE_KEYS_MAP.fastTranslateLanguageType,
   VSCODE_KEYS_MAP.translateEngine,
+  VSCODE_KEYS_MAP.generatedCodeFromStrMode,
 ];
