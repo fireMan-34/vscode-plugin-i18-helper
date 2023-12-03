@@ -32,8 +32,13 @@
 			"models/*": [
 				"./src/models/*"
 			],
+			"decorators/*": [
+				"./src/decorators/*"
+			]
 		},
 		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
 	},
 	"exclude": [
 		"./client/*",

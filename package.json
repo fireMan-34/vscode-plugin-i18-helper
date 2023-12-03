@@ -145,7 +145,7 @@
             "description": "翻译引擎类型"
           },
           "i18n-extension.generatedCodeFromStrMode": {
-            "type":"string",
+            "type": "string",
             "title": "字符串自动生成国际化代码功能启用模式",
             "description": "修改启用模式，避免一些场景强制写入，或者性能浪费。",
             "enum": [
@@ -326,6 +326,7 @@
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
   "repository": {
