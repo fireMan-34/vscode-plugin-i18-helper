@@ -2,7 +2,7 @@ import { isPromise } from 'util/types';
 import isEqual from 'lodash/isEqual';
 
 export interface CacheClass {
-    readonly cache: Map<string, any>;
+    readonly cache: Map<string|number|symbol, any>;
     readonly useCache: true,
     readonly getCache: (key: string) => any;
     readonly setCache: (key: string, value: any) => void;
