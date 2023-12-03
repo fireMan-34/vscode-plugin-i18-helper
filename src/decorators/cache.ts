@@ -1,13 +1,13 @@
-import { isPromise } from 'util/types';
 import isEqual from 'lodash/isEqual';
+import { isPromise } from 'util/types';
 
 export interface CacheClass {
     readonly cache: Map<string|number|symbol, any>;
     readonly useCache: true,
-    readonly getCache: (key: string) => any;
-    readonly setCache: (key: string, value: any) => void;
-    readonly removeCache: (key?: string) => void;
-    [k: string|symbol]: any,
+    readonly getCache: (key: string|number|symbol) => any;
+    readonly setCache: (key: string|number|symbol, value: any) => void;
+    readonly removeCache: (key?: string|number|symbol) => void;
+    [k: string|number|symbol]: any,
 }
 
 /** 持久化 对象
@@ -21,13 +21,13 @@ export function cacheClassDecoratorFactory<T extends { new(...args: any[]): {} }
         /** 使用缓存类, 添加后圆函数时存在但是ts无法直接识别的。 */
         readonly useCache = true;
         readonly cache = new Map();
-        getCache(key: string) {
+        getCache(key: string|number|symbol) {
             return this.cache.get(key);
         }
-        setCache(key: string, value: any) {
+        setCache(key: string|number|symbol, value: any) {
             this.cache.set(key, value);
         };
-        removeCache(key?: string) {
+        removeCache(key?: string|number|symbol) {
             if (key) {
                 this.cache.delete(key);
             } else {
@@ -42,8 +42,7 @@ export function cacheMethDecoratorFactory() {
     return function (proptype: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const method = proptype[propertyKey];
         descriptor.value = function (this: CacheClass, ...args: any[]) {
-            const cache = this.cache;
-            const mayCache: null | [any[], any] = cache.get(propertyKey);
+            const mayCache: null | [any[], any] = this.getCache(propertyKey);
             const [cacheAgrs, cacheResult] = mayCache || [];
             const isUseCache = isEqual(cacheAgrs, args);
             if (isUseCache) {
@@ -52,9 +51,9 @@ export function cacheMethDecoratorFactory() {
             const result = Reflect.apply(method, this, args);
             const isPromiseResult = isPromise(result);
             if (isPromiseResult) {
-                result.catch(() => cache.delete(propertyKey));
+                result.catch(() => this.removeCache(propertyKey));
             };
-            cache.set(propertyKey, [args, result]);
+            this.setCache(propertyKey, [args, result]);
             return result;
         };
     };
@@ -64,7 +63,7 @@ export function cacheMethDecoratorFactory() {
  * @version 1 添加注入的函数类型作为输入提示，暂时找不到办法获取装饰类的类型
  */
 export function cacheSetCleanFactory<C extends { new (...args: any[]): {} }>(clearnCacheKeys: (keyof InstanceType<C>)[] | [], initVal?: any): MethodDecorator {
-    return function (target, propertyKey, descriptor) {
+    return function (_target, propertyKey, descriptor) {
         const innerPropKey = `#${propertyKey as string}`;
         descriptor.get = (function () {
             let isFisrt = true;
@@ -73,11 +72,10 @@ export function cacheSetCleanFactory<C extends { new (...args: any[]): {} }>(cle
             };
         })();
         descriptor.set = function (this: CacheClass, newValue: any) {
-            const cache = this.cache;
             if (clearnCacheKeys.length > 0) {
-                clearnCacheKeys.forEach(key => cache.delete(key));
+                clearnCacheKeys.forEach(key => this.removeCache(key));
             } else {
-                cache.clear();
+                this.removeCache();
             }
             this[innerPropKey] = newValue;
         };
