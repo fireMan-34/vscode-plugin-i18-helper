@@ -7,7 +7,8 @@ describe('装饰器测试', function () {
         class User {
             constructor(public name: string,) {
             }
-            @cacheSetCleanFactory([], 1)
+            public age: number = 18;
+            @cacheSetCleanFactory<typeof User>([] , 1)
             set version(v: number) {
 
             }

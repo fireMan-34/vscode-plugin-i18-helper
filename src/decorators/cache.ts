@@ -51,11 +51,13 @@ export function cacheMethDecoratorFactory() {
     };
 };
 
-/** 属性更新清理缓存 */
-export function cacheSetCleanFactory(clearnCacheKeys: string[] | [], initVal?: any): MethodDecorator {
+/** 属性更新清理缓存
+ * @version 1 添加注入的函数类型作为输入提示，暂时找不到办法获取装饰类的类型
+ */
+export function cacheSetCleanFactory<C extends { new (...args: any[]): {} }>(clearnCacheKeys: (keyof InstanceType<C>)[] | [], initVal?: any): MethodDecorator {
     return function (target, propertyKey, descriptor) {
         const cacheKey = 'cache';
-        const innerPropKey = `_${propertyKey as string}`;
+        const innerPropKey = `#${propertyKey as string}`;
         descriptor.get = (function () {
             let isFisrt = true;
             return function (this: Record<string, any>) {
