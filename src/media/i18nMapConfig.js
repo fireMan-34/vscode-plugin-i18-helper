@@ -1,6 +1,8 @@
+/** @type {import('./base')} */
+
 let messageListener;
 
-/** @type {import('./base').IWebviewVsCodeApi} */
+
 const vscode = acquireVsCodeApi();
 
 window.addEventListener('message', function(ev){
@@ -10,6 +12,3 @@ window.addEventListener('message', function(ev){
 window.onclose = function(){
     window.removeEventListener('message', messageListener);
 };
-
-
-// export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
