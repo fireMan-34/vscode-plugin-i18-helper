@@ -1,17 +1,26 @@
 import { isPromise } from 'util/types';
 import isEqual from 'lodash/isEqual';
 
+export interface CacheClass {
+    readonly cache: Map<string, any>;
+    readonly useCache: true,
+    readonly getCache: (key: string) => any;
+    readonly setCache: (key: string, value: any) => void;
+    readonly removeCache: (key?: string) => void;
+    [k: string|symbol]: any,
+}
+
 /** 持久化 对象
  * 增添方法无法拥有类型校验
   */
 export function cacheClassDecoratorFactory<T extends { new(...args: any[]): {} }>(constructor: T) {
-    return class extends constructor {
+    return class extends constructor implements CacheClass {
         constructor(...args: any[]) {
             super(...args);
         }
         /** 使用缓存类, 添加后圆函数时存在但是ts无法直接识别的。 */
-        useCache = true;
-        cache = new Map();
+        readonly useCache = true;
+        readonly cache = new Map();
         getCache(key: string) {
             return this.cache.get(key);
         }
@@ -32,7 +41,7 @@ export function cacheClassDecoratorFactory<T extends { new(...args: any[]): {} }
 export function cacheMethDecoratorFactory() {
     return function (proptype: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const method = proptype[propertyKey];
-        descriptor.value = function (this: { cache: Map<string, any> }, ...args: any[]) {
+        descriptor.value = function (this: CacheClass, ...args: any[]) {
             const cache = this.cache;
             const mayCache: null | [any[], any] = cache.get(propertyKey);
             const [cacheAgrs, cacheResult] = mayCache || [];
@@ -56,7 +65,6 @@ export function cacheMethDecoratorFactory() {
  */
 export function cacheSetCleanFactory<C extends { new (...args: any[]): {} }>(clearnCacheKeys: (keyof InstanceType<C>)[] | [], initVal?: any): MethodDecorator {
     return function (target, propertyKey, descriptor) {
-        const cacheKey = 'cache';
         const innerPropKey = `#${propertyKey as string}`;
         descriptor.get = (function () {
             let isFisrt = true;
@@ -64,8 +72,8 @@ export function cacheSetCleanFactory<C extends { new (...args: any[]): {} }>(cle
                 return isFisrt ? (isFisrt = false, this[innerPropKey] = initVal) : this[innerPropKey];
             };
         })();
-        descriptor.set = function (this: any, newValue: any) {
-            const cache = <Map<string, any>>this[cacheKey];
+        descriptor.set = function (this: CacheClass, newValue: any) {
+            const cache = this.cache;
             if (clearnCacheKeys.length > 0) {
                 clearnCacheKeys.forEach(key => cache.delete(key));
             } else {
