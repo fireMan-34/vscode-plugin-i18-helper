@@ -14,6 +14,8 @@ export enum I18nType {
     UN_KNOWN,
 }
 
+export type I18nTypeKey = keyof typeof I18nType;
+
 /** 国际化描述对象 */
 export interface I18nDescriptionItem {
   lang: I18nType,
