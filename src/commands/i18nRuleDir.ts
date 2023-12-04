@@ -11,6 +11,7 @@ import {
   I18nDirViewItem,
   I18nTypeKey,
   ProjectGlobalConfig,
+  MethodDecoratorFix,
 } from "types/index";
 
 /** 检测视图目录是否为空 */

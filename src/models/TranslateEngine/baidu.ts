@@ -1,8 +1,8 @@
-import { stringify } from "querystring";
 import { Axios } from "axios";
 import isEmpty from "lodash/isEmpty";
 
 import { md5Hash } from "utils/crypto";
+import type { MethodDecoratorFix, } from 'types/index';
 
 import { TranslateEngine, ITransalteOutItem, I18nTypeKey } from "./base";
 
