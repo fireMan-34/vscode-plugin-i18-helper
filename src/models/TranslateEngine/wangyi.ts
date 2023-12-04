@@ -1,5 +1,5 @@
 import axios from "axios";
-import { stringify, } from 'querystring';
+import { stringify } from "querystring";
 
 import { sha256Hash } from "utils/crypto";
 
@@ -40,35 +40,54 @@ export interface WangYiQueryIntl {
 
 export interface WangYiQueryResponse {
   /** 错误码 */
-  errorCode: string,
+  errorCode: string;
   /** 原语言 查询正确时一定存在 */
-  query?: string,
+  query?: string;
   /** 翻译语言 查询正确时一定存在 */
-  translation?: string[],
+  translation?: string[];
   /** 词义 基本词典，查词时才有 */
-  basic?: string,
+  basic?: string;
   /** 网络释义 该结果不一定存在 */
-  web?: string,
+  web?: string;
   /** 原语言到目标语言 */
-  l: `${string}-${string}`,
+  l: `${string}-${string}`;
   /** 词典deeplink 查询语种为支持语言时，存在 */
-  dict?: string,
+  dict?: string;
   /** webdeeplink	查询语种为支持语言时，存在 */
-  webdict?: string,
+  webdict?: string;
   /** 翻译结果发音地址	翻译成功一定存在，需要应用绑定语音合成服务才能正常播放
 否则返回110错误码 */
-  tSpeakUrl?: string,
+  tSpeakUrl?: string;
   /** 源语言发音地址	翻译成功一定存在，需要应用绑定语音合成服务才能正常播放
 否则返回110错误码 */
-  speakUrl?: string,
+  speakUrl?: string;
   /** 单词校验后的结果	主要校验字母大小写、单词前含符号、中文简繁体 */
-  returnPhrase: []
+  returnPhrase: [];
 }
+
+const postApi = (params: WangYiQueryIntl) => {
+  return axios.request<WangYiQueryResponse>({
+    url: "https://openapi.youdao.com/api",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    method: "POST",
+    paramsSerializer = (params) => stringify(params),
+    params,
+  });
+};
+/** 翻译错误码理由 */
+const errorCodeReason = (res: WangYiQueryResponse) => {
+  if (res.errorCode) {
+    throw new Error(
+      `网易请求错误码: ${res.errorCode}, 请查询 https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html`
+    );
+  }
+};
 
 export class WangYiTranslateEngine extends TranslateEngine {
   appId: string = "";
   appSecret: string = "";
-  url: string = "https://openapi.youdao.com/api";
 
   devInit() {
     this.appId = "4f0331ee24a30e51";
@@ -79,13 +98,13 @@ export class WangYiTranslateEngine extends TranslateEngine {
     "ZH_CN" | "ZH_HK" | "EN_US" | "KO_KR" | "JA_JP" | "UN_KNOWN",
     string
   > = {
-      ZH_CN: "zh-CHS",
-      ZH_HK: "zh-CHT",
-      EN_US: "en",
-      KO_KR: "ko",
-      JA_JP: "ja",
-      UN_KNOWN: "auto",
-    };
+    ZH_CN: "zh-CHS",
+    ZH_HK: "zh-CHT",
+    EN_US: "en",
+    KO_KR: "ko",
+    JA_JP: "ja",
+    UN_KNOWN: "auto",
+  };
 
   async translateOne(
     penddingText: string,
@@ -101,20 +120,12 @@ export class WangYiTranslateEngine extends TranslateEngine {
       const from = this.languageMap.ZH_CN;
       const to = this.languageMap[transalteEngineLanguageType];
       const query = this.createQuery(penddingText, from, to);
-      const { data: {
-        errorCode,
-        translation,
-      }} = await axios
-        .post<WangYiQueryResponse>(this.url, query, {
-          paramsSerializer: params => stringify(params),
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          }
-        });
-      if (errorCode) {
-        throw new Error(`网易请求错误码: ${errorCode}, 请查询 https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html`)
-      }
-      const [ transalteText ] = translation ?? [];
+      const {
+        data,
+        data: { translation },
+      } = await postApi(query);
+      errorCodeReason(data);
+      const [transalteText] = translation ?? [];
       if (!transalteText) {
         return null;
       }
@@ -123,9 +134,8 @@ export class WangYiTranslateEngine extends TranslateEngine {
         transalteEngineLanguageType,
         transalteText,
       };
-
     } catch (err) {
-
+      console.error(err);
       return null;
     }
   }
@@ -147,7 +157,7 @@ export class WangYiTranslateEngine extends TranslateEngine {
   }
 
   createQuery(query: string, from: string, to: string): WangYiQueryIntl {
-    const salt = (new Date).getTime().toString();
+    const salt = new Date().getTime().toString();
     const curtime = Math.round(new Date().getTime() / 1000).toString();
     return {
       appKey: this.appId,
