@@ -1,5 +1,7 @@
 import { equal, notEqual } from 'assert';
-import { cacheClassDecoratorFactory, cacheMethDecoratorFactory, cacheSetCleanFactory, } from 'decorators/index';
+import { cacheClassDecoratorFactory, cacheMethDecoratorFactory, cacheSetCleanFactory, cacheAccessorCleanFacory } from 'decorators/index';
+
+const NAME_1 = 'fireMan-34', NAME_2 = 'maxuFeng', INIT_VERSION = 1;
 
 describe('装饰器测试', function () {
     it('持久化装饰器方法测试', function () {
@@ -100,5 +102,39 @@ describe('装饰器测试', function () {
             .catch(done);
         });
         // equal(r2, r3);
+    });
+    it('存取器装饰器测试', function(){
+        const TEST_VERSION = 2;
+        @cacheClassDecoratorFactory
+        class User{
+            constructor(public userName: string = NAME_1) {
+
+            }
+            
+            @cacheAccessorCleanFacory([])
+            accessor version = INIT_VERSION;
+            
+            @cacheAccessorCleanFacory([])
+            accessor testVersion = INIT_VERSION;
+
+            @cacheMethDecoratorFactory()
+            getUserInfo(){
+                return {
+                    name: this.userName,
+                    age: this.userName.length,
+                };
+            }
+        }
+
+        const u = new User();
+        const r1 = u.getUserInfo();
+        u.version = TEST_VERSION;
+        const r2 = u.getUserInfo();
+        const r3 = u.getUserInfo();
+        notEqual(r1, r2);
+        equal(r2, r3);
+        u.testVersion = TEST_VERSION;
+        const r4 = u.getUserInfo();
+        notEqual(r3, r4);
     });
 });
