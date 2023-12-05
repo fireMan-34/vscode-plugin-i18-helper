@@ -1,4 +1,7 @@
 import type { WorkspaceFolder } from "vscode";
+import isEmpty from "lodash/isEmpty";
+import union from "lodash/union";
+import mapValues from "lodash/mapValues";
 
 import { isSamePath } from "utils/path";
 import type {
@@ -9,7 +12,13 @@ import type {
 } from "types/index";
 import { I18nType } from "types/index";
 import { readJsonFile } from "utils/fs";
-import { emptyReturnError } from "decorators/index";
+import {
+  emptyReturnError,
+  conditionReturnError,
+  cacheClassDecoratorFactory,
+  cacheMethDecoratorFactory,
+  cacheAccessorCleanFacory,
+} from "decorators/index";
 
 interface PrepareCheckReturn {
   workspaceFolder: WorkspaceFolder;
@@ -26,14 +35,22 @@ const isCurrentWorkspaceFolderEmptyJsonFile: MethodDecoratorFix<
 > = emptyReturnError("当前工作目录不存在可消费的国际化数据库");
 
 /** 检测当前工作区主语言是否存在国际化配置文件 */
-const isEmtpyMainLanguageAboutI18nFile: MethodDecoratorFix<
+const isEmtpyLangAboutI18nDirListMap: MethodDecoratorFix<
   (
-    list?: I18nMetaJson["saveContent"][]
-  ) => Promise<I18nMetaJsonSaveContentItem[]>
-> = emptyReturnError("当前工作区主语言不存在可消费的国际化数据库");
+    langs?: I18nType[]
+  ) => Promise<Record<I18nType, I18nMetaJsonSaveContentItem[]>>
+> = conditionReturnError((r) => {
+  const vals = Object.values(r);
+  if (isEmpty(vals) || vals.every(isEmpty)) {
+    return ["当前工作区主语言不存在可消费的国际化数据库", RangeError];
+  }
+});
 
 /** i18n json 文件常用操作封装 */
+@cacheClassDecoratorFactory
 export class I18nDbPaser {
+  @cacheAccessorCleanFacory<typeof I18nDbPaser>(["getCurrentI18nDirList"])
+  accessor forceUpdate = 0;
   constructor(
     public globalConfig: ProjectGlobalConfig,
     public workspaceFolder: WorkspaceFolder
@@ -49,6 +66,7 @@ export class I18nDbPaser {
   }
 
   /** 获取所有和当前工作区相关的 */
+  @cacheMethDecoratorFactory()
   @isCurrentWorkspaceFolderEmptyJsonFile
   async getCurrentI18nDirList() {
     const { i18nDirList } = this.globalConfig;
@@ -66,25 +84,48 @@ export class I18nDbPaser {
   }
 
   /** 获取当前工作区语言所有的国际化键值对文件对象 */
-  @isEmtpyMainLanguageAboutI18nFile
-  async getMainLanguageAboutI18nDirList(
-    currentI18nDirList?: I18nMetaJson["saveContent"][],
-    language?: I18nType
-  ) {
-    const list = await (currentI18nDirList
-      ? Promise.resolve(currentI18nDirList!)
-      : this.getCurrentI18nDirList());
-    const lang = language ?? I18nType[this.globalConfig.mainLanguage];
+  @isEmtpyLangAboutI18nDirListMap
+  async getLangAboutI18nDirListMap(languages?: I18nType[]) {
+    const list = await this.getCurrentI18nDirList();
+    const langs = this.getLangTypes(languages);
     return list.reduce((r, item) => {
-      if (item[lang]) {
-        r.push(...item[lang]);
-      }
+      langs.forEach((lang) => {
+        if (!r[lang]) {
+          r[lang] = [];
+        }
+        if (item[lang]) {
+          r[lang].push(...item[lang]);
+        }
+      });
       return r;
-    }, <I18nMetaJsonSaveContentItem[]>[]);
+    }, {} as Record<I18nType, I18nMetaJsonSaveContentItem[]>);
   }
 
   /** 将单个文件存储 json 对象解析成扁平数组键值对 */
   getI18nKeyAndValueFromSaveJsonItem(list: I18nMetaJsonSaveContentItem[]) {
     return list.flatMap((item) => Object.entries(item.content));
+  }
+
+  /** 获取多种国际化类型 默认返回主体语言 */
+  getLangTypes(langs?: I18nType[]) {
+    return langs ?? [I18nType[this.globalConfig.mainLanguage]];
+  }
+  /** 从已有文件存储字符类型获取所有语言类型 */
+  getLangTypesFromDB(list: I18nMetaJson["saveContent"][]) {
+    return union(...list.map((item) => Object.keys(item) as `${I18nType}`[]))
+      .filter((item) => item !== `${I18nType.UN_KNOWN}`)
+      .map(Number) as I18nType[];
+  }
+
+  /** 搜索国际化字符串键值队 */
+  async findKeyOrValue(keyOrVal: string, languages?: I18nType[]) {
+    const langs = this.getLangTypes(languages);
+    const langMap = await this.getLangAboutI18nDirListMap(langs);
+    const langKVMap = mapValues(langMap, (list) =>
+      this.getI18nKeyAndValueFromSaveJsonItem(list).find(
+        ([k, v]) => k === keyOrVal || v === keyOrVal
+      )
+    );
+    return langKVMap;
   }
 }
