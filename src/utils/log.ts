@@ -28,9 +28,14 @@ export const LoggerSubscription = new Subscription();
  *
  * @param {string} [msg]
  */
-const emptyWarningHandler = (msg?: string) => {
-  const message = `当前${msg || '上下文'}为空`;
-  throw thorwNewError(message, TypeError);
+const emptyWarningHandler = (msg: string, options = { isDefaultMessage : true, isThrow: true }) => {
+  const { isDefaultMessage, isThrow } = options;
+  const message = isDefaultMessage ?  `当前${msg || '上下文'}为空` : msg;
+  const err =  thorwNewError(message, TypeError);
+  if (isThrow) {
+    throw err;
+  }
+  return err;
 };
 
 /** 错误处理浅层封装 */
