@@ -13,4 +13,6 @@ export const CMD_KEY = {
   FAST_TRANSLATE: "i18n.fastTranslate",
   /** 剪切板文本转国际化代码 */
   STR_TO_I18N_CODE: "i18n.strToi18nCode",
+  /** 选中文本转国际化代码 */
+  SELECTION_TOI18N_CODE: 'i18n.selectionToi18nCode'
 };

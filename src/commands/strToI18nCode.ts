@@ -11,7 +11,7 @@ import { renderI18nCode } from 'utils/code';
 import { getWrokspaceFloder, } from 'utils/path.code';
 
 /** 文本转国际化代码 */
-const strToi18nCode = async (context: ExtensionContext, str: string) => {
+const strToi18nCode = async (context: ExtensionContext, str: string, mode?: GeneratedCodeFromStrMode) => {
   if (!str) {
     return;
   };
@@ -24,7 +24,8 @@ const strToi18nCode = async (context: ExtensionContext, str: string) => {
     mainLanguage,
     generatedCodeFromStrMode,
   } = await getGlobalConfiguration();
-  if (generatedCodeFromStrMode === GeneratedCodeFromStrMode.none) {
+  const commandMode = mode ?? generatedCodeFromStrMode;
+  if (commandMode === GeneratedCodeFromStrMode.none) {
     return;
   }
   const currentI18nDirList = i18nDirList.filter((item) => isSamePath(item.projectPath, workfloder.uri.fsPath));
@@ -38,7 +39,7 @@ const strToi18nCode = async (context: ExtensionContext, str: string) => {
   if (!item) {
     return;
   }
-  if (generatedCodeFromStrMode === GeneratedCodeFromStrMode.ask) {
+  if (commandMode === GeneratedCodeFromStrMode.ask) {
     const result  = await window.showQuickPick([ '是', '否' ], {
       title: '检测到可识别的国际化字符串，是否需要帮你转换到剪切板中',
     });

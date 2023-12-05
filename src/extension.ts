@@ -8,10 +8,11 @@ import scanI18FileCmd from 'commands/scanI18File';
 import i18nRuleDirCmd from 'commands/i18nRuleDir';
 import fastTranslateCmd from 'commands/fastTranslate';
 import strToI18nCodeCmd from 'commands/strToI18nCode';
+import selectionToI18nCodeCmd from 'commands/selectionToI18nCode';
 import { createI18nProvider } from 'providers/index';
 import { createTotalRxSubscriptionDisable } from 'utils/disable';
 import { refreshContextTask } from 'utils/task';
-import type { XTextEditor } from 'types/index';
+import type { ICommondItem, XTextEditor } from 'types/index';
 
 
 // This method is called when your extension is activated
@@ -27,13 +28,14 @@ export function activate(context: vscode.ExtensionContext) {
 		// The command has been defined in the package.json file
 		// Now provide the implementation of the command with registerCommand
 		// The commandId parameter must match the command field in package.json
-		const commands = [
+		const commands: ICommondItem[] = [
 			formatMessageCmd,
 			openWebViewCmd,
 			scanI18FileCmd,
 			i18nRuleDirCmd,
 			fastTranslateCmd,
 			strToI18nCodeCmd,
+			selectionToI18nCodeCmd,
 		];
 		const disposables = commands
 			.map((cmdItem) =>
@@ -44,7 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
 							args[1] as vscode.TextEditorEdit,
 							...args.slice(2,))));
 		context.subscriptions.push(...disposables);
-		commands.filter(cmd => cmd.excuter).forEach(cmd => cmd.excuter!(context));
+		commands.filter(cmd => cmd?.excuter).forEach(cmd => cmd.excuter!(context));
 
 		createI18nProvider(context);
 
