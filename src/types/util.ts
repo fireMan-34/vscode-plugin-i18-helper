@@ -4,3 +4,9 @@ export type MethodDecoratorFix<T = any> = (
   propertyKey: string|symbol,
   descriptor: TypedPropertyDescriptor<T>,
 ) => TypedPropertyDescriptor<T> | void;
+
+/** 提取 promise 类型 */
+export type GetPromiseValue<T>  = T extends Promise<infer U> ? U : T;
+
+/** 提取函数同步或异步函数返回值 */
+export type GetFunctionOrAsyncFunctionReturnType<F extends (...args: any[]) => unknown> = GetPromiseValue<ReturnType<F>>;

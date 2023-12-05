@@ -246,8 +246,7 @@
         {
           "command": "i18n.selectionToi18nCode",
           "group": "9_cutcopypaste",
-          "when": "editorHasSelection",
-          "alt": "选中字符串转国际化代码",
+          "when": "editorHasSelection"
         }
       ]
     },

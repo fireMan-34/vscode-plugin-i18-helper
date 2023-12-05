@@ -1,8 +1,8 @@
 import { Axios } from "axios";
-import isEmpty from "lodash/isEmpty";
 
 import { md5Hash } from "utils/crypto";
 import type { MethodDecoratorFix } from "types/index";
+import { conditionReturnError, emptyReturnError, } from 'decorators/index';
 
 import { TranslateEngine, ITransalteOutItem, I18nTypeKey } from "./base";
 
@@ -41,29 +41,15 @@ interface BaiduQueryResponse {
 /** 异常码报错 */
 const errrorResonFromCode: MethodDecoratorFix<
   (params: BaiduQueryIntl) => Promise<BaiduQueryResponse>
-> = (target, propertyKey, describtor) => {
-  const originalMethod = describtor.value!;
-  describtor.value = async function (params: BaiduQueryIntl) {
-    const result = await originalMethod.apply(this, [params]);
-    if (result.error_code) {
-      throw new Error(result.error_msg);
-    }
-    return result;
-  };
-};
+> = conditionReturnError((res) => {
+  if (res.error_code) {
+    return [ res.error_msg, Error ];
+  }
+});
 /** 翻译为空 */
 const emptyResult: MethodDecoratorFix<
   (params: BaiduQueryIntl) => Promise<BaiduQueryResponse>
-> = (target, propetKey, describtor) => {
-  const originalMethod = describtor.value!;
-  describtor.value = async function (params: BaiduQueryIntl) {
-    const result = await originalMethod.apply(this, [params]);
-    if (isEmpty(result)) {
-      throw new Error("transalte empty result");
-    }
-    return result;
-  };
-};
+> = emptyReturnError('翻译为空');
 
 export class BaiduTranslateEngine extends TranslateEngine {
   appId = "";
