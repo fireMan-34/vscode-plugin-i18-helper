@@ -234,17 +234,20 @@
           "command": "i18n.parseKeyAndValue2FormatMessage",
           "group": "9_cutcopypaste",
           "when": "editorTextFocus && editorHasSelection && i18n.isInI18nDirOne"
-        },
-        {
-          "command": "i18n.selectionToi18nCode",
-          "group": "9_cutcopypaste@34",
-          "when": "editorHasSelection"
         }
       ],
       "view/item/context": [
         {
           "command": "i18n.i18nRuleDirSet",
           "when": "view =~ /i18n-map/ && viewItem == i18n.dir"
+        }
+      ],
+      "editor/context/copy": [
+        {
+          "command": "i18n.selectionToi18nCode",
+          "group": "9_cutcopypaste",
+          "when": "editorHasSelection",
+          "alt": "选中字符串转国际化代码",
         }
       ]
     },
