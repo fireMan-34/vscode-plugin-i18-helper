@@ -2,7 +2,7 @@ import { Axios } from "axios";
 import isEmpty from "lodash/isEmpty";
 
 import { md5Hash } from "utils/crypto";
-import type { MethodDecoratorFix, } from 'types/index';
+import type { MethodDecoratorFix } from "types/index";
 
 import { TranslateEngine, ITransalteOutItem, I18nTypeKey } from "./base";
 
@@ -44,7 +44,7 @@ const errrorResonFromCode: MethodDecoratorFix<
 > = (target, propertyKey, describtor) => {
   const originalMethod = describtor.value!;
   describtor.value = async function (params: BaiduQueryIntl) {
-    const result = await originalMethod(params);
+    const result = await originalMethod.apply(this, [params]);
     if (result.error_code) {
       throw new Error(result.error_msg);
     }
@@ -57,9 +57,9 @@ const emptyResult: MethodDecoratorFix<
 > = (target, propetKey, describtor) => {
   const originalMethod = describtor.value!;
   describtor.value = async function (params: BaiduQueryIntl) {
-    const result = await originalMethod(params);
+    const result = await originalMethod.apply(this, [params]);
     if (isEmpty(result)) {
-      throw new Error('transalte empty result');
+      throw new Error("transalte empty result");
     }
     return result;
   };

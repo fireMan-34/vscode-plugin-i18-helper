@@ -13,8 +13,8 @@ export const emptyReturnError = <F extends (...args: any[]) => any>(
 ): MethodDecoratorFix<F> => {
   return function (target, propertKey, describor) {
     const originMethod = describor.value!;
-    describor.value = function (...args: any[]) {
-      const result: unknown = originMethod(...args);
+    describor.value = function (this: any, ...args: any[]) {
+      const result: unknown = originMethod.apply(this, args);
       if (isPromise(result)) {
         return new Promise((resolve, reject) => {
           result

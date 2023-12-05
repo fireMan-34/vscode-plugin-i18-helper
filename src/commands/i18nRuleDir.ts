@@ -22,7 +22,7 @@ export const isEmptySelection: MethodDecoratorFix<() => I18nDirViewItem> = (
 ) => {
   const originalMethod = descriptor.value!;
   descriptor.value = function () {
-    const selection = originalMethod();
+    const selection = originalMethod.apply(this, );
     if (isEmpty(selection)) {
       throw new Error("请选择需要操作的目录");
     }
@@ -38,7 +38,7 @@ export const unQuickI18nType: MethodDecoratorFix<() => Promise<I18nTypeKey>> = (
 ) => {
   const originalMethod = describtor.value!;
   describtor.value = async function () {
-    const result = await originalMethod();
+    const result = await originalMethod.apply(this);
     if (isEmpty(result)) {
       throw new Error("请选择目录要设定的国际化类型");
     }
@@ -52,7 +52,7 @@ export const showCatchAsyncError: MethodDecoratorFix<
   const originalMethod = describtor.value!;
   describtor.value = async function (...args: any) {
     try {
-      await originalMethod(...args);
+      await originalMethod.apply(this, args);
     } catch (error) {
       if (typeof error === "string") {
         thorwNewError(error, TypeError);
@@ -67,11 +67,10 @@ class I18nRuleDir implements ICommondItem {
   cmd = CMD_KEY.I18N_RULE_DIR_SET;
   @showCatchAsyncError
   async cmdExcuter(context: ExtensionContext) {
-    const modal = this;
-    const selection = modal.getSelection();
-    const i18nTyeKey = await modal.getI18nRuleTypeFromQuickPick();
+    const selection = this.getSelection();
+    const i18nTyeKey = await this.getI18nRuleTypeFromQuickPick();
     const globalConfig = await getGlobalConfiguration();
-    const nextI18nRuleDirList = await modal.getNewI18nRuleDirList(
+    const nextI18nRuleDirList = await this.getNewI18nRuleDirList(
       globalConfig,
       selection,
       i18nTyeKey
@@ -102,7 +101,7 @@ class I18nRuleDir implements ICommondItem {
       detail: item.dir,
     }));
     const i18nTypeQuickItem = await window.showQuickPick(i18nTypeQuickItems);
-    return i18nTypeQuickItem?.description as unknown as I18nTypeKey;
+    return i18nTypeQuickItem?.detail as unknown as I18nTypeKey;
   }
 
   /** 获取新的国际化类型 */
