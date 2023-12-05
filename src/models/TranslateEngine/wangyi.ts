@@ -72,13 +72,13 @@ const postApi = (params: WangYiQueryIntl) => {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     method: "POST",
-    paramsSerializer = (params) => stringify(params),
+    paramsSerializer : (params) => stringify(params),
     params,
   });
 };
 /** 翻译错误码理由 */
 const errorCodeReason = (res: WangYiQueryResponse) => {
-  if (res.errorCode) {
+  if (res.errorCode && res.errorCode !== '0') {
     throw new Error(
       `网易请求错误码: ${res.errorCode}, 请查询 https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html`
     );

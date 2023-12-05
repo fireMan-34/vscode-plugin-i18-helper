@@ -121,6 +121,7 @@ export class BaiduTranslateEngine extends TranslateEngine {
       .request({
         baseURL: "http://fanyi-api.baidu.com",
         url: "/api/trans/vip/translate",
+        params,
       })
       .then((res) => JSON.parse(res.data) as BaiduQueryResponse);
   }
