@@ -112,7 +112,7 @@ export class I18nDbPaser {
   }
   /** 从已有文件存储字符类型获取所有语言类型 */
   getLangTypesFromDB(list: I18nMetaJson["saveContent"][]) {
-    return union(...list.map((item) => Object.keys(item) as `${I18nType}`[]))
+    return union(...list.map((item) =>( Object.keys(item)as `${I18nType}`[]).filter(k => !isEmpty(item[k]))))
       .filter((item) => item !== `${I18nType.UN_KNOWN}`)
       .map(Number) as I18nType[];
   }
