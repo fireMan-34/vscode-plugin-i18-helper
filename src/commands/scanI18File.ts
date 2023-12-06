@@ -1,8 +1,6 @@
 import {
   Uri,
-  window
 } from "vscode";
-import { join } from "path";
 import { readDeepDir } from 'utils/fs';
 import { CMD_KEY } from 'constants/index';
 import { I18nFileItemClass, I18nFileItemUserClass } from 'models/index';
@@ -29,13 +27,10 @@ import {
  */
 const scanI18File: ICommondItem['cmdExcuter'] = async (context, uri: Uri) => {
   const dirPath = uri.fsPath;
-  const rootPath = join(dirPath, '..');
-  window.showInformationMessage('准备扫描', rootPath, context.extension.extensionPath);
   try {
     I18nFileItemClass.initContext(context);
     const i18nFileItemUserClass = new I18nFileItemUserClass(context, uri);
 
-    window.showInformationMessage('插件根路径', i18nFileItemUserClass.rootPath);
 
     const { filePaths } = await readDeepDir(dirPath);
     const i18nFileItems = filePaths.map(path => new I18nFileItemClass(path));
