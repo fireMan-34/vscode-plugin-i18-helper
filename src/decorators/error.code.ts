@@ -12,7 +12,7 @@ export const catchAsyncError = <
         return await originMethod.apply(this, args);
       } catch (error) {
         if (typeof error === "string") {
-          window.showErrorMessage(error);
+          window.showInformationMessage(error);
         }
       }
     } as F;
