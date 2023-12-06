@@ -210,3 +210,19 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
   - feat: 动态模板悬浮提示，跳转
   - feat: 动态模板智能提示
   - docs: 更新国际化文档
+
+# 0.2.107
+  - feat: 1s 频次扫描国际化 key 转国际化代码
+  - feat: 添加国际化配置欢迎页面
+  - feat： 添加国际化配置极简 webview
+  - feat: 对接网易接口 （自动翻译暂未上线）
+  - feat: 添加国际化主语言转国际化代码
+  - feat: 选中文本转国际化代码命令
+  - feat: 右键菜单、快捷键添加
+  - fix: 修复获取当前数据所有国际化类型为空数据 bug
+  - build: 引入 tailwindCSS 为后面开发 webview 做做准备
+  - pref: 更新 vscode 插件提交配置
+  - refacor: 代码引入装饰器
+  - refacor: 改进提示用语
+  - docs: 更新开发文档
+  - test: 修复测试用例失效或错误问题
