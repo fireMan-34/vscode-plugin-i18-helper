@@ -115,7 +115,79 @@
   SuperKeyword `super`
   SwitchKeyword `switch`
   ThisKeyword `this`
+  ThrowKeyword `throw`
+  TrueKeyword `true`
+  TryKeyword `try`
+  TypeOfKeyword `typeof`
+  VarKeyword `var`
+  VoidKeyword `void`
+  WhileKeyword `while`
+  WithKeyword `with`
+  ImplementsKeyword `implements`
+  InterfaceKeyword `interface`
+  LetKeyword `let`
+  PackageKeyword `package`
+  PrivateKeyword `private`
+  ProtectedKeyword `protected`
+  PublicKeyword `public`
+  StaticKeyword `static`
+  YieldKeyword `yield`
+  AbstractKeyword `abstract`
+  AsKeyword `as`
+  AssertsKeyword `asserts`
+  AnyKeyword `any`
+  AwaitKeyword `await`
+  BooleanKeyword `boolean`
+  ConstructorKeyword `constructor`
+  DeclareKeyword `declare`
+  GetKeyword `get`
+  InferKeyword `infer`
+  IsKeyword `is`
+  KeyOfKeyword `keyof`
+  ModuleKeyword `module`
+  NamespaceKeyword `namespace`
+  NeverKeyword `never`
+  ReadonlyKeyword `readonly`
+  RequireKeyword `require`
+  NumberKeyword `number`
+  ObjectKeyword `object`
+  SetKeyword `set`
+  SatisfiesKeyword `satisfies`
+  StringKeyword `string`
+  SymbolKeyword `symbol`
+  TypeKeyword `type`
+  UndefinedKeyword `undefined`
+  UniqueKeyword `unique`
+  UnknownKeyword `unknown`
+  FromKeyword `from`
+  GlobalKeyword `global`
+  BigIntKeyword `bigint`
+  OverrideKeyword `override`
+  OfKeyword `of`
+
+### Name
+ 疑似属性限制
+
+### Signature
+  属性方法函数构造函数索引签名
+
+### Declaration
+  说明
 
 ### JSX
   JsxText JSX 文本
   JsxTextAllWhiteSpaces JSX 空行
+
+### `${string}Type`
+
+### `Type${string}`
+
+### `${xxx}BingdPattern`
+
+### `${string}Expression`
+  表达式
+  
+
+
+// 8:56 分机器砍的声音消失
+// 9:08
