@@ -226,3 +226,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
   - refacor: 改进提示用语
   - docs: 更新开发文档
   - test: 修复测试用例失效或错误问题
+
+
+# 致谢
+- 感谢同事 舒婷 的建议。
+- 感谢同事 勉盛 的建议。
