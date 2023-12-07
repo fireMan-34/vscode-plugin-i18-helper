@@ -203,6 +203,11 @@
         "command": "i18n.selectionToi18nCode",
         "title": "选中文本转国际化",
         "icon": "./assets/icons/提取.svg"
+      },
+      {
+        "command": "i18n.quickSearchI18n",
+        "title": "快速搜索国际化代码",
+        "icon": "./assets/icons/提取.svg"
       }
     ],
     "keybindings": [
@@ -219,6 +224,13 @@
         "win": "ctrl+shift+2",
         "mac": "ctrl+shift+2",
         "when": "editorHasSelection"
+      },
+      {
+        "command": "i18n.quickSearchI18n",
+        "key": "ctrl+shift+1",
+        "win": "ctrl+shift+1",
+        "mac": "ctrl+shift+1",
+        "when": "editorTextFocus"
       }
     ],
     "menus": {
@@ -234,6 +246,11 @@
           "command": "i18n.parseKeyAndValue2FormatMessage",
           "group": "9_cutcopypaste",
           "when": "editorTextFocus && editorHasSelection && i18n.isInI18nDirOne"
+        },
+        {
+          "command": "i18n.quickSearchI18n",
+          "group": "9_cutcopypaste",
+          "when": "editorTextFocus"
         }
       ],
       "view/item/context": [

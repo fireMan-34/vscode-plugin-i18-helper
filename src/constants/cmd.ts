@@ -14,5 +14,7 @@ export const CMD_KEY = {
   /** 剪切板文本转国际化代码 */
   STR_TO_I18N_CODE: "i18n.strToi18nCode",
   /** 选中文本转国际化代码 */
-  SELECTION_TOI18N_CODE: 'i18n.selectionToi18nCode'
+  SELECTION_TOI18N_CODE: 'i18n.selectionToi18nCode',
+  /** 快速搜索国际化文本转代码 */
+  QUICK_SEARCH_I18N: 'i18n.quickSearchI18n',
 };

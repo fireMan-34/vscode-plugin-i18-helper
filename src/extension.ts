@@ -9,6 +9,7 @@ import i18nRuleDirCmd from 'commands/i18nRuleDir';
 import fastTranslateCmd from 'commands/fastTranslate';
 import strToI18nCodeCmd from 'commands/strToI18nCode';
 import selectionToI18nCodeCmd from 'commands/selectionToI18nCode';
+import quickSearchI18nCmd from 'commands/quickSearchI18n';
 import { createI18nProvider } from 'providers/index';
 import { createTotalRxSubscriptionDisable } from 'utils/disable';
 import { refreshContextTask } from 'utils/task';
@@ -36,6 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
 			fastTranslateCmd,
 			strToI18nCodeCmd,
 			selectionToI18nCodeCmd,
+			quickSearchI18nCmd,
 		];
 		const disposables = commands
 			.map((cmdItem) =>

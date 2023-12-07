@@ -102,8 +102,8 @@ export class I18nDbPaser {
   }
 
   /** 将单个文件存储 json 对象解析成扁平数组键值对 */
-  getI18nKeyAndValueFromSaveJsonItem(list: I18nMetaJsonSaveContentItem[]) {
-    return list.flatMap((item) => Object.entries(item.content));
+  getI18nKeyAndValueFromSaveJsonItem(list: I18nMetaJsonSaveContentItem[]): (readonly [ string, string, I18nMetaJsonSaveContentItem ])[] {
+    return list.flatMap((item) => Object.entries(item.content).map(list =>  [ list[0], list[1], item ] as const));
   }
 
   /** 获取多种国际化类型 默认返回主体语言 */
