@@ -441,7 +441,22 @@
 ---
 
 ### NodeFlags
+  节点标记
+### ModifierFlags
+  修饰标记
 ### JsxFlags
+  jsx 标记
+### Node
+  基类 提供底层 节点 方法
+  JSDocContainer 扩展
+  LocalsContainer 本地扩展
+### HasJSDoc
+  - [declaration](#stringdeclaration)
+  - ArrorFunction
+  - BinaryExpression
+  - Block
+  - BreakStatement
+  - CaseClause
 
 // 8:56 分机器砍的声音消失
 // 9:08
