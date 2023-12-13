@@ -19,6 +19,7 @@ const webpackConfig = {
       providers: join(__dirname, './src/providers'),
       models: join(__dirname, './src/models'),
       decorators: join(__dirname, './src/decorators'),
+      tasks: join(__dirname, './src/tasks'),
     },
     extensions: [ ".ts", '.js' , ".json" ]
   },
