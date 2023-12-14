@@ -226,6 +226,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
   - refacor: 改进提示用语
   - docs: 更新开发文档
   - test: 修复测试用例失效或错误问题
+  
+# 0.2.108
+  - feat: 添加国际化目录数据热更新
 
 
 # 致谢
