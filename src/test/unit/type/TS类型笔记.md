@@ -681,6 +681,26 @@ interface Program extends ScriptReferenceHost {
   InTypeAlias = 8388608,
   InInitialEntityName = 16777216
 
+
+### Ts Src 目录解析
+- cancellationToken 取消记号 提供一个函数构造一个取消标记的对象
+- compiler 编译器 Ts 核心功能之一
+- deprecatedCompat 不赞成的兼容
+- executeCommandLine 执行命令
+- harness 基于 Ts 基础扩展的一系列类型服务， 核心功能之一
+- jsTyping 似乎是 Js 代码转类型 ，核心功能之一
+- lib  TS 内置类型库 提供不少有用的东西在里面
+- loc 无法确定 似乎是提供一些有国际化的 xml 可能是 Ts 的前端模板
+- server Ts 类型中的服务，服务程序本身，而非程序的功能。
+- services Ts 核心功能基础服务集成
+- testRunner
+- tsc
+- tsserver
+- typescript
+- typingsInstaller
+- typingsInstallerCore
+- watchGuard
+
 // 8:56 分机器砍的声音消失
 // 9:08
 
