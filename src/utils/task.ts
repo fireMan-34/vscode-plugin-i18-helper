@@ -1,19 +1,18 @@
 import {
   commands,
-  workspace,
-  type ExtensionContext,
   window,
-  Uri,
+  workspace,
+  type ExtensionContext
 } from "vscode";
+
+import { EXTENSION_NAME, VSCODE_KEYS_MAP } from "constants/index";
 import {
-  refreshI18nConfigJson,
   GlobalExtensionSubject,
-  getGlobalConfiguration,
+  refreshI18nConfigJson
 } from "utils/conf";
-import { isSamePath, isSubPath } from "utils/path";
+import { isSubPath } from "utils/path";
 import { AcitveTextEditorSubject } from "utils/path.code";
-import { CMD_KEY, EXTENSION_NAME, VSCODE_KEYS_MAP } from "constants/index";
-import { refreshI18nDb } from "tasks/index";
+
 
 /** 扫描国际化上下文任务 */
 export const refreshScan18FileTaskContext = (context: ExtensionContext) => {

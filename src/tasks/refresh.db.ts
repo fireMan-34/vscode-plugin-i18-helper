@@ -2,11 +2,12 @@ import { watch } from "fs";
 import debounce from "lodash/debounce";
 import { BehaviorSubject } from "rxjs/internal/BehaviorSubject";
 import { Subscription } from "rxjs/internal/Subscription";
-import { getGlobalConfiguration } from "utils/conf";
+import { Disposable, ExtensionContext, Uri, commands, workspace } from "vscode";
+
+import { CMD_KEY } from "constants/index";
+import { getGlobalConfiguration, refreshSlientGlobalConfiguration, } from "utils/conf";
 import { isSamePath } from "utils/path";
 import { getWrokspaceFloder } from "utils/path.code";
-import { Disposable, ExtensionContext, workspace, Uri, commands } from "vscode";
-import { CMD_KEY } from "constants/index";
 
 const watchFilesSubject = new BehaviorSubject({ isInit: true, version: 0 });
 const watchFileSubscription = new Subscription();
@@ -34,9 +35,11 @@ export const initScanCurrentLocals = async (context: ExtensionContext) => {
     Uri.file(i18nDir.originalPath)
   );
 
-  await Promise.all(
-    localUris.map((uri) => commands.executeCommand(CMD_KEY.SCAN_I18_FILE, uri))
-  );
+  for (const uri  of localUris) {
+    /** 避免竞态操作 */
+    await commands.executeCommand(CMD_KEY.SCAN_I18_FILE, uri);
+  };
+  await refreshSlientGlobalConfiguration();
 };
 
 export const refreshI18nDb = async (context: ExtensionContext) => {
@@ -62,11 +65,11 @@ export const refreshI18nDb = async (context: ExtensionContext) => {
     )
   );
   watchFileSubscription.add(
-    watchFilesSubject.subscribe((ev) => {
+    watchFilesSubject.subscribe(async (ev) => {
       if (ev.isInit) {
         return;
       }
-      console.log("文件已更新", ev.version);
+      await initScanCurrentLocals(context);
     })
   );
 
