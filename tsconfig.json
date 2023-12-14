@@ -34,6 +34,9 @@
 			],
 			"decorators/*": [
 				"./src/decorators/*"
+			],
+			"tasks/*": [
+				"./src/tasks/*"
 			]
 		},
 		"esModuleInterop": true,

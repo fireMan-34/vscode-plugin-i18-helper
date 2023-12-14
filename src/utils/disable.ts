@@ -5,7 +5,8 @@ import { ClipboardSubscription, createClipboardTask } from 'utils/clipboard.code
 import { GlobalExtensionSubscription, } from 'utils/conf';
 import { LoggerSubscription } from 'utils/log';
 import { createDisableFromSubscription } from 'utils/rxHelper';
-import { createConfgiChangeSubscript, createSelectionChangeSubscript, createTextEditofrChangeSubscript, initScanCurrentLocals } from 'utils/task';
+import { createConfgiChangeSubscript, createSelectionChangeSubscript, createTextEditofrChangeSubscript, } from 'utils/task';
+import { refreshI18nDb, } from 'tasks/index';
 
 /** 资源释放处理 */
 export const createTotalRxSubscriptionDisable = async (context: ExtensionContext) => {
@@ -27,8 +28,7 @@ export const createTotalRxSubscriptionDisable = async (context: ExtensionContext
   // * 初始化 国际化扫描数据初始化
   await rescanI18nFileContentJson(context);
   // * 重新加载初始化国际代码
-  await initScanCurrentLocals(context);
-
+  await refreshI18nDb(context);
   // * 创建读取剪切板自动生成国际化代码
   createClipboardTask();
 };
