@@ -1,6 +1,7 @@
 import { equal } from 'assert';
 import Mocha, { describe, it, } from 'mocha';
 import { glob } from 'glob';
+import { argv, } from 'process';
 import { isSameTrimString } from 'utils/str';
 import { isSamePath } from 'utils/path';
 import { join } from 'path';
@@ -26,6 +27,7 @@ describe('单元测试', function () {
 const root = join(__dirname, '..');
 
 async function main() {
+  const [ ignore ] = argv.slice(3);
   const mocha = new Mocha({
     ui: 'tdd',
     color: true,
@@ -33,7 +35,7 @@ async function main() {
   });
 
   await new Promise((resolve, reject) => {
-    glob('unit/**/**.test.ts', { cwd: root }, (err, files) => {
+    glob('unit/**/**.test.ts', { cwd: root, ignore: ignore, }, (err, files) => {
       if (err) {
         reject(err);
         return;
