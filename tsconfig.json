@@ -48,6 +48,7 @@
 		"./study/*",
 		"./mock/*",
 		"./demo/*",
+		"./scripts/*"
 	],
 	"ts-node": {
 		"require": [ "tsconfig-paths/register" ]
