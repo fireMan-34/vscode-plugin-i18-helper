@@ -1,71 +1,74 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { LanguageServiceMode, ScriptTarget, createScanner, SyntaxKind, LanguageVariant, } from 'typescript';
+import { join } from "path";
+import {
+  Node,
+  SourceFile,
+  createPrinter,
+  createProgram,
+  isObjectLiteralExpression,
+  transform,
+  visitEachChild,
+  visitNode,
+  NewLineKind,
+} from "typescript";
+import { expect, } from 'chai';
 
-function mapFilter<T, N = T>(arr: T[], fn: (val: T, idx: number, arr: T[]) => T | T[] | N | N[] | void) {
-  const filterArr = [];
-  for (let i = 0; i < arr.length; i++) {
-    const r = fn(arr[i], i, arr);
-    if (!r) {
-      continue;
-    }
-    if (Array.isArray(r) && !Array.isArray(arr[i])) {
-      filterArr.push(...r);
-    } else {
-      filterArr.push(r);
-    }
-  }
-  return filterArr;
-};
-
-/** 
+/**
  * @see https://blog.csdn.net/hhhhhhhhhhhhhhhc/article/details/131450984 simple blog tell me typescript
-*/
-describe('学习测试 typescript API', function () {
-  const jsonFilePath = join(__dirname, './type.json');
-  it('测试 typescript 解析 json 数据格式', function () {
-    const jsonText = readFileSync(jsonFilePath, 'utf-8');
-    const scanner = createScanner(ScriptTarget.ES5, true, LanguageServiceMode.Semantic as any, jsonText);
-    const list = [];
-    while (scanner.scan() !== SyntaxKind.EndOfFileToken) {
-      list.push({
-        token: scanner.getToken(),
-        tokenType: SyntaxKind[scanner.getToken()],
-        text: scanner.getTokenText(),
-        val: scanner.getTokenValue(),
-      });
-    };
-    const mp = mapFilter(list, (item, index, arr) => {
-      if (
-        item.token === SyntaxKind.ColonToken
-        && arr[index - 1].token === SyntaxKind.StringLiteral
-        && arr[index + 1].token === SyntaxKind.StringLiteral
-      ) {
-        return {
-          key: arr[index - 1].val,
-          val: arr[index + 1].val,
-        };
-      }
-    });
+ * @see https://zhuanlan.zhihu.com/p/630871173
+ * @see https://stackoverflow.com/questions/45466913/how-can-i-parse-modify-and-regenerate-the-ast-of-a-typescript-file-like-jscod
+ * @see https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API
+ * @see https://github.com/microsoft/TypeScript/pull/13940
+ *
+ * @description 节点修改提供的方法是不可变
+ */
+describe("学习测试 typescript API", function () {
+  const typeESMPath = join(__dirname, "./type.esm.ts");
+  const program = createProgram({
+    rootNames: [typeESMPath],
+    options: {
+      rootDir: typeESMPath,
+      skipLibCheck: true,
+      skipDefaultLibCheck: true,
+    },
   });
+  const sourceFile = program.getSourceFile(typeESMPath);
+  const printer = createPrinter({ newLine: NewLineKind.LineFeed });
+  if (!sourceFile) {
+    return;
+  }
 
-  const tsPath = join(__dirname, './type.esm.ts');
-  it('测试 typescript 解析 ts 文件格式', function (){
-    const tsText = readFileSync(tsPath, 'utf8');
-    const scanner = createScanner(ScriptTarget.ES5, true, LanguageVariant.Standard, tsText);
-    
-    while (scanner.scan() !== SyntaxKind.EndOfFileToken) {
-      const result = {
-        token: scanner.getToken(),
-        tokenType: SyntaxKind[scanner.getToken()],
-        text: scanner.getTokenText(),
-        val: scanner.getTokenValue(),
-        start: scanner.getTokenStart(),
-        end: scanner.getTokenEnd(),
-        /** 包含做空格开始 */
-        fullStart: scanner.getTokenFullStart(),
-      };
-    };
+  it("测试 原生 Ts 解析后给对象添加自定义属性", function () {
+    const addKey = 'addKey';
+    const addVal = 'addVal';
+    const transformSourceFile = transform(sourceFile, [
+      (context) => {
+        return sourceFile => {
+          function visit (node: Node) {
+            node = visitEachChild(node, visit, context);
+
+            if (isObjectLiteralExpression(node)) {
+              return context.factory.updateObjectLiteralExpression(
+                node,
+                node.properties.concat(
+                  context.factory.createPropertyAssignment(
+                    addKey,
+                    context.factory.createStringLiteral(
+                      addVal,
+                    )
+                  )
+                )
+              );
+            }
+            
+            return node;
+          }
+          return visitNode(sourceFile, visit) as SourceFile;// 不知道为啥官方的的这个搭配不太智能。
+        };
+      },
+    ]);
+    const outFile = printer.printFile(transformSourceFile.transformed[0]);
+    expect(outFile, '输出结果不为空').is.not.null;
+    expect(outFile, '包含生成代码文本').has.string(addKey);
+    expect(outFile, '包含生成代码文本').has.string(addVal);
   });
 });
-
