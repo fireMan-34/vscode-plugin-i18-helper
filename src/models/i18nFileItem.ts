@@ -101,7 +101,7 @@ class RuleDir2I18nTypeClass extends BaseFile2I18nTypeClass {
  */
 export class I18nFileItemClass implements I18nFileItem {
   /** 键值对文本提取正则 */
-  static KEY_AND_VALUE_REG = /["'][^"']*?["']:\s*["'].*["'],?/gi;
+  static KEY_AND_VALUE_REG = /(["'])[^"']*?\1:\s*["'].*["'],?/gi;
 
   static Context: ExtensionContext;
 
