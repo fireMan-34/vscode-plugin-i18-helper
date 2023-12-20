@@ -1,17 +1,16 @@
+import type { ExtensionContext } from 'vscode';
 import countBy from "lodash/countBy";
 import isEmpty from "lodash/isEmpty";
 import { I18nRuleDirItem, I18nType } from "types/conf";
 import { I18nFileItem } from "types/modal";
 import { getCharsI18nType } from "utils/code";
-import { getGlobalConfiguration } from "utils/conf";
+import { getGlobalConfiguration, getSaveJsonConfig, } from "utils/conf";
 import { getPathSameVal, isSubPath } from "utils/path";
 
 /** 默认 文件 utf-8 字符范围频率 判断国际化类型 */
 export class BaseFile2I18nTypeClass {
-  file: I18nFileItem;
 
-  constructor(file: I18nFileItem) {
-    this.file = file;
+  constructor(public file: I18nFileItem, public context: ExtensionContext ) {
   }
 
   isThisTransformer(): Promise<BaseFile2I18nTypeClass> {
@@ -39,13 +38,13 @@ export class BaseFile2I18nTypeClass {
 export class RuleDir2I18nTypeClass extends BaseFile2I18nTypeClass {
   suitI18nRuleDirList: I18nRuleDirItem[] = [];
 
-  constructor(file: I18nFileItem) {
-    super(file);
+  constructor(file: I18nFileItem, context: ExtensionContext) {
+    super(file, context);
   }
 
   async isThisTransformer(): Promise<BaseFile2I18nTypeClass> {
     const file = this.file;
-    const { i18nRuleDirList } = await getGlobalConfiguration();
+    const { i18nRuleDirList } = await getSaveJsonConfig(this.context);
     this.suitI18nRuleDirList = i18nRuleDirList.filter((dirItem) =>
       isSubPath(dirItem.rulePath, file.path)
     );

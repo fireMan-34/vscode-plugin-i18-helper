@@ -1,3 +1,4 @@
+import type { ExtensionContext } from "vscode";
 import { readFile } from "fs/promises";
 
 import { I18nFileItem, I18nType } from "types/index";
@@ -22,14 +23,12 @@ export class I18nFileItemClass implements I18nFileItem {
 
   cacheMap: Partial<I18nFileItem>;
 
-  path: string;
 
-  constructor(path: string) {
+  constructor(public path: string, public context: ExtensionContext ) {
     this.cacheMap = {};
-    this.path = path;
     this.i18nFile2Types = [
-      new RuleDir2I18nTypeClass(this),
-      new BaseFile2I18nTypeClass(this),
+      new RuleDir2I18nTypeClass(this, context),
+      new BaseFile2I18nTypeClass(this, context),
     ];
   }
 
