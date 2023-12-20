@@ -28,12 +28,11 @@ import {
 const scanI18File: ICommondItem['cmdExcuter'] = async (context, uri: Uri) => {
   const dirPath = uri.fsPath;
   try {
-    I18nFileItemClass.initContext(context);
     const i18nFileItemUserClass = new I18nFileItemUserClass(context, uri);
 
 
     const { filePaths } = await readDeepDir(dirPath);
-    const i18nFileItems = filePaths.map(path => new I18nFileItemClass(path));
+    const i18nFileItems = filePaths.map(path => new I18nFileItemClass(path, context));
 
     await i18nFileItemUserClass.writeI18nFileContent2Json(i18nFileItems);
 

@@ -12,4 +12,6 @@ const zh1 = formatMessage({
     defaultMessage: '中文',
 });
 
+getMessage('often','经常');
+
 console.log(zhCN);
