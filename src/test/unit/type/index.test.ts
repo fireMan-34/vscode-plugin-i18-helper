@@ -14,10 +14,13 @@ import {
   isPropertyAssignment,
   isIdentifier,
   isStringLiteral,
+  SyntaxKind,
+  isExpressionStatement,
+  isFunctionExpression,
+  isCallExpression,
 } from "typescript";
 import { expect, } from 'chai';
 import typeJson from './type.json';
-import { SyntaxKind } from "ts-morph";
 
 declare namespace ts {
   interface StringLiteral {
@@ -188,5 +191,28 @@ describe("学习测试 typescript API", function () {
     };
 
     nextSourceFile.forEachChild(testVisit);
+  });
+
+  it('测试代码片段解析 ast ', function (){
+    class Namer {
+      count: number = 0;
+      constructor(public name: string) {
+      }
+      get autoName(){
+        return this.name + (this.count++);
+      };
+    }
+    const name = new Namer('temp');
+    const ast = createSourceFile(name.autoName, 'const o = {};formatMessage({ key: "i18n", defaultMessage: "国际化" })', ScriptTarget.ESNext);
+    const [,statement ] = ast.statements;
+    expect(
+      isExpressionStatement(statement) 
+      && isCallExpression(statement.expression)
+      && statement.expression.arguments.length
+      && isObjectLiteralExpression(statement.expression.arguments[0])
+      && statement.expression.arguments[0].properties.length
+      && statement.expression.arguments[0].properties.some(p => p.name && (isStringLiteral(p.name) || isIdentifier(p.name)) && p.name.text === 'key')
+      && statement.expression.arguments[0].properties.some(p => p.name && (isStringLiteral(p.name) || isIdentifier(p.name)) && p.name.text === 'defaultMessage')
+    ).is.true;
   });
 });
