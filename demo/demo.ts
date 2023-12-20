@@ -12,4 +12,5 @@ const zh1 = formatMessage({
     defaultMessage: '中文',
 });
 
+
 console.log(zhCN);

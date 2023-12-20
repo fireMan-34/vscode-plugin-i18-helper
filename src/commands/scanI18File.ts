@@ -28,7 +28,6 @@ import {
 const scanI18File: ICommondItem['cmdExcuter'] = async (context, uri: Uri) => {
   const dirPath = uri.fsPath;
   try {
-    I18nFileItemClass.initContext(context);
     const i18nFileItemUserClass = new I18nFileItemUserClass(context, uri);
 
 
