@@ -8,6 +8,11 @@
 		"typescript.tsc.autoDetect": "off",
 		"GitCommitPlugin.MaxSubjectCharacters": 34,
 		"GitCommitPlugin.CustomCommitType": [
+		],
+		"git.optimisticUpdate": false,
+		"git.repositoryScanIgnoredFolders": [
+			"node_modules",
+			"study"
 		]
 	}
 }
