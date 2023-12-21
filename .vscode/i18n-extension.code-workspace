@@ -13,6 +13,13 @@
 		"git.repositoryScanIgnoredFolders": [
 			"node_modules",
 			"study"
+		],
+		"mocha.files.glob": "src/test/unit/**/*.test.ts",
+		"mocha.options": {
+			"require": "ts-node/register",
+		},
+		"mocha.requires": [
+			"ts-node/register"
 		]
 	}
 }

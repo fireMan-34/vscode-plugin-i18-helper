@@ -48,5 +48,5 @@ module.exports = {
   // 'v8-stack-trace-limit': 100, // V8 flags are prepended with "v8-"
   // watch: false,
   // 'watch-files': ['lib/**/*.js', 'test/**/*.js'],
-  // 'watch-ignore': ['lib/vendor']
+  // 'watch-ignore': ['lib/vendor'],
 };
