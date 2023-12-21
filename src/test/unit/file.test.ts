@@ -1,7 +1,7 @@
 import { deepEqual, equal } from 'assert';
 import { join } from 'path';
 import { existsSync } from 'fs';
-import { describe, it, } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { checkPathIsFileOrDirectory, type FileAndDirPaths, getSubDirectoryFromDirectoryPath } from 'utils/fs';
 
 const path = join(__dirname, '..');

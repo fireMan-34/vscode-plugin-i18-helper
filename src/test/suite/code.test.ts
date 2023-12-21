@@ -1,16 +1,16 @@
-import { equal, } from 'node:assert';
 import { describe, it, } from 'mocha';
+import { equal, } from 'node:assert';
 import {
-  getCharsI18nType,
-  generateDynamicTemplateString,
-  generateTemplateStringToRegex,
-} from 'utils/code';
-import {
-  FORMAT_MESSAGE_REGEX,
   FORMAT_MESSAGE_ID_REGEX,
-  I18N_T_REGEX,
+  FORMAT_MESSAGE_REGEX,
+  I18N_T_REGEX
 } from 'constants/index';
 import { I18nType } from 'types/index';
+import {
+  generateDynamicTemplateString,
+  generateTemplateStringToRegex,
+  getCharsI18nType,
+} from 'utils/code';
 
 describe('国际化文本检测测试', function () {
   it('中文繁体检测 1级', function () {
