@@ -35,6 +35,8 @@ declare namespace ts {
  * @see https://stackoverflow.com/questions/45466913/how-can-i-parse-modify-and-regenerate-the-ast-of-a-typescript-file-like-jscod
  * @see https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API
  * @see https://github.com/microsoft/TypeScript/pull/13940
+ * @see https://github.com/facebook/jscodeshift
+ * @see https://github.com/acornjs/acorn
  *
  * @description 节点修改提供的方法是不可变
  */
