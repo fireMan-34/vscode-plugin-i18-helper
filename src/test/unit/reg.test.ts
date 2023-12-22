@@ -159,3 +159,22 @@ describe("正则巩固学习 组和范围", function () {
     expect('xy'.match(/(?:x)y/)).is.not.include('x');
   });
 });
+
+
+describe('正则巩固学习 量词', function(){
+  const code = 'xxyyyzzz';
+  it('常用两次匹配模式', function(){
+    expect(/u*/.test(code)).is.true;
+    expect(/x+/.test(code)).is.true;
+    expect(/c?/.test(code)).is.true;
+    expect(/x{2}/.test(code)).is.true;
+    expect(/x{3}/.test(code)).is.false;
+    expect(/x{1,}/.test(code)).is.true;
+    expect(/x{1,3}/.test(code)).is.true;
+  });
+
+  it('惰性匹配', function(){
+    expect(code.match(/x{1,}?/)?.length).is.equal(1);
+    expect(code.match(/x+?/)?.length).is.equal(1);
+  });
+});
