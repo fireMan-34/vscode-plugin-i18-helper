@@ -4,7 +4,7 @@ import { BaseI18nTextParsePlugin } from 'models/i18nTextParser/index';
 import { I18nTextParse, I18nTextParseIsPluginThisSupportOptions } from "types/index";
 import { GlobalExtensionSubject } from 'utils/conf';
 import { adjustNumberRange } from 'utils/num';
-import { findStartAndEndIndex } from "utils/str";
+import { findStartAndEndIndex, formatCodeText } from "utils/str";
 
 
 /*** i18n 代码解析对象 */
@@ -95,11 +95,11 @@ export class I18nTextParserClass implements I18nTextParse {
 
         for (let line = 1; line <= diffuseVal; line++) {
             const rangeText = this.getRangeTextFromProvider(line);
-            const isWholePasssTest = wholeRule.test(rangeText);
+            const wholePassResult = rangeText.match(wholeRule)?.[0];
+            const isWholePasssTest = !!wholePassResult;
 
             if (!isWholePasssTest) { continue; };
 
-            const wholePassResult = rangeText.match(wholeRule)![0];
             const isInludeLineText = wholePassResult.includes(lineText);
             if (!isInludeLineText) { continue; };
             if (isWholePasssTest && isInludeLineText) {
@@ -112,6 +112,6 @@ export class I18nTextParserClass implements I18nTextParse {
     }
 
     getFormatText2Parse(str: string): string {
-        return str.replace(/\s/g, '');
+        return formatCodeText(str);
     }
 };

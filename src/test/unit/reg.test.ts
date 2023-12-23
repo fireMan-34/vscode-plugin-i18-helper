@@ -1,5 +1,5 @@
-// import { describe, it } from 'mocha';
 import { expect } from "chai";
+import { FORMAT_MESSAGE_ID_DEFAULT_MSG_WITH_VARIABLE_REGEX } from "constants/index";
 
 const text = `This is a test.
 goman like fake r23   teyt
@@ -176,5 +176,51 @@ describe('正则巩固学习 量词', function(){
   it('惰性匹配', function(){
     expect(code.match(/x{1,}?/)?.length).is.equal(1);
     expect(code.match(/x+?/)?.length).is.equal(1);
+  });
+});
+
+
+describe('携带变量匹配国际化代码', function(){
+  const reg = FORMAT_MESSAGE_ID_DEFAULT_MSG_WITH_VARIABLE_REGEX;
+  const variable = `{
+    price: 1,
+    value: 2,
+    current:3,
+  }`;
+  const code_normal = `formatMessage({id:'hah',defaultMessage:'jlfj'},${variable})`;
+
+  const matchAll_normal = code_normal.matchAll(new RegExp(reg, 'g'));
+
+  it('最简单的压缩模式应该能够识别', function(){
+    expect(matchAll_normal).not.null;
+    expect(Array.from(matchAll_normal)[0][5]).equal(variable.slice(1,-1));
+  });
+});
+
+describe('匹配注释', function(){
+  it('测试单行注释', function(){
+    const text = `const o = {
+      // 注释的内容根本是不想让人知道  
+    hah: 1,
+    // 另外再加
+  };`;
+  const reg = /^\s*\/\/.*?$/mg;
+  expect(reg.exec(text)).not.null;
+  expect(reg.exec(text)).not.null;
+  expect(reg.exec(text)).is.null;
+  });
+
+  it('匹配范围注释，无换行等', function(){
+    const text = `const o = {
+      /**  
+       * kjfkaj 
+       * kjkfja
+      */ girl,firman
+      jfa/** fjks*/jf
+    }`;
+    const reg = /\/\*\*[^]*?\*\//g;
+    expect(reg.exec(text)).not.null;
+    expect(reg.exec(text)).not.null;
+    expect(reg.exec(text)).is.null;
   });
 });

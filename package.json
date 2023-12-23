@@ -67,19 +67,19 @@
             "description": "支持扫描的国际化目录匹配"
           },
           "i18n-extension.generateTemplate": {
-            "description": "配置复制键值对产生的模板文本，目前已加入其它文本渲染场景。请输入 ${id} ${msg} 如果有字符串则用单引号的形式。",
-            "default": "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
+            "description": "配置复制键值对产生的模板文本，目前已加入其它文本渲染场景。请输入 {{id}} {{msg}} 如果有字符串则用单引号的形式。",
+            "default": "formatMessage({\nid: '{{id}}',\ndefaultMessage: '{{msg}}',\n})",
             "anyOf": [
               {
                 "type": "string",
                 "enum": [
-                  "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
-                  "formatMessage({\nid: '${id}',\n})",
-                  "intl.formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
-                  "intl.formatMessage({\nid: '${id}',\n})",
-                  "i18n.t('${id}')",
-                  "t('${id}')",
-                  "$t('${id}')"
+                  "formatMessage({\nid: '{{id}}',\ndefaultMessage: '{{msg}}',\n})",
+                  "formatMessage({\nid: '{{id}}',\n})",
+                  "intl.formatMessage({\nid: '{{id}}',\ndefaultMessage: '{{msg}}',\n})",
+                  "intl.formatMessage({\nid: '{{id}}',\n})",
+                  "i18n.t('{{id}}')",
+                  "t('{{id}}')",
+                  "$t('{{id}}')"
                 ],
                 "enumItemLabels": [
                   "formatMessage 渲染国际化 key&val",
@@ -90,13 +90,13 @@
                   "t 渲染国际化 key， 添加 intl 前缀"
                 ],
                 "enumDescriptions": [
-                  "formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
-                  "formatMessage({\nid: '${id}',\n})",
-                  "intl.formatMessage({\nid: '${id}',\ndefaultMessage: '${msg}',\n})",
-                  "intl.formatMessage({\nid: '${id}',\n})",
-                  "i18n.t('${id}')",
-                  "t('${id}')",
-                  "$t('${id}')"
+                  "formatMessage({\nid: '{{id}}',\ndefaultMessage: '{{msg}}',\n})",
+                  "formatMessage({\nid: '{{id}}',\n})",
+                  "intl.formatMessage({\nid: '{{id}}',\ndefaultMessage: '{{msg}}',\n})",
+                  "intl.formatMessage({\nid: '{{id}}',\n})",
+                  "i18n.t('{{id}}')",
+                  "t('{{id}}')",
+                  "$t('{{id}}')"
                 ]
               },
               {

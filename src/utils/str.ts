@@ -11,3 +11,17 @@ export const findStartAndEndIndex = (str: string ,search: string): [ number, num
   }
   return void 0;
 };
+
+/**
+ * 降低代码处理琐碎
+ * @param str 
+ * @returns 
+ */
+export const formatCodeText = (str: string): string => {
+  return str
+  // 去除单行注释
+  .replace(/^\s*\/\/.*?$/mg,'')
+  /** 范围注释 */
+  .replace(/\/\*\*[^]*?\*\//g,'')
+  .replace(/\s/g, '');
+};

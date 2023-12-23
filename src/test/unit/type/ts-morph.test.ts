@@ -136,8 +136,8 @@ describe("测试 ts-morph", function () {
     const sf = p.createSourceFile(
       "temp",
       `formatMessage({
-        id: '\${id}',
-        message: '\${msg}',
+        id: '\{{id}}',
+        message: '\{{msg}}',
       })`
     );
     const caller = getCallExpression(sf);
@@ -148,14 +148,14 @@ describe("测试 ts-morph", function () {
       i18nMsg: <CallerFindArgumentsAction[]>[],
     };
     visitEachNodes(caller.getArguments(), (n) => {
-      if (isStringLiteralValue(n, "${id}")) {
+      if (isStringLiteralValue(n, "{{id}}")) {
         const parentNodes = getParentsWhileKind(n, SyntaxKind.CallExpression);
         const nodes = parentNodes.concat(n);
         const actions = getCallerAgrumentActions(nodes);
         o.i18nId = actions;
         expect(n).is.equal(getNodeFromCallerArguments(nodes[0], actions));
       }
-      if (isStringLiteralValue(n, "${msg}")) {
+      if (isStringLiteralValue(n, "{{msg}}")) {
         const parentNodes = getParentsWhileKind(n, SyntaxKind.CallExpression);
         const nodes = parentNodes.concat(n);
         const actions = getCallerAgrumentActions(nodes);

@@ -73,6 +73,7 @@ const getCharsI18nType = (code: string): I18nType => {
  */
 const generateDynamicTemplateString = (code: string, context: Record<string, string|boolean|number>) => {
 	return template(code, {
+		interpolate: /{{([\s\S]+?)}}/g,
 	})(context);
 };
 
@@ -108,7 +109,7 @@ export function generateTemplateStringToRegex(generateTemplateStr: string) {
 		;
 	}
 	let generateTemplate = generateTemplateStr;
-	const variableReg = /'\$\{.*?\}'/g;
+	const variableReg = /'\{\{.*?\}\}'/g;
 	const keyIndex = 1;
 	const valIndex = 3;
 	/** [x][x][x]  */

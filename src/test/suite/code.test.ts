@@ -79,8 +79,8 @@ describe('代码模板测试解析生成', function () {
   };
   const template_1 = [
     "formatMessage({",
-    " id: '${id}'",
-    " defaultMessage: '${message}'",
+    " id: '{{id}}'",
+    " defaultMessage: '{{message}}'",
     "})",
   ].join('\n');
   const render_1 = [
@@ -92,8 +92,8 @@ describe('代码模板测试解析生成', function () {
 
   const template_2 = [
     "t({",
-    " id: '${id}'",
-    " defaultMessage: '${message}'",
+    " id: '{{id}}'",
+    " defaultMessage: '{{message}}'",
     "})",
   ].join('\n');
   const render_2 = [
@@ -104,13 +104,13 @@ describe('代码模板测试解析生成', function () {
   ].join('\n');
 
   const template_3 = [
-    "t(${id}, ${message})",
+    "t({{id}}, {{message}})",
   ].join('\n');
   const render_3 = [
     "t(i18n.key, i18n.value)",
   ].join('\n');
   const template_4 = [
-    "$t(${id})",
+    "$t({{id}})",
   ].join('\n');
   const render_4 = [
     "$t(i18n.key)",
@@ -141,7 +141,7 @@ describe('测试 i18n 调用 t 的方式', function () {
 });
 
 describe('测试动态模板转换正则功能', function () {
-  const generateTemplate = "getMessage('${id}','${msg}')";
+  const generateTemplate = "getMessage('{{id}}','{{msg}}')";
 
   it('验证动态模板正则是否可以生成', function () {
     const result = generateTemplateStringToRegex(generateTemplate);
