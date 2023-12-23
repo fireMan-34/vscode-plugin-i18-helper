@@ -43,7 +43,7 @@ describe("正则巩固学习 断言篇", function () {
 
   it("先行否定断言", function () {
     expect(/fa(?=ke)/.test(text)).is.true;
-    expect(/fa(?!ke)/.test(text)).is.false;
+    expect(/fa(?!ke)/.test(text)).is.true;
   });
 
   it("后行断言", function () {
@@ -72,8 +72,8 @@ describe("正则巩固学习 字符类", function () {
   // * 在字符集内，点失去了它的特殊意义，并与文字点匹配
   // ! 需要注意的是，m multiline 标志不会改变点的行为。因此，要跨多行匹配一个模式，可以使用字符集[^]—它将匹配任何字符，包括新行。
   it(".匹配模式", function () {
-    expect(/./.test("\n\r\u2008\u2029")).is.false;
-    expect(/[^]/.test("\n\r\u2008\u2029")).is.false;
+    expect(/./.test("\n\r\u2008\u2029")).is.true;
+    expect(/[^]/.test("\n\r\u2008\u2029")).is.true;
   });
 
   // * \d 相当于 [0-9]
