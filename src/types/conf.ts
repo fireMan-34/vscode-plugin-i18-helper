@@ -101,6 +101,8 @@ export interface VScodeConfig {
   mainLanguage: keyof typeof I18nType,
   /** 生成的代码模板 */
   generateTemplate: string,
+  /** 生成的代码模板（批量模式， 实验阶段） */
+  generateTemplates: string[],
   /** 可扫描的国际化目录路径 */
   scanFolders: string[],
   /** 快速翻译文本 */

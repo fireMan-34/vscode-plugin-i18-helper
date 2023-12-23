@@ -104,6 +104,48 @@
               }
             ]
           },
+          "i18n-extension.generateTemplates": {
+            "description": "配置键值对代码的模板文本代码文本,支持自定义模式，具体输入模板后，鼠标悬浮查看对应的提示。",
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "formatMessage({\nid: '{{id}}',\ndefaultMessage: '{{msg}}',\n})",
+                    "formatMessage({\nid: '{{id}}',\n})",
+                    "intl.formatMessage({\nid: '{{id}}',\ndefaultMessage: '{{msg}}',\n})",
+                    "intl.formatMessage({\nid: '{{id}}',\n})",
+                    "i18n.t('{{id}}')",
+                    "t('{{id}}')",
+                    "$t('{{id}}')"
+                  ],
+                  "enumItemLabels": [
+                    "formatMessage 渲染国际化 key&val",
+                    "formatMessage 渲染国际化 key",
+                    "formatMessage 渲染国际化 key&val， 添加 intl 前缀",
+                    "formatMessage 渲染国际化 key， 添加 intl 前缀",
+                    "i18n.t 渲染国际化 key， 添加 intl 前缀",
+                    "t 渲染国际化 key， 添加 intl 前缀"
+                  ],
+                  "enumDescriptions": [
+                    "formatMessage({\nid: '{{id}}',\ndefaultMessage: '{{msg}}',\n})",
+                    "formatMessage({\nid: '{{id}}',\n})",
+                    "intl.formatMessage({\nid: '{{id}}',\ndefaultMessage: '{{msg}}',\n})",
+                    "intl.formatMessage({\nid: '{{id}}',\n})",
+                    "i18n.t('{{id}}')",
+                    "t('{{id}}')",
+                    "$t('{{id}}')"
+                  ]
+                },
+                {
+                  "default": "formatMessage({id:'{{id}}',defaultMessage: '{{msg}}'},{{variable}})",
+                  "type": "string",
+                  "description": "自定义代码模板，请输入携带 {{id}} {{msg}} {{variable}} 的字符串 如果有字符串则用单引号的形式。{{id}} 必备的，国际化识别键值， {{msg}} 可选，添加匹配对应的默认翻译文本，{{variable}} 映射变量，仅在携带国际化嵌入变量的值中才会启用。 "
+                }
+              ]
+            }
+          },
           "i18n-extension.fastTranslateLanguageType": {
             "type": "array",
             "items": {

@@ -71,10 +71,11 @@ export const VSCODE_KEYS_MAP = {
   mainLanguage: 'mainLanguage',
   scanFolders: 'scanFolders',
   generateTemplate: 'generateTemplate',
+  generateTemplates: 'generateTemplates',
   fastTranslateLanguageType: 'fastTranslateLanguageType',
   translateEngine: 'translateEngine',
   generatedCodeFromStrMode: "generatedCodeFromStrMode",
-};
+} as const;
 
 /** vscode 配置 */
 export const VSCODE_KEYS = [
@@ -82,6 +83,7 @@ export const VSCODE_KEYS = [
   VSCODE_KEYS_MAP.mainLanguage,
   VSCODE_KEYS_MAP.scanFolders,
   VSCODE_KEYS_MAP.generateTemplate,
+  VSCODE_KEYS_MAP.generateTemplates,
   VSCODE_KEYS_MAP.fastTranslateLanguageType,
   VSCODE_KEYS_MAP.translateEngine,
   VSCODE_KEYS_MAP.generatedCodeFromStrMode,

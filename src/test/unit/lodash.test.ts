@@ -9,6 +9,7 @@ describe('lodash 疑问功能测试', function() {
         const projectConfig: ProjectGlobalConfig = {
             ...PROJECT_META_JSON,
             generateTemplate: '测试',
+            generateTemplates: ['测试'],
             isOpenCheckDir: true,
             mainLanguage: 'ZH_HK',
             scanFolders: [ './glob' ],
