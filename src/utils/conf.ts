@@ -133,6 +133,9 @@ export const GlobalExtensionSubscription = GlobalExtensionSubject.subscribe({
 export const getGlobalConfiguration = () => {
     return firstValueFrom(GlobalExtensionSubject.pipe(first(conf => !!conf.i18nDirList.length)));
 };
+export const getGlobalConfigurationSync = () => {
+    return GlobalExtensionSubject.getValue();
+};
 
 /** 强制更新全局数据 一般是 db 层变动又以全局config 做 cache 代码做强制更新 */
 export const refreshSlientGlobalConfiguration = () => {
