@@ -1,31 +1,32 @@
+import { CallExpression, Node, SourceFile, SyntaxKind, } from 'ts-morph';
+
+import { conditionReturnError, emptyReturnError, } from 'decorators/index';
 import { getGlobalConfigurationSync, } from 'utils/conf';
-import { emptyReturnError, conditionReturnError, } from 'decorators/index';
-import { Node, Project, SyntaxKind, } from 'ts-morph';
 
-const project = new Project({
-    compilerOptions: {
-        resolveJsonModule: true,
-        allowJs: true,
-        strict: false,
-        skipDefaultLibCheck: true,
-        skipLibCheck: true,
-        strictNullChecks: false,
-    },
-});
+import { createSourceFile, findStringLiteralNode, getCallExpressionFromSource, getFlatternNodes, getParen2ChildNodesIfExist } from './morph';
 
-const getSourceTempFilePath = (function(){
-    let index = 1;
-    return () => `${index++}.ts`;
-})();
+type TemplateDynamicVariableModal = { has: false, } | {
+    /** 是否存在 */
+    has: true;
+    /** 调用路径到当前节点的路径 */
+    CallNodeToChildNodes: Node[],
+    /** 函数名 */
+    callName: string;
+};
+
+const I18nWithDynamic = (str: string) => `{{${str}}}`;
+const I18nId = 'id';
+const I18nMsg = 'msg';
+const I18nVariable = 'variable';
+const I18nVaribleWithDynamic = I18nWithDynamic(I18nVariable);
 
 class I18nTemplateModal {
     templateVariables: string[] = [];
-    /** 模板携带标记 */
-    variableFlags = {
-        hasI18nKey: false,
-        hasI18nValue: false,
-        hasI18nVariable: false,
-    };
+    ast: SourceFile|null = null;
+
+    [I18nId]: TemplateDynamicVariableModal = { has: false };
+    [I18nMsg]: TemplateDynamicVariableModal = { has: false };
+    [I18nVariable]: TemplateDynamicVariableModal = { has: false };
 
     constructor(
         /* 模板字符串 */
@@ -48,60 +49,70 @@ class I18nTemplateModal {
         } else {
             this.templateVariables = [];
         }
-        this.updateI18nVariables();
         return this.templateVariables;
     }
-
-    updateI18nVariables() {
-        this.variableFlags = {
-            hasI18nKey: this.templateVariables.includes('id'),
-            hasI18nValue: this.templateVariables.includes('msg'),
-            hasI18nVariable: this.templateVariables.includes('variable'),
-        };
-    };
-    getAstFromTemplate() {
+    
+    /** 更新 ast 从模板中 */
+    updateAstFromTemplate() {
         let waitParseTemplate = this.template;
         // 移除不符合语法的变量字符串
-        if (this.variableFlags.hasI18nVariable) {
-            waitParseTemplate = waitParseTemplate.replace('{{variable}}','{}');
+        if (this.templateVariables.includes(I18nVariable)) {
+            waitParseTemplate = waitParseTemplate
+            .replace(I18nVaribleWithDynamic,`{ variable : '${I18nVaribleWithDynamic}'}`);
         };
-        const ast = project.createSourceFile(getSourceTempFilePath(),waitParseTemplate,);
-        const callExpression = ast.getStatementByKindOrThrow(SyntaxKind.CallExpression);
+        this.ast = createSourceFile(waitParseTemplate);
+        const callerNode = getCallExpressionFromSource(this.ast);
+        const flattenNodes = getFlatternNodes(callerNode);
+        
+        this.updateDynamicVariableModal({
+            flag: I18nId,
+            flattenNodes,
+            callerNode,
+        });
+        this.updateDynamicVariableModal({
+            flag: I18nMsg,
+            flattenNodes,
+            callerNode,
+        });
+        this.updateDynamicVariableModal({
+            flag: I18nVariable,
+            flattenNodes,
+            callerNode,
+        });
+    }
 
-        // https://ts-morph.com/navigation/compiler-nodes
-        //  使用截取生成位置来生成代码，或者查询节点来生成代码
-        const createSimpleAstModal = (node: Node, simpleAstModal: any = {}) => {
-            simpleAstModal.kind = node.getKind();
-            simpleAstModal.kindName = node.getKindName();
-
-            if (node.isKind(SyntaxKind.CallExpression)) {
-                simpleAstModal.arguments = node.getArguments().map(cnode => createSimpleAstModal(cnode,));
-                simpleAstModal.expression = createSimpleAstModal(node.getExpression(),);
-            }
-            else if (node.isKind(SyntaxKind.ObjectLiteralExpression)) {
-                simpleAstModal.properties = node.getProperties().map(createSimpleAstModal);
-            } 
-            else if (node.isKind(SyntaxKind.PropertyAssignment)) {
-                const initializer = node.getInitializer();
-                simpleAstModal.name = createSimpleAstModal(node.getNameNode());
-                simpleAstModal.initialer = initializer && createSimpleAstModal(initializer);
-
-            }
-            else if (node.isKind(SyntaxKind.ArrayLiteralExpression)) {
-                simpleAstModal.children = node.getElements().map(createSimpleAstModal);
-            } 
-            else if (node.isKind(SyntaxKind.StringLiteral)) {
-                simpleAstModal.text = node.getText();
-            }
-            else if (node.isKind(SyntaxKind.Identifier)) {
-                simpleAstModal.escapedTex = node.getText();
-            } else if (node.isKind(SyntaxKind.NumericLiteral)) {
-                simpleAstModal.text = node.getText();
-            }
-            return simpleAstModal;
+    /** 更新动态变量基于调用表达式节点模型 */
+    updateDynamicVariableModal(options: {
+        flag: typeof I18nId | typeof I18nMsg | typeof I18nVariable,
+        flattenNodes: Node[],
+        callerNode: CallExpression,
+    }) {
+        const {
+            flag,
+            flattenNodes,
+            callerNode,
+        } = options;
+        const has = this.templateVariables.includes(flag);
+        if (!has) {
+            this[flag] = { has, };
+            return;
+        }
+        const i18nNode = findStringLiteralNode(flattenNodes, I18nWithDynamic(flag));
+        if (!i18nNode) {
+            this[flag] = { has: false, };
+            return;
+        }
+        const p2cNodes = getParen2ChildNodesIfExist(callerNode, i18nNode);
+        if (!p2cNodes) {
+            this[flag] = { has: false, };
+            return;
         };
-
-        const simpleAstModal = createSimpleAstModal(callExpression);
+        // 打算提供一个数据查询逻辑，可以从调用函数节点查询到对应节点位置
+        this[flag] = {
+            has,
+            CallNodeToChildNodes: p2cNodes,
+            callName: callerNode.getExpression().getText()
+        };
     }
 };
 
@@ -110,7 +121,7 @@ class I18nTemplateModal {
  */
 export class I18nGenTemplate {
     /** 模板解析 */
-    templateModals = [];
+    templateModals: I18nTemplateModal[] = [];
 
     getTemplateModals() {
         const { generateTemplate, generateTemplates } = getGlobalConfigurationSync();
@@ -118,6 +129,7 @@ export class I18nGenTemplate {
             generateTemplate,
             ...generateTemplates,
         ];
-        return templates.map(template => new I18nTemplateModal(template));
+        this.templateModals = templates.map(template => new I18nTemplateModal(template));
+        return this.templateModals;
     }
 };

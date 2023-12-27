@@ -8,6 +8,14 @@ import {
   StringLiteral,
 } from "ts-morph";
 
+import {
+  getCallExpressionFromSource,
+  getFlatternNodes,
+  getParen2ChildNodesIfExist,
+  findStringLiteralNode,
+  getParentAndChildSimplePath,
+} from 'models/i18nGenTemplate/morph';
+
 type CallerFindArgumentsAction = [
   keyof typeof SyntaxKind,
   /** 操作方法名 */ string,
@@ -165,5 +173,24 @@ describe("测试 ts-morph", function () {
     expect(o.callerName).is.string;
     expect(o.i18nId.length).gt(0);
     expect(o.i18nMsg.length).gt(0);
+  });
+
+  it('工具库测试', function(){
+    const p = new Project();
+    const ast = p.createSourceFile('temp.ts', `formatMessage({id: '{{id}}', defaultMessage: '{{msg}}'},)`);
+    const caller = getCallExpressionFromSource(ast);
+    const nodes = getFlatternNodes(caller);
+    const i18nIdNode = findStringLiteralNode(nodes, '{{id}}');
+    if (!i18nIdNode) {
+      return;
+    };
+    const p2cNs = getParen2ChildNodesIfExist(caller, i18nIdNode);
+    if (!p2cNs) {
+      return;
+    };
+    for (let i = 0; i < p2cNs.length - 1; i++) {
+      const p = p2cNs[i], c = p2cNs[i + 1];
+      console.log('路径', getParentAndChildSimplePath(p, c));
+    }
   });
 });
