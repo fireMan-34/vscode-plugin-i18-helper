@@ -177,10 +177,21 @@ describe("测试 ts-morph", function () {
 
   it('工具库测试', function(){
     const p = new Project();
-    const ast = p.createSourceFile('temp.ts', `formatMessage({id: '{{id}}', defaultMessage: '{{msg}}'},)`);
+    const ast = p.createSourceFile('temp.ts', `intl.formatMessage({id: '{{id}}', defaultMessage: '{{msg}}'},)`);
     const caller = getCallExpressionFromSource(ast);
     const nodes = getFlatternNodes(caller);
     const i18nIdNode = findStringLiteralNode(nodes, '{{id}}');
+    // https://www.saoniuhuo.com/question/detail-2253664.html
+    // https://github.com/dsherret/ts-morph/issues/107
+    // 疑似有个小 bug 当前元素的父元素类型为确定则无法返回，可能我误会了它的用法
+    // console.log('能否取到函数', i18nIdNode?.getParentWhile(node => {
+    //   console.log('node', node.getKindName())
+    //   if (node.isKind(SyntaxKind.CallExpression)) {
+    //     return false;
+    //   } else {
+    //     return true;
+    //   }
+    // })?.getParent());
     if (!i18nIdNode) {
       return;
     };

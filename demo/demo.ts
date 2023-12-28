@@ -4,7 +4,7 @@ const title = '仓库级自测项目';
 const desc = '本代码仅用于手动级别插件自测功能。';
 
 function getMessage(id, defaultMessage){};
-function formatMessage(o) {};
+function formatMessage(o, v?) {};
 
 const zh = getMessage('zhCN','中文');
 const zh1 = formatMessage({
@@ -14,4 +14,20 @@ const zh1 = formatMessage({
 
 getMessage('often','经常');
 
+getMessage('zhCN','中文')
+
+formatMessage({
+    id: 'zhCN',
+    defaultMessage: '中文',
+});
+
+getMessage('login','登录')
+
 console.log(zhCN);
+
+formatMessage({
+    id: 'zhCN',
+    defaultMessage: 'zxx',
+}, {
+    aa:'sd'
+});
