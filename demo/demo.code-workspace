@@ -5,7 +5,12 @@
 		}
 	],
 	"settings": {
-		"i18n-extension.generateTemplate": "getMessage('${id}','${msg}')",
+		"i18n-extension.generateTemplate": "getMessage('{{id}}','{{msg}}')",
+		"i18n-extension.generateTemplates": [
+			"formatMessage({id: '{{id}}',defaultMessage: '{{msg}}',},{{variable}})",
+			"formatMessage({id: '{{id}}'})",
+			"intl.formatMessage({id: '{{id}}',\ndefaultMessage: '{{msg}}',})"
+		],
 		"i18n-extension.mainLanguage": "ZH_CN"
 	}
 }
