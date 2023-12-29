@@ -31,3 +31,10 @@ formatMessage({
 }, {
     aa:'sd'
 });
+
+formatMessage({
+    id: 'needNum',
+    defaultMessage: '需要输入变量{{num}}'
+}, {
+    num: 2
+});
