@@ -25,6 +25,8 @@ interface PrepareCheckReturn {
   config: ProjectGlobalConfig;
 }
 
+type I18nUnitArr = readonly [string, string, I18nMetaJsonSaveContentItem];
+
 /** 检测工作文件目录是否为空 */
 const isEmptyWorkspaceFolder: MethodDecoratorFix<() => PrepareCheckReturn> =
   emptyReturnError("匹配不到工作区");
@@ -54,7 +56,7 @@ export class I18nDbPaser {
   constructor(
     public globalConfig: ProjectGlobalConfig,
     public workspaceFolder: WorkspaceFolder
-  ) {}
+  ) { }
 
   /** 运行前检测必要上下文 */
   @isEmptyWorkspaceFolder
@@ -102,8 +104,8 @@ export class I18nDbPaser {
   }
 
   /** 将单个文件存储 json 对象解析成扁平数组键值对 */
-  getI18nKeyAndValueFromSaveJsonItem(list: I18nMetaJsonSaveContentItem[]): (readonly [ string, string, I18nMetaJsonSaveContentItem ])[] {
-    return list.flatMap((item) => Object.entries(item.content).map(list =>  [ list[0], list[1], item ] as const));
+  getI18nKeyAndValueFromSaveJsonItem(list: I18nMetaJsonSaveContentItem[]): I18nUnitArr[] {
+    return list.flatMap((item) => Object.entries(item.content).map(list => [list[0], list[1], item] as const));
   }
 
   /** 获取多种国际化类型 默认返回主体语言 */
@@ -112,19 +114,28 @@ export class I18nDbPaser {
   }
   /** 从已有文件存储字符类型获取所有语言类型 */
   getLangTypesFromDB(list: I18nMetaJson["saveContent"][]) {
-    return union(...list.map((item) =>( Object.keys(item)as `${I18nType}`[]).filter(k => !isEmpty(item[k]))))
+    return union(...list.map((item) => (Object.keys(item) as `${I18nType}`[]).filter(k => !isEmpty(item[k]))))
       .filter((item) => item !== `${I18nType.UN_KNOWN}`)
       .map(Number) as I18nType[];
   }
 
   /** 搜索国际化字符串键值队 */
-  async findKeyOrValue(keyOrVal: string, languages?: I18nType[]) {
+  async findKeyOrValue(keyOrVal: string, languages?: I18nType[], mode?: 'key' | 'value' | 'all') {
+    const searchFn = (function () {
+      switch (mode) {
+        case 'key':
+          return ([k]: I18nUnitArr) => k === keyOrVal;
+        case 'value':
+          return ([, v]: I18nUnitArr) => v === keyOrVal;
+        case 'all':
+        default:
+          return ([k, v]: I18nUnitArr) => k === keyOrVal || v === keyOrVal;
+      }
+    })();
     const langs = this.getLangTypes(languages);
     const langMap = await this.getLangAboutI18nDirListMap(langs);
     const langKVMap = mapValues(langMap, (list) =>
-      this.getI18nKeyAndValueFromSaveJsonItem(list).find(
-        ([k, v]) => k === keyOrVal || v === keyOrVal
-      )
+      this.getI18nKeyAndValueFromSaveJsonItem(list).find(searchFn)
     );
     return langKVMap;
   }
