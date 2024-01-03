@@ -8,7 +8,6 @@ import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
 
 /**
  * 国际化高亮
- * 
  */
 const hoverProvider: HoverProvider = {
   async provideHover(document, position, token) {
@@ -50,6 +49,11 @@ const hoverProvider: HoverProvider = {
   },
 };
 
+/**
+ * @deprecated 旧工作模式，依照渐进式文本正则解析工作，自定义规则、动态模板生成规则等
+ * @param context 
+ * @returns 
+ */
 export const createHoverProvider = (context: ExtensionContext) => {
   return languages.registerHoverProvider(SUPPORT_DOCUMENT_SELECTOR, hoverProvider);
 };

@@ -98,7 +98,7 @@ export interface VScodeConfig {
    */
   isOpenCheckDir: boolean,
   /** 主要项目使用语言 */
-  mainLanguage: keyof typeof I18nType,
+  mainLanguage: I18nTypeKey,
   /** 生成的代码模板 */
   generateTemplate: string,
   /** 生成的代码模板（批量模式， 实验阶段） */
@@ -106,7 +106,7 @@ export interface VScodeConfig {
   /** 可扫描的国际化目录路径 */
   scanFolders: string[],
   /** 快速翻译文本 */
-  fastTranslateLanguageType: (keyof typeof I18nType)[],
+  fastTranslateLanguageType: I18nTypeKey[],
   /** 翻译引擎 */
   translateEngine: TranslateEngineType,
   /** 检测可识别国际化代码是否自动生成到剪切板 */

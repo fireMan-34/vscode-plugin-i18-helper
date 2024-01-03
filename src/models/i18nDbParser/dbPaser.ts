@@ -9,6 +9,7 @@ import type {
   ProjectGlobalConfig,
   I18nMetaJson,
   I18nMetaJsonSaveContentItem,
+  I18nTypeKey,
 } from "types/index";
 import { I18nType } from "types/index";
 import { readJsonFile } from "utils/fs";
@@ -33,7 +34,7 @@ const isEmptyWorkspaceFolder: MethodDecoratorFix<() => PrepareCheckReturn> =
 
 /** 检测当前工作目录是否存在国际化配置文件 */
 const isCurrentWorkspaceFolderEmptyJsonFile: MethodDecoratorFix<
-  () => Promise<I18nMetaJson["saveContent"][]>
+  () => Promise<Record<I18nType, I18nMetaJsonSaveContentItem[]>[]>
 > = emptyReturnError("当前工作目录不存在可消费的国际化数据库");
 
 /** 检测当前工作区主语言是否存在国际化配置文件 */
@@ -108,12 +109,21 @@ export class I18nDbPaser {
     return list.flatMap((item) => Object.entries(item.content).map(list => [list[0], list[1], item] as const));
   }
 
+  /**
+   * 
+   * @param i18nKey 传空返回主语言枚举值
+   * @returns 
+   */
+  getLangEnumValue(i18nKey?: I18nTypeKey) {
+    return I18nType[i18nKey ?? this.globalConfig.mainLanguage];
+  };
+
   /** 获取多种国际化类型 默认返回主体语言 */
   getLangTypes(langs?: I18nType[]) {
-    return langs ?? [I18nType[this.globalConfig.mainLanguage]];
+    return langs ?? [this.getLangEnumValue()];
   }
   /** 从已有文件存储字符类型获取所有语言类型 */
-  getLangTypesFromDB(list: I18nMetaJson["saveContent"][]) {
+  getLangTypesFromDB(list: Record<I18nType, I18nMetaJsonSaveContentItem[]>[]) {
     return union(...list.map((item) => (Object.keys(item) as `${I18nType}`[]).filter(k => !isEmpty(item[k]))))
       .filter((item) => item !== `${I18nType.UN_KNOWN}`)
       .map(Number) as I18nType[];

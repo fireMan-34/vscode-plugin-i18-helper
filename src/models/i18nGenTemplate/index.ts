@@ -1,6 +1,7 @@
 import type { TextDocument, Position } from 'vscode';
 import { CallExpression, Node, SourceFile, SyntaxKind, } from 'ts-morph';
 import inRange from 'lodash/inRange';
+import isEmpty from 'lodash/isEmpty';
 
 import { conditionReturnError, emptyReturnError, } from 'decorators/index';
 import { getGlobalConfigurationSync, } from 'utils/conf';
@@ -235,7 +236,7 @@ class I18nTemplateModal {
         return node.asKind(SyntaxKind.ObjectLiteralExpression)?.getProperties().filter(p => p.isKind(SyntaxKind.PropertyAssignment) || p.isKind(SyntaxKind.ShorthandPropertyAssignment)).map(p => {
             if (p.isKind(SyntaxKind.PropertyAssignment)) {
                 return p.getName();
-            } 
+            }
             else if (p.isKind(SyntaxKind.ShorthandPropertyAssignment)) {
                 return p.getName();
             }
@@ -342,58 +343,54 @@ export class I18nGenTemplate {
         }
     }
 
-    /** 从文档中优化
-     * 目前可以正常识别，但是存在一个问题，每一次访问都需要重新生成 ast ，这毫无疑问是非常昂贵的。
-     */
-    getI18nIdFromDocumentPosition(document: TextDocument, position: Position): string | void {
-        const templates = this.getTemplateWithFlags([I18nId]);
+    /** 链式询问模板返回工作的代码询问模板工作，得到结果并返回，如果后期分叉则移除 */
+    private getI18nFlagFromDocAndPosChain<R>(
+        document: TextDocument,
+        position: Position,
+        flag: VariableFlag,
+        work: (template: I18nTemplateModal, docPosModal: CodeTextModal) => R,
+    ): R | void {
+        const templates = this.getTemplateWithFlags(flag === I18nId ? [I18nId] : [I18nId, flag]);
         const docPosModal = this.documentPostionToModal(document, position);
         if (!docPosModal) {
             return;
         }
         for (const template of templates) {
-            const result = template.matchIdStringLitera(docPosModal);
+            const result = work(template, docPosModal);
             if (result) {
                 return result;
             }
         }
+    }
+
+    getI18nIdFromDocumentPosition(document: TextDocument, position: Position): string | void {
+        return this.getI18nFlagFromDocAndPosChain(
+            document, position, 
+            I18nId, (template, docPosModal) => template.matchIdStringLitera(docPosModal),
+        );
     }
 
     getI18nMsgFromDocumentPosition(document: TextDocument, position: Position): string | void {
-        const templates = this.getTemplateWithFlags([I18nId, I18nMsg]);
-        const docPosModal = this.documentPostionToModal(document, position);
-        if (!docPosModal) {
-            return;
-        }
-        for (const template of templates) {
-            const result = template.matchMsgStringLitera(docPosModal);
-            if (result) {
-                return result;
-            }
-        }
+        return this.getI18nFlagFromDocAndPosChain(
+            document, position,
+            I18nMsg, (template, docPosModal) => template.matchMsgStringLitera(docPosModal),
+        );
     }
 
     getI18nVariableFromDocumentPosition(document: TextDocument, position: Position): string[] | void {
-        const templates = this.getTemplateWithFlags([I18nId, I18nVariable]);
-        const docPosModal = this.documentPostionToModal(document, position);
-        if (!docPosModal) {
-            return;
-        }
-        for (const template of templates) {
-            const result = template.matchMsgVariableLitera(docPosModal);
-            if (result) {
-                return result;
-            }
-        }
+        return this.getI18nFlagFromDocAndPosChain(
+            document, position,
+            I18nVariable, (template, docPosModal) => template.matchMsgVariableLitera(docPosModal),
+        );
     }
 
     /** 匹配国际化翻译中的变量并输出 */
     matchMsgVariable(i18nMsg: string): string[] | void {
         const reg = /{{([\S\s]*?])}}/g;
-        const result = i18nMsg.matchAll(reg);
-        if (!result) {
+        const result = Array.from(i18nMsg.matchAll(reg));
+        if (isEmpty(result)) {
             return;
         }
-        return Array.from(result).map(([, v]) => v);
+        return result.map(([, v]) => v);
     }
 };
