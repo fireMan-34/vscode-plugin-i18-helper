@@ -38,3 +38,10 @@ formatMessage({
 }, {
     num: 2
 });
+formatMessage({id: 'zhCN',defaultMessage: '中文',},)
+formatMessage({ id: "chinese" });
+
+formatMessage(
+  { id: "needNum", defaultMessage: "需要输入变量{{num}}" },
+  { num: "" },
+);

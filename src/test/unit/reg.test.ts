@@ -224,3 +224,14 @@ describe('匹配注释', function(){
     expect(reg.exec(text)).is.null;
   });
 });
+
+describe('匹配文本', function(){
+  it('匹配得到', function(){
+    const str = `formatMessage({
+      id: 'xx',
+      defaultMessage; 'xx',
+    });`;
+    console.log('matchResult', str.match(/\).*?$/));
+    expect(/\).*?$/.test(str)).is.true;
+  });
+});

@@ -1,7 +1,8 @@
-import type { TextDocument, Position } from 'vscode';
-import { CallExpression, Node, SourceFile, SyntaxKind, } from 'ts-morph';
 import inRange from 'lodash/inRange';
 import isEmpty from 'lodash/isEmpty';
+import template from 'lodash/template';
+import { CallExpression, Node, SourceFile, SyntaxKind } from 'ts-morph';
+import type { Position, TextDocument } from 'vscode';
 
 import { conditionReturnError, emptyReturnError, } from 'decorators/index';
 import { getGlobalConfigurationSync, } from 'utils/conf';
@@ -9,15 +10,14 @@ import { getGlobalConfigurationSync, } from 'utils/conf';
 import {
     Node2NodePathSimpleModal,
     createSourceFile,
+    createSourceFileFromDocument,
     findStringLiteralNode,
+    genSimplePathFromNodes,
     getCallExpressionFromSource,
     getFlatternNodes,
     getParen2ChildNodesIfExist,
-    genSimplePathFromNodes,
     getWhileKindIfExists,
-    createSourceFileFromDocument,
-    useSimpePathFromNode,
-    getPropertyName,
+    useSimpePathFromNode
 } from './morph';
 
 interface FailTemplateDynamicVariableModal { has: false, };
@@ -26,6 +26,10 @@ interface SuccessTemplateDynamicVariableModal {
     has: true;
     /** 调用路径到当前节点的路径 */
     CallNodeToChildNodes: Node[],
+    /** 调用节点 */
+    CallNode: CallExpression,
+    /** 当前节点 */
+    CurrentNode: Node,
     /** 函数/方法名 */
     callName: string;
     /** 参数位置 */
@@ -51,7 +55,6 @@ const I18nVariable = 'variable';
 const I18nVaribleWithDynamic = I18nWithDynamic(I18nVariable);
 
 const isSuccessFlag = (t: TemplateDynamicVariableModal): t is SuccessTemplateDynamicVariableModal => t.has;
-const isFailFlag = (t: TemplateDynamicVariableModal): t is FailTemplateDynamicVariableModal => !t.has;
 
 class I18nTemplateModal {
     templateVariables: string[] = [];
@@ -155,6 +158,8 @@ class I18nTemplateModal {
         this[flag] = {
             has,
             CallNodeToChildNodes: p2cNodes,
+            CallNode: callerNode,
+            CurrentNode: i18nNode,
             callName: callerNode.getExpression().getText(),
             agrumentIndex: callPath.index,
             node2nodePath: node2NodePath,
@@ -241,6 +246,22 @@ class I18nTemplateModal {
                 return p.getName();
             }
             return '';
+        });
+    }
+
+    getMsgVariableFromString(msg: string) {
+        const result = msg.match(/(?<={{).*?(?=}})/g);
+        return result;
+    }
+
+    renderI18nTemplate(i18nItem: { id: string, msg: string }) {
+        const { id, msg, } = i18nItem;
+        const msgVariable = this.getMsgVariableFromString(msg);
+        
+        return template(this.template, { interpolate: /{{([\s\S]+?)}}/g, }, )({
+            id,
+            msg,
+            variable: msgVariable && `{${msgVariable.map(str => str + ":''").join(',')}}`,
         });
     }
 };
@@ -365,7 +386,7 @@ export class I18nGenTemplate {
 
     getI18nIdFromDocumentPosition(document: TextDocument, position: Position): string | void {
         return this.getI18nFlagFromDocAndPosChain(
-            document, position, 
+            document, position,
             I18nId, (template, docPosModal) => template.matchIdStringLitera(docPosModal),
         );
     }
@@ -392,5 +413,18 @@ export class I18nGenTemplate {
             return;
         }
         return result.map(([, v]) => v);
+    }
+
+    getI18nTemplateModalsWhenCodeTextIsSameCaller(doc: TextDocument, pos: Position) {
+        const codeTextModal = this.documentPostionToModal(doc, pos);
+        if (!codeTextModal) {
+            return;
+        }
+        return this.templateModals.filter(template => {
+            if (!template[I18nId].has) {
+                return false;
+            }
+            return codeTextModal.codeTextCallerName === template[I18nId].callName;
+        });
     }
 };
