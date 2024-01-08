@@ -1,18 +1,19 @@
-import { expect } from "chai";
+ import { expect } from "chai";
 import {
-  Project,
-  SyntaxKind,
-  SourceFile,
   CallExpression,
   Node,
+  Project,
+  SourceFile,
   StringLiteral,
+  SyntaxKind,
+  printNode
 } from "ts-morph";
 
 import {
+  findStringLiteralNode,
   getCallExpressionFromSource,
   getFlatternNodes,
   getParen2ChildNodesIfExist,
-  findStringLiteralNode,
   getParentAndChildSimplePath,
 } from 'models/i18nGenTemplate/morph';
 
@@ -204,4 +205,31 @@ describe("测试 ts-morph", function () {
       console.log('路径', getParentAndChildSimplePath(p, c));
     }
   });
+
+  it('生成测试', function(){
+    const p = new Project();
+    const sf = p.createSourceFile(
+      "temp",
+      `formatMessage({
+        id: '{{id}}',
+        message: '{{msg}}',
+      })`
+    );
+
+
+     const newSF= sf.forEachDescendant((node, traversal) => {
+      return node;
+    });
+    // 修改通个属性
+    // https://blog.kaleidos.net/Refactoring-Typescript-code-with-ts-morph/
+    newSF?.getDescendants().forEach((node) => {
+      if (Node.isStringLiteral(node)) {
+        switch (node.getLiteralValue()) {
+          case '{{id}}':
+            return node.setLiteralValue('自定义ID');
+        }
+      }
+      console.log('输出 ', printNode(newSF.compilerNode), printNode(sf.compilerNode));
+    });
+  }, );
 });
