@@ -6,7 +6,6 @@ import {
   SourceFile,
   StringLiteral,
   SyntaxKind,
-  printNode
 } from "ts-morph";
 
 import {
@@ -202,7 +201,7 @@ describe("测试 ts-morph", function () {
     };
     for (let i = 0; i < p2cNs.length - 1; i++) {
       const p = p2cNs[i], c = p2cNs[i + 1];
-      console.log('路径', getParentAndChildSimplePath(p, c));
+      // console.log('路径', getParentAndChildSimplePath(p, c));
     }
   });
 
@@ -229,7 +228,6 @@ describe("测试 ts-morph", function () {
             return node.setLiteralValue('自定义ID');
         }
       }
-      console.log('输出 ', printNode(newSF.compilerNode), printNode(sf.compilerNode));
     });
   }, );
 });
