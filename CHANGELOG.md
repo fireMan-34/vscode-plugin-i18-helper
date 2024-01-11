@@ -230,6 +230,17 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 # 0.2.108
   - feat: 添加国际化目录数据热更新
 
+# 1.0.11
+  - fix: 获取初始配置过久错误
+  - refacor: 重构国际化文件对象缓存
+  - feat: 更新模板嵌入变量写法
+  - feat: 添加多模板配置设置
+  - feat: 添加模板转模型
+  - feat: 模型添加匹配国际化 key的值 功能
+  - feat: 添加悬浮面板 多模板模式
+  - feat: 添加跳转 多模板模式
+  - feat: 添加输入候选 多模板模式
+  - feat: 添加命令生成代码 多模板模式
 
 # 致谢
 - 感谢同事 舒婷 的建议。
