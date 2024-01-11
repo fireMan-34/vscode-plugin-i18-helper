@@ -1,5 +1,6 @@
 import { existsSync } from "fs";
 import cloneDeep from "lodash/cloneDeep";
+import isEmpty from 'lodash/isEmpty';
 import { join } from "path";
 import { ExtensionContext, Uri } from "vscode";
 
@@ -8,6 +9,7 @@ import {
   I18nFileItem,
   I18nMetaJson,
   I18nMetaJsonSaveContentItem,
+  I18nType,
 } from "types/index";
 import { PromiseAllMap } from "utils/asy";
 import { writeI18nConfigJson } from "utils/conf";
@@ -62,6 +64,12 @@ export class I18nFileItemUserClass {
     i18nItems.forEach((item) =>
       this.i18nMetaJson.saveContent[item.i18nType].push(item)
     );
+    for (const key in this.i18nMetaJson.saveContent){
+      const i18nTypeKey = key as  I18nType;
+      if (isEmpty(this.i18nMetaJson.saveContent[i18nTypeKey])) {
+        delete this.i18nMetaJson.saveContent[i18nTypeKey];
+      }
+    }
     await saveJsonFile(this.saveJsonPath, this.i18nMetaJson);
     await writeI18nConfigJson(this.Context, this.scanUri, this.saveJsonPath);
 

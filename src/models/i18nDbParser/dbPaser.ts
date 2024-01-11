@@ -9,7 +9,6 @@ import type {
   ProjectGlobalConfig,
   I18nMetaJson,
   I18nMetaJsonSaveContentItem,
-  I18nTypeKey,
 } from "types/index";
 import { I18nType } from "types/index";
 import { readJsonFile } from "utils/fs";
@@ -124,8 +123,9 @@ export class I18nDbPaser {
   }
   /** 从已有文件存储字符类型获取所有语言类型 */
   getLangTypesFromDB(list: Record<I18nType, I18nMetaJsonSaveContentItem[]>[]) {
-    return union(...list.map((item) => (Object.keys(item) as `${I18nType}`[]).filter(k => !isEmpty(item[k]))))
-      .filter((item) => item !== `${I18nType.UN_KNOWN}`) as I18nType[];
+    return union(
+      ...list.map(o => Object.keys(o))
+    ).filter(item => item !== I18nType.UN_KNOWN)  as I18nType[];
   }
 
   /** 搜索国际化字符串键值队 */
