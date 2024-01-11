@@ -24,9 +24,10 @@ const hoverProvider: HoverProvider = {
             });
             const i18nDbPaser = new I18nDbPaser(globalConfig, workspaceFolder);
             i18nDbPaser.prepareCheck();
-            const langs = i18nDbPaser.getLangTypes();
-            const i18nResult = await  i18nDbPaser.findKeyOrValue(i18nId, void 0, 'key');
-            const i18nInfoStr = langs
+            const i18nJsons = await i18nDbPaser.getCurrentI18nDirList();
+            const allLangs = await i18nDbPaser.getLangTypesFromDB(i18nJsons);
+            const i18nResult = await  i18nDbPaser.findKeyOrValue(i18nId, allLangs, 'key');
+            const i18nInfoStr = allLangs
             .map(lang => {
                 const out = i18nResult[lang];
                 if (!out) {
