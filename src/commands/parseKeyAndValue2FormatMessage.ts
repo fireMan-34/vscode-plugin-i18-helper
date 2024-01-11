@@ -1,9 +1,11 @@
 import vscode from 'vscode';
-import { rangeFix } from 'utils/arr';
-import { parseKeyAndValTexts2Object, renderI18nCode } from 'utils/code';
-import { emptyWarningHandler } from 'utils/log';
+
 import { CMD_KEY } from 'constants/index';
+import { I18nGenTemplate, } from 'models/index';
 import type { ICommondItem } from 'types/index';
+import { rangeFix } from 'utils/arr';
+import { parseKeyAndValTexts2Object } from 'utils/code';
+import { emptyWarningHandler } from 'utils/log';
 
 /**
  * @description 解析键值对，创建代码到剪切板
@@ -12,7 +14,7 @@ import type { ICommondItem } from 'types/index';
 * * 2. 映射快捷后代码 -[x]
 * * 3. 映射到剪贴板 -[x]
  */
-function parseKeyAndValue2FormatMessage() {
+async function parseKeyAndValue2FormatMessage() {
   const editor = vscode.window.activeTextEditor;
   /** 获取键值对字符串数组 */
   function getKeyAndValLines() {
@@ -40,10 +42,10 @@ function parseKeyAndValue2FormatMessage() {
     const o = parseKeyAndValTexts2Object(keyAndValueLine);
     return Object.assign(obj, o);
   }, {});
-  const formatMessage = Object
+  const i18nGenTemplate = new I18nGenTemplate().refreshTemplateModals();
+  const formatMessage = await Promise.all(Object
     .entries(i18nObject)
-    .map(([id, msg]) => renderI18nCode({id, msg}))
-    .join('\n');
+    .map(([id, msg]) => i18nGenTemplate.renderI18nCode({id, msg}))).then((codes) => codes.filter(Boolean).join('\n'));
 
 
   const clipboard = vscode.env.clipboard;

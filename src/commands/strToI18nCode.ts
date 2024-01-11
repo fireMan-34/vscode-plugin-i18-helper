@@ -1,15 +1,14 @@
-import { env, window } from "vscode";
 import type { ExtensionContext } from "vscode";
+import { env, window } from "vscode";
 
 import { CMD_KEY } from "constants/index";
+import { I18nDbPaser, I18nGenTemplate } from "models/index";
 import {
-  type ICommondItem,
   GeneratedCodeFromStrMode,
+  type ICommondItem,
 } from "types/index";
 import { getGlobalConfiguration } from "utils/conf";
-import { renderI18nCode } from "utils/code";
 import { getWrokspaceFloder } from "utils/path.code";
-import { I18nDbPaser } from "models/i18nDbParser";
 
 /** 文本转国际化代码 */
 const strToi18nCode = async (
@@ -41,14 +40,17 @@ const strToi18nCode = async (
     if (result === "否" || !result) {
       return;
     }
-  } else {
-    window.showInformationMessage(
-      "检测到可识别的国际化字符串，已为你转换成动态模板对应的代码"
-    );
   }
   const [id, msg] = item;
-  const newCode = renderI18nCode({ id, msg });
+  const i18nGenTemplate = new I18nGenTemplate().refreshTemplateModals();
+  const newCode = await i18nGenTemplate.renderI18nCode({ id, msg });
+  if (!newCode) {
+    return;
+  }
   env.clipboard.writeText(newCode);
+  window.showInformationMessage(
+    "检测到可识别的国际化字符串，已为你转换成动态模板对应的代码"
+  );
 };
 
 /** 打开界面视图指令 */

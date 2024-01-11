@@ -1,11 +1,9 @@
-import { HoverProvider, Hover, languages, MarkdownString, TextDocument, Position, Range, Uri } from 'vscode';
+import { Hover, HoverProvider, MarkdownString, Uri, languages } from 'vscode';
 
-import { I18nGenTemplate, } from 'models/i18nGenTemplate';
-import { SUPPORT_DOCUMENT_SELECTOR, I18N_DESCRIPTION_MAP, } from 'constants/index';
-import { getGlobalConfiguration,  } from 'utils/conf';
+import { I18N_DESCRIPTION_MAP, SUPPORT_DOCUMENT_SELECTOR, } from 'constants/index';
+import { I18nDbPaser, I18nGenTemplate } from 'models/index';
+import { getGlobalConfiguration, } from 'utils/conf';
 import { getWrokspaceFloder } from 'utils/path.code';
-import { I18nType } from 'types/index';
-import { I18nDbPaser } from 'models/i18nDbParser';
 
 const hoverProvider: HoverProvider = {
     async provideHover(document, position, token) {

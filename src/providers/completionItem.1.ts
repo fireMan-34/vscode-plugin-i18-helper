@@ -3,8 +3,7 @@ import type { CompletionItemProvider, ExtensionContext, } from 'vscode';
 import { CompletionItem, languages } from 'vscode';
 
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/provider';
-import { I18nDbPaser } from 'models/i18nDbParser';
-import { I18nGenTemplate, } from 'models/i18nGenTemplate';
+import { I18nDbPaser, I18nGenTemplate } from 'models/index';
 import { getGlobalConfiguration } from 'utils/conf';
 import { isSubPath, } from 'utils/path';
 import { getWrokspaceFloder } from 'utils/path.code';

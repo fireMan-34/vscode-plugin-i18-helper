@@ -2,7 +2,9 @@ import inRange from 'lodash/inRange';
 import isEmpty from 'lodash/isEmpty';
 import template from 'lodash/template';
 import { CallExpression, Node, SourceFile, SyntaxKind } from 'ts-morph';
-import type { Position, TextDocument } from 'vscode';
+import type { Position, QuickPickItem, TextDocument } from 'vscode';
+import { window } from 'vscode';
+import { format, } from 'prettier';
 
 import { conditionReturnError, emptyReturnError, } from 'decorators/index';
 import { getGlobalConfigurationSync, } from 'utils/conf';
@@ -426,5 +428,22 @@ export class I18nGenTemplate {
             }
             return codeTextModal.codeTextCallerName === template[I18nId].callName;
         });
+    }
+
+    /** 渲染 i18n 国际化代码，多模板询问模式 */
+    async renderI18nCode(i18nItem: { id: string, msg: string }){
+        const item = await window.showQuickPick(
+            this.templateModals.map<QuickPickItem & { modal: I18nTemplateModal }>(modal => ({
+                label: modal.template,
+                modal,
+            })),{
+                title: '请选择要使用的代码模板',
+                placeHolder: '请选中要使用的代码模板',
+            }
+        );
+        if (!item) {
+            return;
+        }
+        return format(item.modal.renderI18nTemplate(i18nItem), { parser: 'typescript' });
     }
 };

@@ -2,8 +2,7 @@ import type { DefinitionProvider, ExtensionContext } from 'vscode';
 import { Location, Uri, languages, workspace, } from 'vscode';
 
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/index';
-import { I18nDbPaser, } from 'models/i18nDbParser';
-import { I18nGenTemplate } from 'models/i18nGenTemplate';
+import { I18nDbPaser, I18nGenTemplate } from 'models/index';
 import { getGlobalConfigurationSync } from 'utils/conf';
 import { getWrokspaceFloder } from 'utils/path.code';
 
