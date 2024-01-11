@@ -357,6 +357,7 @@
     "test:unit": "mocha ./src/test/unit/index.ts",
     "ri": "rimraf ./node_modules && npm install",
     "package": "vsce package",
+    "publish": "npm run package && vsce publish",
     "dev:webview": "webpack --config ./client/webpack.config.js",
     "dev": "webpack --config ./webpack.config.js",
     "prepare": "husky install",
