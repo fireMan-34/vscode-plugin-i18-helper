@@ -229,28 +229,23 @@
       },
       {
         "command": "i18n.i18nRuleDirSet",
-        "title": "文件规则设定命令",
-        "icon": "./assets/icons/提取.svg"
+        "title": "文件规则设定命令"
       },
       {
         "command": "i18n.fastTranslate",
-        "title": "快速翻译单个文本",
-        "icon": "./assets/icons/提取.svg"
+        "title": "快速翻译单个文本"
       },
       {
         "command": "i18n.strToi18nCode",
-        "title": "文本转国际化代码",
-        "icon": "./assets/icons/提取.svg"
+        "title": "文本转国际化代码"
       },
       {
         "command": "i18n.selectionToi18nCode",
-        "title": "选中文本转国际化",
-        "icon": "./assets/icons/提取.svg"
+        "title": "选中文本转国际化"
       },
       {
         "command": "i18n.quickSearchI18n",
-        "title": "快速搜索国际化代码",
-        "icon": "./assets/icons/提取.svg"
+        "title": "快速搜索国际化代码"
       }
     ],
     "keybindings": [
