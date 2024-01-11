@@ -42,9 +42,9 @@ const hoverProvider: HoverProvider = {
                 ];
                 return strs.join('\n\n');
             }).filter(Boolean);
-            const i18nType = I18nType[globalConfig.mainLanguage];
-            const mainLanguageDefaultMsg = i18nResult[i18nType]?.[1];
-            const mainLanguageText = `默认语言: ${I18N_DESCRIPTION_MAP[i18nType].name}`;
+            const { mainLanguage, } = globalConfig;
+            const mainLanguageDefaultMsg = i18nResult[mainLanguage]?.[1];
+            const mainLanguageText = `默认语言: ${I18N_DESCRIPTION_MAP[mainLanguage].name}`;
             const isEqualDefaultMsgCheckText = `默认语言编写检测: ${
                 mainLanguageDefaultMsg
                 ? mayMsgResult

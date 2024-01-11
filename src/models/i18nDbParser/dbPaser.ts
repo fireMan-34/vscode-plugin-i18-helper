@@ -111,11 +111,11 @@ export class I18nDbPaser {
 
   /**
    * 
-   * @param i18nKey 传空返回主语言枚举值
+   * @param i18nType 传空返回主语言枚举值
    * @returns 
    */
-  getLangEnumValue(i18nKey?: I18nTypeKey) {
-    return I18nType[i18nKey ?? this.globalConfig.mainLanguage];
+  getLangEnumValue(i18nType?: I18nType) {
+    return i18nType ?? this.globalConfig.mainLanguage;
   };
 
   /** 获取多种国际化类型 默认返回主体语言 */
@@ -125,8 +125,7 @@ export class I18nDbPaser {
   /** 从已有文件存储字符类型获取所有语言类型 */
   getLangTypesFromDB(list: Record<I18nType, I18nMetaJsonSaveContentItem[]>[]) {
     return union(...list.map((item) => (Object.keys(item) as `${I18nType}`[]).filter(k => !isEmpty(item[k]))))
-      .filter((item) => item !== `${I18nType.UN_KNOWN}`)
-      .map(Number) as I18nType[];
+      .filter((item) => item !== `${I18nType.UN_KNOWN}`) as I18nType[];
   }
 
   /** 搜索国际化字符串键值队 */

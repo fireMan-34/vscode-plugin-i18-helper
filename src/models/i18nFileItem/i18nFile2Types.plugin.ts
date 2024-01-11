@@ -24,7 +24,7 @@ export class BaseFile2I18nTypeClass {
       const list = Object.values(record);
       const i18nTypes = list.map(getCharsI18nType);
       const countMap = countBy(i18nTypes);
-      const i18nType = +Object.entries(countMap).reduce(
+      const i18nType = Object.entries(countMap).reduce(
         (maxKeyAndVal, curKeyAndVal) =>
           curKeyAndVal[1] > maxKeyAndVal[1] ? curKeyAndVal : maxKeyAndVal,
         [`${I18nType.UN_KNOWN}`, 0]

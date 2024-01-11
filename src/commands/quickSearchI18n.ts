@@ -1,14 +1,13 @@
-import type { ExtensionContext, QuickPickItem } from "vscode";
-import { window, SnippetString } from 'vscode';
 import { relative, } from 'path';
+import type { ExtensionContext, QuickPickItem } from "vscode";
+import { SnippetString, window } from 'vscode';
 
 import { CMD_KEY } from "constants/index";
 import { I18nDbPaser } from "models/index";
 import type { ICommondItem } from "types/index";
-import { I18nType, } from 'types/index';
-import { getWrokspaceFloder } from "utils/path.code";
-import { getGlobalConfiguration } from "utils/conf";
 import { renderI18nCode, } from 'utils/code';
+import { getGlobalConfiguration } from "utils/conf";
+import { getWrokspaceFloder } from "utils/path.code";
 
 class QuickSearchI18n implements ICommondItem {
   cmd: string = CMD_KEY.QUICK_SEARCH_I18N;
@@ -24,9 +23,8 @@ class QuickSearchI18n implements ICommondItem {
     const i18nDbParser = new I18nDbPaser(globalConfig, workfloder);
     await i18nDbParser.prepareCheck();
     const { mainLanguage, } = globalConfig;
-    const mainLanguageKey = I18nType[mainLanguage];
     const i18nLangDirMap = await i18nDbParser.getLangAboutI18nDirListMap();
-    const mainLanguageMap = i18nLangDirMap[mainLanguageKey];
+    const mainLanguageMap = i18nLangDirMap[mainLanguage];
     const keyAndValues = i18nDbParser.getI18nKeyAndValueFromSaveJsonItem(mainLanguageMap);
     const selectVal = await window.showQuickPick(keyAndValues.map<QuickPickItem & { value: string }>(([id, msg, item]) => ({
       label: msg,

@@ -39,7 +39,7 @@ class I18nMapConfigWebview implements WebviewViewProvider {
       return;
     }
     const projectPath = workspaceFolder.uri.fsPath;
-    const { mainLanguage, i18nDirList } = await getGlobalConfiguration();
+    const { i18nDirList } = await getGlobalConfiguration();
     const curretnI18nDirList = i18nDirList.filter((item) =>
       isSamePath(item.projectPath, projectPath)
     );

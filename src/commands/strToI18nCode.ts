@@ -3,7 +3,6 @@ import type { ExtensionContext } from "vscode";
 
 import { CMD_KEY } from "constants/index";
 import {
-  I18nType,
   type ICommondItem,
   GeneratedCodeFromStrMode,
 } from "types/index";
@@ -31,7 +30,7 @@ const strToi18nCode = async (
     return;
   }
   const i18nKeyAndValMap = await i18nDbParser.findKeyOrValue(str);
-  const item = i18nKeyAndValMap[I18nType[mainLanguage]];
+  const item = i18nKeyAndValMap[mainLanguage];
   if (!item) {
     return;
   }

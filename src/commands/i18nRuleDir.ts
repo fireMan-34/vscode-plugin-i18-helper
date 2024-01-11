@@ -7,7 +7,7 @@ import { I18N_DESCRIPTION_MAP, I18N_ENTRY_ENUM_VALUE } from "constants/index";
 import {
   ICommondItem,
   I18nDirViewItem,
-  I18nTypeKey,
+  I18nType,
   ProjectGlobalConfig,
   MethodDecoratorFix,
 } from "types/index";
@@ -19,7 +19,7 @@ export const isEmptySelection: MethodDecoratorFix<() => I18nDirViewItem> =
   emptyReturnError("请选择需要操作的目录");
 
 /** 检测是否选中国际化类型供设置 */
-export const unQuickI18nType: MethodDecoratorFix<() => Promise<I18nTypeKey>> =
+export const unQuickI18nType: MethodDecoratorFix<() => Promise<I18nType>> =
   emptyReturnError("请选择目录要设定的国际化类型");
 
 export const showCatchAsyncError: MethodDecoratorFix<
@@ -64,14 +64,14 @@ class I18nRuleDir implements ICommondItem {
       detail: item.dir,
     }));
     const i18nTypeQuickItem = await window.showQuickPick(i18nTypeQuickItems);
-    return i18nTypeQuickItem?.detail as unknown as I18nTypeKey;
+    return i18nTypeQuickItem?.detail as unknown as I18nType;
   }
 
   /** 获取新的国际化类型 */
   getNewI18nRuleDirList(
     globalConfig: ProjectGlobalConfig,
     selection: I18nDirViewItem,
-    i18nType: I18nTypeKey
+    i18nType: I18nType,
   ) {
     const { i18nRuleDirList } = globalConfig;
     const i18nRuleDirItem = {

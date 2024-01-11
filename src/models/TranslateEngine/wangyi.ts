@@ -2,6 +2,7 @@ import axios from "axios";
 import { stringify } from "querystring";
 
 import { sha256Hash } from "utils/crypto";
+import { I18nType } from "types/index";
 
 import type { ITransalteOutItem } from "./base";
 import { TranslateEngine } from "./base";
@@ -108,13 +109,7 @@ export class WangYiTranslateEngine extends TranslateEngine {
 
   async translateOne(
     penddingText: string,
-    transalteEngineLanguageType:
-      | "ZH_CN"
-      | "ZH_HK"
-      | "EN_US"
-      | "KO_KR"
-      | "JA_JP"
-      | "UN_KNOWN"
+    transalteEngineLanguageType: I18nType
   ): Promise<ITransalteOutItem | null> {
     try {
       const from = this.languageMap.ZH_CN;

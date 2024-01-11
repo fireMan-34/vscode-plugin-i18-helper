@@ -7,8 +7,6 @@ import { getGlobalConfiguration } from 'utils/conf';
 import { md5Hash, } from 'utils/crypto';
 import { requestX } from "utils/request";
 
-type I18nTypeKey = keyof typeof I18nType;
-
 /** crypto 模块大类笔记
  * 
  * Certificate 证明书
@@ -18,12 +16,12 @@ type I18nTypeKey = keyof typeof I18nType;
 
 interface ITransalteOutItem {
   penddingText: string;
-  transalteEngineLanguageType: I18nTypeKey;
+  transalteEngineLanguageType: I18nType;
   transalteText: string;
 }
 
 class TranslateEngine {
-  languageMap: Record<I18nTypeKey, string> = {
+  languageMap: Record<I18nType, string> = {
     ZH_CN: 'zh-CN',
     ZH_HK: 'zh-HK',
     EN_US: 'en-US',
@@ -32,7 +30,7 @@ class TranslateEngine {
     UN_KNOWN: 'UNKNOWN',
   };
 
-  async translate(penddingText: string, transalteEngineLanguageTypes: I18nTypeKey[]): Promise<ITransalteOutItem[]> {
+  async translate(penddingText: string, transalteEngineLanguageTypes: I18nType[]): Promise<ITransalteOutItem[]> {
     return [
       {
         penddingText,

@@ -1,15 +1,13 @@
-import { I18nType } from "types/conf";
-
-export type I18nTypeKey = keyof typeof I18nType;
+import { I18nType } from "types/index";
 
 export interface ITransalteOutItem {
   penddingText: string;
-  transalteEngineLanguageType: I18nTypeKey;
+  transalteEngineLanguageType: I18nType;
   transalteText: string;
 }
 
 export class TranslateEngine {
-  languageMap: Record<I18nTypeKey, string> = {
+  languageMap: Record<I18nType, string> = {
     ZH_CN: 'zh-CN',
     ZH_HK: 'zh-HK',
     EN_US: 'en-US',
@@ -19,7 +17,7 @@ export class TranslateEngine {
   };
 
   /** 翻译单个文本 */
-  async translateOne(penddingText: string, transalteEngineLanguageType: I18nTypeKey): Promise<ITransalteOutItem|null> {
+  async translateOne(penddingText: string, transalteEngineLanguageType: I18nType): Promise<ITransalteOutItem|null> {
     return {
       penddingText,
       transalteEngineLanguageType: transalteEngineLanguageType,
@@ -28,7 +26,7 @@ export class TranslateEngine {
   }
 
   /**　翻译多个文本　默认并发模式 */
-  async translate(penddingText: string, transalteEngineLanguageTypes: I18nTypeKey[]): Promise<(ITransalteOutItem|null)[]> {
+  async translate(penddingText: string, transalteEngineLanguageTypes: I18nType[]): Promise<(ITransalteOutItem|null)[]> {
     return Promise.all(
       transalteEngineLanguageTypes.map((transalteEngineLanguage) => this.translateOne(penddingText, transalteEngineLanguage)),
     );

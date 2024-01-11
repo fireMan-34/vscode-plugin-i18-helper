@@ -1,10 +1,11 @@
 import { Axios } from "axios";
 
-import { md5Hash } from "utils/crypto";
-import type { MethodDecoratorFix } from "types/index";
 import { conditionReturnError, emptyReturnError, } from 'decorators/index';
+import type { MethodDecoratorFix } from "types/index";
+import { I18nType, } from 'types/index';
+import { md5Hash } from "utils/crypto";
 
-import { TranslateEngine, ITransalteOutItem, I18nTypeKey } from "./base";
+import { ITransalteOutItem, TranslateEngine } from "./base";
 
 interface BaiduQueryIntl {
   /**
@@ -58,7 +59,7 @@ export class BaiduTranslateEngine extends TranslateEngine {
 
   salt = `${Math.ceil(Math.random() * 1000)}`;
 
-  languageMap: Record<I18nTypeKey, string> = {
+  languageMap: Record<I18nType, string> = {
     ZH_CN: "zh",
     ZH_HK: "cht",
     KO_KR: "kor",
@@ -114,7 +115,7 @@ export class BaiduTranslateEngine extends TranslateEngine {
 
   async translateOne(
     penddingText: string,
-    transalteEngineLanguageType: I18nTypeKey
+    transalteEngineLanguageType: I18nType
   ): Promise<ITransalteOutItem | null> {
     const language = this.languageMap[transalteEngineLanguageType];
     const query = this.createQuery(penddingText, language);

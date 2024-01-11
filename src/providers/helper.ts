@@ -18,7 +18,6 @@ let workspacePath: string;
 export async function getProviderI18nJsonAndMainLanguage(folder: WorkspaceFolder) {
   const { i18nDirList, mainLanguage, runTimeVersion } = await firstValueFrom(GlobalExtensionSubject);
 
-  const i18nType = I18nType[mainLanguage];
   const workspaceFolderPath = folder.uri.fsPath;
 
   const isUseCache = runTimeVersionNote && workspacePath && !providerComputeCache.clearWhile(runTimeVersionNote,
@@ -44,7 +43,7 @@ export async function getProviderI18nJsonAndMainLanguage(folder: WorkspaceFolder
         .then((metaJson: I18nMetaJson) => ({ ...metaJson, ...item }))
     )));
 
-  const i18nMainFileContents = i18nDirJsons.map((json => json.saveContent[i18nType])).flat();
+  const i18nMainFileContents = i18nDirJsons.map((json => json.saveContent[mainLanguage])).flat();
 
   const ctx = {
     /** 运行版本 */
@@ -52,7 +51,7 @@ export async function getProviderI18nJsonAndMainLanguage(folder: WorkspaceFolder
     /** 当前激活语言 */
     mainLanguage,
     /** 主语言相关枚举 */
-    i18nType,
+    i18nType: mainLanguage,
     /** 插件所有 i18n 扫描目录 */
     i18nDirList,
     /** 匹配当前工作区的语言 */

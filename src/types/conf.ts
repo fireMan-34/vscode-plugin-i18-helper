@@ -1,19 +1,22 @@
 /** 国际化枚举类型 */
 export enum I18nType {
     /** 中文简体 */
-    ZH_CN,
+    ZH_CN = 'ZH_CN',
     /** 中文繁体 */
-    ZH_HK,
+    ZH_HK = 'ZH_HK',
     /** 英文 */
-    EN_US,
+    EN_US = 'EN_US',
     /** 韩文 */
-    KO_KR,
+    KO_KR = 'KO_KR',
     /** 日文 */
-    JA_JP,
+    JA_JP = 'JA_JP',
     /** 未知 */
-    UN_KNOWN,
+    UN_KNOWN = 'UN_KNOWN',
 }
 
+/**
+ * @deprecated 原排序的枚举值在进入数据为无意义数据，故此移除
+ */
 export type I18nTypeKey = keyof typeof I18nType;
 
 /** 国际化描述对象 */
@@ -98,7 +101,7 @@ export interface VScodeConfig {
    */
   isOpenCheckDir: boolean,
   /** 主要项目使用语言 */
-  mainLanguage: I18nTypeKey,
+  mainLanguage: I18nType,
   /** 生成的代码模板 */
   generateTemplate: string,
   /** 生成的代码模板（批量模式， 实验阶段） */
@@ -106,7 +109,7 @@ export interface VScodeConfig {
   /** 可扫描的国际化目录路径 */
   scanFolders: string[],
   /** 快速翻译文本 */
-  fastTranslateLanguageType: I18nTypeKey[],
+  fastTranslateLanguageType: I18nType[],
   /** 翻译引擎 */
   translateEngine: TranslateEngineType,
   /** 检测可识别国际化代码是否自动生成到剪切板 */

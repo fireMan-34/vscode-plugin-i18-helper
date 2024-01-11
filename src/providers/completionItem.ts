@@ -1,14 +1,15 @@
+import isEmpty from 'lodash/isEmpty';
 import { relative } from 'path';
 import type { CompletionItemProvider, ExtensionContext } from 'vscode';
-import { languages, CompletionItem } from 'vscode';
-import isEmpty from 'lodash/isEmpty';
-import { getWrokspaceFloder } from 'utils/path.code';
-import { thorwNewError } from 'utils/log';
-import { renderI18nCode } from 'utils/code';
-import { I18nMetaJson, I18nType, I18nDirItem } from 'types/index';
+import { CompletionItem, languages } from 'vscode';
+
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/provider';
 import { I18nTextParserClass, createMatchI18nFnPlugin } from 'models/index';
 import { getProviderI18nJsonAndMainLanguage } from 'providers/helper';
+import { I18nDirItem, I18nMetaJson } from 'types/index';
+import { renderI18nCode } from 'utils/code';
+import { thorwNewError } from 'utils/log';
+import { getWrokspaceFloder } from 'utils/path.code';
 
 /** @see http://blog.haoji.me/vscode-plugin-jump-completion-hover.html
  * * 步骤分解
@@ -46,9 +47,8 @@ const I18nCompetionItemProvider: CompletionItemProvider = {
                 const i18nContents = i18nDirJsons.flatMap(getI18nList);
 
                 function getI18nList(metaJson: I18nMetaJson & I18nDirItem) {
-                    const i18nType = I18nType[mainLanguage];
                     return metaJson
-                        .saveContent[i18nType]
+                        .saveContent[mainLanguage]
                         .flatMap(i18nItem =>
                             Object.entries(i18nItem.content)
                                 .map<CompletionItem>((([id, msg]) => ({

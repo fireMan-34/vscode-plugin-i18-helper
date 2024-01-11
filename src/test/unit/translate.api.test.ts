@@ -1,5 +1,6 @@
 import { equal } from 'assert';
 import { BaiduTranslateEngine, WangYiTranslateEngine } from 'models/TranslateEngine';
+import { I18nType } from 'types/conf';
 
 describe('测试百度翻译 api', function() {
   it('测试 签名 函数', function() {
@@ -14,7 +15,7 @@ describe('测试百度翻译 api', function() {
   it('接口应该能请求', function(done) {
     const engine = new BaiduTranslateEngine();
     engine.init();
-    engine.translate('翻译内容', ['KO_KR'])
+    engine.translate('翻译内容', [I18nType.KO_KR])
     .then((vals) => {
       done();
     })
@@ -26,7 +27,7 @@ describe('测试网易 api 接入', function(){
   it('请求结果测试', function(done) {
     const engine = new WangYiTranslateEngine();
     engine.devInit();
-    engine.translate('翻译内容', ['KO_KR'])
+    engine.translate('翻译内容', [I18nType.KO_KR])
     .then(res => {
       if (!res) {
         done('Empty');

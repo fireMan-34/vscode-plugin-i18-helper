@@ -4,7 +4,6 @@ import { Location, Uri, languages, workspace, } from 'vscode';
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/index';
 import { I18nDbPaser, } from 'models/i18nDbParser';
 import { I18nGenTemplate } from 'models/i18nGenTemplate';
-import { I18nType } from 'types/index';
 import { getGlobalConfigurationSync } from 'utils/conf';
 import { getWrokspaceFloder } from 'utils/path.code';
 
@@ -28,7 +27,7 @@ const definitionProvider: DefinitionProvider = {
         i18nDbParser.prepareCheck();
         const pathMaps = await i18nDbParser.findKeyOrValue(i18nId, void 0, 'key');
         const { mainLanguage, } = globalConfig;
-        const mainI18nData = pathMaps[I18nType[mainLanguage]];
+        const mainI18nData = pathMaps[mainLanguage];
         if (!mainI18nData) {
             return;
         }

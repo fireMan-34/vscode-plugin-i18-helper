@@ -23,7 +23,6 @@ const hoverProvider: HoverProvider = {
         matchPath: document.uri,
       });
       const { mainLanguage, i18nDirJsons } = await getProviderI18nJsonAndMainLanguage(currentWorkFolder);
-      const i18nType = I18nType[mainLanguage];
       const i18nTypeKeys = Object.values(I18nType);
       const filterI18nFileContents = i18nDirJsons.flatMap((dirJson =>
         i18nTypeKeys
@@ -42,7 +41,7 @@ const hoverProvider: HoverProvider = {
         return strs;
       };
 
-      const mainLanguageText = `主体语言: ${I18N_DESCRIPTION_MAP[i18nType].name}`;
+      const mainLanguageText = `主体语言: ${I18N_DESCRIPTION_MAP[mainLanguage].name}`;
 
       return new Hover([mainLanguageText, ...filterI18nFileContents.flatMap(generateTextFromI18nFileContent)].join('\n\n'));
     }
