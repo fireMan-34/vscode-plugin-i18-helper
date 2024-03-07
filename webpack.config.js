@@ -1,12 +1,12 @@
 const { join } = require('path');
 const { cwd } = require('process');
-const { DllPlugin, } = require('webpack');
+const filterWranPlugin = require('./plugins/FilterCriticalWran');
 
 const OUT_PATH = join(cwd(), 'out');
 
 /** @type {import('webpack').Configuration} */
 const webpackConfig = {
-	mode: 'none', // this leaves the source code as close as possible to the original (when packaging we set this to 'production')
+  mode: 'none', // this leaves the source code as close as possible to the original (when packaging we set this to 'production')
   target: 'node', // VS Code extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
   devtool: 'source-map',
   entry: join(__dirname, './src/extension.ts'),
@@ -21,7 +21,7 @@ const webpackConfig = {
       decorators: join(__dirname, './src/decorators'),
       tasks: join(__dirname, './src/tasks'),
     },
-    extensions: [ ".ts", '.js' , ".json" ]
+    extensions: [".ts", 'mjs', '.js', ".json"]
   },
   externals: {
     vscode: 'commonjs vscode' // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
@@ -43,11 +43,12 @@ const webpackConfig = {
   },
   plugins: [
     // new DllPlugin({ format: true, path: OUT_PATH }),
+    filterWranPlugin,
   ],
   cache: {
     /** 文件编译缓存加速 这个真的顶 d=====(￣▽￣*)b */
     type: 'filesystem'
-  }
+  },
 };
 
-module.exports = [ webpackConfig ];
+module.exports = [webpackConfig];
