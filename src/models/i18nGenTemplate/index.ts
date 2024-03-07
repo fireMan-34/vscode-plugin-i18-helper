@@ -321,6 +321,9 @@ export class I18nGenTemplate {
         const [ast, flattenNodes] = createSourceFileFromDocument(document);
         const offset = document.offsetAt(position);
         const nodes = flattenNodes.filter(n => inRange(offset, n.compilerNode.pos, n.compilerNode.end));
+        if (isEmpty(nodes)) {
+            return;
+        }
         const node = nodes.reduce((res, cur) => {
             const space = res.compilerNode.pos - res.compilerNode.end;
             const curSpace = cur.compilerNode.pos - cur.compilerNode.end;
