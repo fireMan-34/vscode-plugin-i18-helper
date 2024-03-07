@@ -86,12 +86,8 @@ class I18nTemplateModal {
         }
     })
     updateTemplateVariables() {
-        const matchResult = this.template.matchAll(/{{([\S\s]*?)}}/g);
-        if (matchResult) {
-            this.templateVariables = [...matchResult].map(([, dynamicVaribale]) => dynamicVaribale);
-        } else {
-            this.templateVariables = [];
-        }
+        const matchResult = Array.from(this.template.matchAll(/{{([\S\s]*?)}}/g));
+        this.templateVariables = matchResult.map(([, dynamicVaribale]) => dynamicVaribale);
         return this.templateVariables;
     }
 

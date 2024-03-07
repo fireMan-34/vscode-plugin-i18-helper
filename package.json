@@ -2,7 +2,7 @@
   "name": "i18n-extension",
   "displayName": "i18n-extension",
   "icon": "./assets/icons/i18n.png",
-  "description": "国际化扩展工具, 支持 js 、ts、 json 键值对解析 (注意解析类型的时候也会当作键值对), 支持复制国际化键值对文本转国际化代码，目前支持单一一种形式。",
+  "description": "国际化辅助扩展, 支持 js 、ts、 json 键值对解析 (注意解析类型的时候也会当作键值对), 支持复制国际化键值对文本转国际化代码",
   "author": {
     "name": "firman-34",
     "email": "524915379@qq.com",

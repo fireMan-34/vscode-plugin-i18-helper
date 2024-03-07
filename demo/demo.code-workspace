@@ -5,12 +5,21 @@
 		}
 	],
 	"settings": {
+		// 这是 旧的配置，我们使用时无需去关注它。
 		"i18n-extension.generateTemplate": "getMessage('{{id}}','{{msg}}')",
+		// 配置这里的，需要编写的国际化代码模板
 		"i18n-extension.generateTemplates": [
 			"formatMessage({id: '{{id}}',defaultMessage: '{{msg}}',},{{variable}})",
 			"formatMessage({id: '{{id}}'})",
 			"intl.formatMessage({id: '{{id}}',\ndefaultMessage: '{{msg}}',})"
 		],
-		"i18n-extension.mainLanguage": "ZH_CN"
+		// 这里是工作语言
+		"i18n-extension.mainLanguage": "ZH_CN",
+		// 这是支持扫描国际化的目录名
+		"i18n-extension.scanFolders": [
+			"locales",
+			"locale"
+		]
+		// 配置完，扫描目录
 	}
 }
