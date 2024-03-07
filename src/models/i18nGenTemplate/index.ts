@@ -2,7 +2,7 @@ import inRange from 'lodash/inRange';
 import isEmpty from 'lodash/isEmpty';
 import template from 'lodash/template';
 import { CallExpression, Node, SourceFile, SyntaxKind } from 'ts-morph';
-import type { Position, QuickPickItem, TextDocument } from 'vscode';
+import { Position, QuickPickItem, TextDocument, CompletionItem, CompletionItemKind } from 'vscode';
 import { window } from 'vscode';
 import { format, } from 'prettier';
 
@@ -288,6 +288,13 @@ export class I18nGenTemplate {
             return map.get(template)!;
         });
         return this;
+    }
+
+    getFunctionOrMethods(){
+        return this.templateModals
+        .map(template => (template[I18nId].has && template[I18nId].callName) as string)
+        .filter(Boolean)
+        .map((fn) => new CompletionItem(fn, CompletionItemKind.Function));
     }
 
     getTemplateWithFlags(flags: VariableFlag[]) {

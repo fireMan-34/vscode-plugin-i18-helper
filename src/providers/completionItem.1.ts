@@ -1,6 +1,6 @@
 import { relative } from 'path';
 import type { CompletionItemProvider, ExtensionContext, } from 'vscode';
-import { CompletionItem, languages } from 'vscode';
+import { CompletionItem, languages, Disposable, } from 'vscode';
 
 import { SUPPORT_DOCUMENT_SELECTOR } from 'constants/provider';
 import { I18nDbPaser, I18nGenTemplate } from 'models/index';
@@ -61,13 +61,13 @@ const completionItemProvider: CompletionItemProvider = {
             completionItems.map(item => {
                 if (item.insertText && typeof item.insertText === 'string') {
                     const formatPromise = format(item.insertText, { parser: 'typescript' })
-                    .then(insertText => ({
-                        ...item,
-                        insertText: getArgFromFnStr(insertText),
-                    }));
+                        .then(insertText => ({
+                            ...item,
+                            insertText: getArgFromFnStr(insertText),
+                        }));
                     return formatPromise;
-                }   
-                return item;                         
+                }
+                return item;
 
             })
         );
@@ -75,6 +75,18 @@ const completionItemProvider: CompletionItemProvider = {
     },
 };
 
+const compileri18nFunctionNameProvider: CompletionItemProvider = {
+    provideCompletionItems(document, position, token, context) {
+        const i18nGenTemplate = new I18nGenTemplate().refreshTemplateModals();
+        return i18nGenTemplate.getFunctionOrMethods();
+    }
+};
+
 export const createI18nCompetionItemProvider = (context: ExtensionContext) => {
-    return languages.registerCompletionItemProvider(SUPPORT_DOCUMENT_SELECTOR, completionItemProvider, '(',);
+    const dispose1 = languages.registerCompletionItemProvider(SUPPORT_DOCUMENT_SELECTOR, completionItemProvider, '(',);
+    const dispose2 = languages.registerCompletionItemProvider(SUPPORT_DOCUMENT_SELECTOR,compileri18nFunctionNameProvider,);
+    return new Disposable(() => {
+        dispose1.dispose();
+        dispose2.dispose();
+    });
 };
