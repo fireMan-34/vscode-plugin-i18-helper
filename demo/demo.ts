@@ -14,14 +14,14 @@ const zh1 = formatMessage({
 
 getMessage('often','经常');
 
-getMessage('zhCN','中文')
+getMessage('zhCN','中文');
 
 formatMessage({
     id: 'zhCN',
     defaultMessage: '中文',
 });
 
-getMessage('login','登录')
+getMessage('login','登录');
 
 console.log(zhCN);
 
@@ -38,10 +38,12 @@ formatMessage({
 }, {
     num: 2
 });
-formatMessage({id: 'zhCN',defaultMessage: '中文',},)
+formatMessage({id: 'zhCN',defaultMessage: '中文',},);
 formatMessage({ id: "chinese" });
 
 formatMessage(
   { id: "needNum", defaultMessage: "需要输入变量{{num}}" },
   { num: "" },
 );
+
+formatMessage({ id: "enUS", defaultMessage: "英語" });

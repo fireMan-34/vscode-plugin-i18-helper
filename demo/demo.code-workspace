@@ -14,7 +14,7 @@
 			"intl.formatMessage({id: '{{id}}',\ndefaultMessage: '{{msg}}',})"
 		],
 		// 这里是工作语言
-		"i18n-extension.mainLanguage": "ZH_CN",
+		"i18n-extension.mainLanguage": "ZH_HK",
 		// 这是支持扫描国际化的目录名
 		"i18n-extension.scanFolders": [
 			"locales",
