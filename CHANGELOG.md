@@ -242,6 +242,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
   - feat: 添加输入候选 多模板模式
   - feat: 添加命令生成代码 多模板模式
 
+# 1.0.15
+  - feat: 添加发布插件命令
+  - fix: 修复提取模板语法错误
+  - docs: 更新扩展文档
+  - pref: 添加建议扩展
+  - docs: 添加中文繁体测试
+  - fix: 修复空数组调用 reduce 方法错误
+  - pref: 添加忽略 webpack 中一些动态加载依赖项识别警告
+  - feat: 添加模板函数调用语法提示
+
 # 致谢
 - 感谢同事 舒婷 的建议。
 - 感谢同事 勉盛 的建议。

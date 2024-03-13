@@ -19,6 +19,9 @@
 		"i18n-extension.scanFolders": [
 			"locales",
 			"locale"
+		],
+		"css.styleSheets": [
+			
 		]
 		// 配置完，扫描目录
 	}
