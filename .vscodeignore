@@ -13,3 +13,14 @@ study/**
 node_modules/**
 mock/**
 demo/**
+assets/教程/**
+assets/思维图解/**
+.husky/**
+plugins/**
+webpack.config.js
+.git/**
+scripts/**
+client/**
+coverage/**
+.eslintrc.json
+.mocharc.js
